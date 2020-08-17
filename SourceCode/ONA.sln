@@ -7,6 +7,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ONA", "ONA\ONA.csproj", "{7
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ONATests", "ONATests\ONATests.csproj", "{FD2B2444-B223-4B30-AD0F-5D9CE4154616}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{60243253-434A-4F6A-A673-613C1A208D9A}"
+	ProjectSection(SolutionItems) = preProject
+		..\CHANGELOG.md = ..\CHANGELOG.md
+		..\CODE_OF_CONDUCT.md = ..\CODE_OF_CONDUCT.md
+		..\CONTRIBUTING.md = ..\CONTRIBUTING.md
+		..\CONTRIBUTORS.md = ..\CONTRIBUTORS.md
+		..\FAQ.md = ..\FAQ.md
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+		..\RELEASENOTES.md = ..\RELEASENOTES.md
+		..\ROADMAP.md = ..\ROADMAP.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
