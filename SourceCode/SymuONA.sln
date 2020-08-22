@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ONA", "ONA\ONA.csproj", "{740EE4D3-7B6E-4F95-B9A6-C04A4AB548EE}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ONATests", "ONATests\ONATests.csproj", "{FD2B2444-B223-4B30-AD0F-5D9CE4154616}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{60243253-434A-4F6A-A673-613C1A208D9A}"
 	ProjectSection(SolutionItems) = preProject
 		..\CHANGELOG.md = ..\CHANGELOG.md
@@ -20,20 +16,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{60243253-4
 		..\ROADMAP.md = ..\ROADMAP.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SymuONA", "SymuONA\SymuONA.csproj", "{59F0A41D-4A92-4D10-A033-4127226C5DDB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SymuONATests", "SymuONATests\SymuONATests.csproj", "{0228C893-403B-4381-9B82-7FD50EA5619E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{740EE4D3-7B6E-4F95-B9A6-C04A4AB548EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{740EE4D3-7B6E-4F95-B9A6-C04A4AB548EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{740EE4D3-7B6E-4F95-B9A6-C04A4AB548EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{740EE4D3-7B6E-4F95-B9A6-C04A4AB548EE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FD2B2444-B223-4B30-AD0F-5D9CE4154616}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD2B2444-B223-4B30-AD0F-5D9CE4154616}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FD2B2444-B223-4B30-AD0F-5D9CE4154616}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FD2B2444-B223-4B30-AD0F-5D9CE4154616}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59F0A41D-4A92-4D10-A033-4127226C5DDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59F0A41D-4A92-4D10-A033-4127226C5DDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59F0A41D-4A92-4D10-A033-4127226C5DDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59F0A41D-4A92-4D10-A033-4127226C5DDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0228C893-403B-4381-9B82-7FD50EA5619E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0228C893-403B-4381-9B82-7FD50EA5619E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0228C893-403B-4381-9B82-7FD50EA5619E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0228C893-403B-4381-9B82-7FD50EA5619E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

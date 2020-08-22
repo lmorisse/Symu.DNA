@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Symu.ONA</AssemblyName>
+    <RootNamespace>Symu.ONA</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Symu.Common">
+      <HintPath>..\..\..\..\Symu.Common\Github\SourceCode\SymuCommon\bin\Debug\netstandard2.0\Symu.Common.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
