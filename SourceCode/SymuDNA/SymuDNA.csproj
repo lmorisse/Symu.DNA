@@ -13,11 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="OneModeNetworks\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="YC.QuickGraph" Version="3.7.4" />
+    <Folder Include="OneModeNetworks\Knowledge\" />
+    <Folder Include="TwoModesNetworks\Sphere\" />
   </ItemGroup>
 
 </Project>

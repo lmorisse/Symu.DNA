@@ -7,35 +7,35 @@
 
 #endregion
 
-#region using directives
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Symu.Repository.Networks.Knowledges;
+using Symu.Common.Interfaces.Entity;
 
-#endregion
-
-namespace Symu.Repository.Networks.Activities
+namespace SymuDNATests.Classes
 {
     /// <summary>
-    ///     Define an activity by its name and the list of knowledgeIds required by the activity
+    ///     Defines an activity (a task type)
     /// </summary>
-    public class Activity
+    /// <remarks>This entity is called a Task in classical organization network analysis theory, but it's confusing with a task on which agent works</remarks>
+    public class TestActivity: IActivity
     {
-        public Activity(string name)
+        public TestActivity(string name)
         {
             Name = name;
         }
 
         public string Name { get; set; }
-
         /// <summary>
         ///     List of knowledges required to work on this activity
         /// </summary>
-        public List<Knowledge> Knowledges { get; } = new List<Knowledge>();
+        public List<IKnowledge> Knowledges { get; } = new List<IKnowledge>();
 
-        public void AddKnowledge(Knowledge knowledge)
+        /// <summary>
+        /// Add knowledge to an activity
+        /// </summary>
+        /// <param name="knowledge"></param>
+        public void AddKnowledge(IKnowledge knowledge)
         {
             if (Knowledges.Contains(knowledge))
             {
@@ -50,7 +50,7 @@ namespace Symu.Repository.Networks.Activities
         /// </summary>
         /// <param name="agentKnowledgeIds"></param>
         /// <returns></returns>
-        public bool CheckKnowledgeIds(List<ushort> agentKnowledgeIds)
+        public bool CheckKnowledgeIds(List<IId> agentKnowledgeIds)
         {
             if (agentKnowledgeIds is null)
             {
@@ -58,6 +58,12 @@ namespace Symu.Repository.Networks.Activities
             }
 
             return Knowledges.Any(knowledge => agentKnowledgeIds.Contains(knowledge.Id));
+        }
+
+        public bool Equals(IActivity activity)
+        {
+            return activity is TestActivity test &&
+                   Name == test.Name;
         }
     }
 }

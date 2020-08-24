@@ -7,15 +7,14 @@
 
 #endregion
 
-namespace Symu.Repository.Networks.Beliefs
+using Symu.Common.Interfaces.Agent;
+using Symu.Common.Interfaces.Entity;
+
+namespace Symu.DNA.Activities
 {
-    /// <summary>
-    ///     Measure of the weight's belief
-    /// </summary>
-    public enum BeliefWeightLevel
+    public interface IAgentActivity
     {
-        NoWeight = 0,
-        RandomWeight = 1,
-        FullWeight = 2
+        IAgentId Id { get; }
+        IActivity Activity { get; set; }
     }
 }
