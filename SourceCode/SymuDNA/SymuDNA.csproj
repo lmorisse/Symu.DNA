@@ -2,14 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Symu.ONA</AssemblyName>
-    <RootNamespace>Symu.ONA</RootNamespace>
+    <AssemblyName>Symu.DNA</AssemblyName>
+    <RootNamespace>Symu.DNA</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <Reference Include="Symu.Common">
       <HintPath>..\..\..\..\Symu.Common\Github\SourceCode\SymuCommon\bin\Debug\netstandard2.0\Symu.Common.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="OneModeNetworks\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="YC.QuickGraph" Version="3.7.4" />
   </ItemGroup>
 
 </Project>
