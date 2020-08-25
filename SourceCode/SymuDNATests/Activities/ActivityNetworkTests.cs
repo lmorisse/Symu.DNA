@@ -24,7 +24,7 @@ using SymuDNATests.Classes;
 namespace SymuDNATests.Activities
 {
     [TestClass]
-    public class NetworkActivitiesTests
+    public class ActivityNetworkTests
     {
         private const string StrActivity1 = "a1";
         private const string StrActivity2 = "a2";
