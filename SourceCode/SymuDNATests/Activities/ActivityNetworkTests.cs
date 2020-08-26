@@ -38,10 +38,10 @@ namespace SymuDNATests.Activities
         private TestAgentActivity _agentActivity2;
 
         private readonly TestKnowledge _knowledge1 =
-            new TestKnowledge(1, 1);
+            new TestKnowledge(1);
 
         private readonly TestKnowledge _knowledge2 =
-            new TestKnowledge(2, 1);
+            new TestKnowledge(2);
 
         private readonly ActivityNetwork _network = new ActivityNetwork();
 

@@ -16,28 +16,18 @@ namespace SymuDNATests.Classes
     public class TestKnowledge : IKnowledge
     {
         private readonly UId _id;
-        public TestKnowledge(UId id, byte length)
+        public TestKnowledge(UId id)
         {
             _id = id;
-            Length = length;
         }
-        public TestKnowledge(ushort id, byte length)
+        public TestKnowledge(ushort id)
         {
             _id = new UId(id);
-            Length = length;
         }
         /// <summary>
         ///     The unique agentId of the resource
         /// </summary>
         public IId Id => _id;
-
-        /// <summary>
-        ///     Each area of knowledge is represented by a collection of KnowledgeBits
-        ///     The size define the length of the collection
-        ///     each bit represent a single atomic fact
-        ///     size range [0; 10]
-        /// </summary>
-        public byte Length { get; }
         public bool Equals(IKnowledge knowledge)
         {
             return knowledge is TestKnowledge test &&
