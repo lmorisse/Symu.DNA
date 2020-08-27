@@ -8,6 +8,7 @@
 #endregion
 
 using Symu.Common.Interfaces.Entity;
+using Symu.DNA.Knowledges;
 
 namespace SymuDNATests.Classes
 {    /// <summary>
