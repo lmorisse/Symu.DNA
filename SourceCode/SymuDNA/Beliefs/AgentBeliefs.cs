@@ -30,6 +30,11 @@ namespace Symu.DNA.Beliefs
         /// </summary>
         public List<IAgentBelief> List { get; } = new List<IAgentBelief>();
 
+        public bool Any()
+        {
+            return List.Any();
+        }
+
         public int Count => List.Count;
 
         public void Add(IAgentBelief agentBelief)

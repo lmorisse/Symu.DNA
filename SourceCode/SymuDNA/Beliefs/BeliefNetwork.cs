@@ -31,7 +31,7 @@ namespace Symu.DNA.Beliefs
     public class BeliefNetwork
     {
 
-        public RandomGenerator Model { get; set; } = new RandomGenerator();
+        //public RandomGenerator Model { get; set; } = new RandomGenerator();
 
         /// <summary>
         ///     Repository of all the Beliefs used during the simulation
