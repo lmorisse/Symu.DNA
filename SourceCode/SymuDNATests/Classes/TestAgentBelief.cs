@@ -9,22 +9,19 @@
 
 #region using directives
 
-using Symu.Common.Interfaces.Agent;
-using Symu.DNA.Activities;
+using Symu.Common.Interfaces.Entity;
+using Symu.DNA.Beliefs;
 
 #endregion
 
 namespace SymuDNATests.Classes
 {
-    public class TestAgentActivity : IAgentActivity
+    public class TestAgentBelief : IAgentBelief
     {
-        public TestAgentActivity(IAgentId id, IActivity activity)
+        public TestAgentBelief(IId beliefId)
         {
-            Id = id;
-            Activity = activity;
+            BeliefId = beliefId;
         }
-
-        public IAgentId Id { get; }
-        public IActivity Activity { get; set; }
+        public IId BeliefId { get; }
     }
 }
