@@ -16,10 +16,24 @@ namespace SymuDNATests.Classes
     /// </summary>
     public class TestAgentKnowledge : IAgentKnowledge
     {
+        internal float Value { get; set; }
         public IId KnowledgeId { get; }
         public TestAgentKnowledge(IId knowledgeId)
         {
             KnowledgeId = knowledgeId;
+        }
+        public TestAgentKnowledge(IId knowledgeId, float value): this(knowledgeId)
+        {
+            Value = value;
+        }
+
+        public float CompareTo(IAgentKnowledge other)
+        {
+            if (other is TestAgentKnowledge test)
+            {
+                return Value * test.Value;
+            }
+            return 0;
         }
     }
 }

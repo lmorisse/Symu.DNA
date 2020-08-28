@@ -8,13 +8,14 @@
 #endregion
 
 using Symu.Common.Interfaces.Entity;
+using Symu.Common.Interfaces;
 
 namespace Symu.DNA.Knowledges
 {
     /// <summary>
     /// Defines how who knows what
     /// </summary>
-    public interface IAgentKnowledge
+    public interface IAgentKnowledge : IComparable<IAgentKnowledge>
     {
         IId KnowledgeId { get; }
     }

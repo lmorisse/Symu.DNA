@@ -18,10 +18,20 @@ namespace SymuDNATests.Classes
 {
     public class TestAgentBelief : IAgentBelief
     {
+        internal float Value { get; set; }
         public TestAgentBelief(IId beliefId)
         {
             BeliefId = beliefId;
         }
         public IId BeliefId { get; }
+
+        public float CompareTo(IAgentBelief other)
+        {
+            if (other is TestAgentBelief test)
+            {
+                return Value * test.Value;
+            }
+            return 0;
+        }
     }
 }

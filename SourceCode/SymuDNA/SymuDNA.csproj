@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <Folder Include="OneModeNetworks\Knowledge\" />
-    <Folder Include="TwoModesNetworks\Sphere\" />
   </ItemGroup>
 
 </Project>

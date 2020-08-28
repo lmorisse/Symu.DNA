@@ -7,6 +7,7 @@
 
 #endregion
 
+using Symu.Common.Interfaces;
 using Symu.Common.Interfaces.Entity;
 
 namespace Symu.DNA.Beliefs
@@ -14,7 +15,7 @@ namespace Symu.DNA.Beliefs
     /// <summary>
     /// Defines how who beliefs what
     /// </summary>
-    public interface IAgentBelief
+    public interface IAgentBelief: IComparable<IAgentBelief>
     {
         IId BeliefId { get; }
     }

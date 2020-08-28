@@ -11,6 +11,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common;
+using Symu.Common.Classes;
 using Symu.DNA.Beliefs;
 using SymuDNATests.Classes;
 
