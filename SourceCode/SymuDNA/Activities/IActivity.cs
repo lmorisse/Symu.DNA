@@ -9,7 +9,7 @@
 
 using System.Collections.Generic;
 using Symu.Common.Interfaces.Entity;
-using IKnowledge = Symu.DNA.Knowledges.IKnowledge;
+using IKnowledge = Symu.DNA.OneModeNetworks.Knowledge.IKnowledge;
 
 namespace Symu.DNA.Activities
 {

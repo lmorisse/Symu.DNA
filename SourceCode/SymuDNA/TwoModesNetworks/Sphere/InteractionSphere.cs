@@ -16,9 +16,10 @@ using Symu.Common;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Math.ProbabilityDistributions;
 using Symu.DNA.Activities;
-using Symu.DNA.Knowledges;
 using Symu.DNA.OneModeNetworks.Belief;
+using Symu.DNA.OneModeNetworks.Knowledge;
 using Symu.DNA.TwoModesNetworks.AgentBelief;
+using Symu.DNA.TwoModesNetworks.AgentKnowledge;
 using Symu.DNA.TwoModesNetworks.Interactions;
 
 #endregion
@@ -231,7 +232,7 @@ namespace Symu.DNA.TwoModesNetworks.Sphere
                 ? SetRelativeBelief(agentI, agentJ, network.AgentBelief)
                 : 0;
             var relativeKnowledge = _model.RelativeKnowledgeWeight > Constants.Tolerance
-                ? SetRelativeKnowledge(agentI, agentJ, network.Knowledge)
+                ? SetRelativeKnowledge(agentI, agentJ, network.AgentKnowledge)
                 : 0;
             var relativeActivity = _model.RelativeActivityWeight > Constants.Tolerance
                 ? SetRelativeActivity(agentI, agentJ, network.Activities)
@@ -277,7 +278,7 @@ namespace Symu.DNA.TwoModesNetworks.Sphere
         ///     The closer two agents are in the knowledge area, the more likely they will be to interact.
         /// </summary>
         public static float SetRelativeKnowledge(IAgentId agentId1, IAgentId agentId2,
-            KnowledgeNetwork knowledgeNetwork)
+            AgentKnowledgeNetwork knowledgeNetwork)
         {
             if (knowledgeNetwork == null)
             {

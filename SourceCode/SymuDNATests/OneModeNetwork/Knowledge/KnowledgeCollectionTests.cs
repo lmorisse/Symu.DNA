@@ -10,12 +10,12 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.DNA.Knowledges;
+using Symu.DNA.OneModeNetworks.Knowledge;
 using SymuDNATests.Classes;
 
 #endregion
 
-namespace SymuDNATests.Knowledges
+namespace SymuDNATests.OneModeNetwork.Knowledge
 {
     [TestClass]
     public class KnowledgeCollectionTests

@@ -71,7 +71,7 @@ namespace SymuDNATests
             _network.Roles.Add(_testAgentRole);
             _network.Resources.Add(_component);
             _network.Knowledge.AddKnowledge(_knowledge);
-            _network.Knowledge.Add(TeammateId, _agentKnowledge);
+            _network.AgentKnowledge.Add(TeammateId, _agentKnowledge);
             _network.Belief.AddBelief(_belief);
             var agentBelief = new TestAgentBelief(_belief.Id);
             _network.AgentBelief.Add(TeammateId, agentBelief);
@@ -82,9 +82,10 @@ namespace SymuDNATests
             Assert.IsFalse(_network.Roles.Any());
             Assert.IsFalse(_network.Resources.Any());
             Assert.IsFalse(_network.Knowledge.Any());
-            Assert.IsFalse(_network.Knowledge.Any());
+            Assert.IsFalse(_network.AgentKnowledge.Any());
             Assert.IsFalse(_network.Activities.Any());
             Assert.IsFalse(_network.Belief.Any());
+            Assert.IsFalse(_network.AgentBelief.Any());
         }
 
         /// <summary>
@@ -150,8 +151,7 @@ namespace SymuDNATests
             _network.Groups.AddAgent(_agentGroup1, _teamId);
             _network.Roles.Add(_testAgentRole);
             _network.Resources.Add(TeammateId, _agentResource);
-            _network.Knowledge.AddKnowledge(_knowledge);
-            _network.Knowledge.Add(TeammateId, _agentKnowledge);
+            _network.AgentKnowledge.Add(TeammateId, _agentKnowledge);
             _network.Belief.AddBelief(_belief);
             _network.Activities.AddActivities(TeammateId, _teamId, new List<IAgentActivity> {new TestAgentActivity(TeammateId, _activity)});
             _network.RemoveAgent(TeammateId);
@@ -159,7 +159,7 @@ namespace SymuDNATests
             Assert.AreEqual(0, _network.Groups.GetAgentsCount(_teamId, TeammateId.ClassId));
             Assert.IsFalse(_network.Roles.IsMember(TeammateId, _teamId.ClassId));
             Assert.IsFalse(_network.Resources.HasResource(TeammateId, _component.Id, new TestResourceUsage(IsWorkingOn)));
-            Assert.IsFalse(_network.Knowledge.Any());
+            Assert.IsFalse(_network.AgentKnowledge.Any());
             Assert.IsFalse(_network.AgentBelief.Any());
             Assert.IsFalse(_network.Agents.Any());
             Assert.IsFalse(_network.Activities.AgentHasActivitiesOn(TeammateId, _teamId));

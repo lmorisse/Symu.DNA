@@ -13,13 +13,14 @@ using System;
 using Symu.Common.Interfaces.Agent;
 using Symu.DNA.Activities;
 using Symu.DNA.Groups;
-using Symu.DNA.Knowledges;
 using Symu.DNA.OneModeNetworks.Agent;
 using Symu.DNA.OneModeNetworks.Belief;
 using Symu.DNA.OneModeNetworks.Event;
+using Symu.DNA.OneModeNetworks.Knowledge;
 using Symu.DNA.Resources;
 using Symu.DNA.Roles;
 using Symu.DNA.TwoModesNetworks.AgentBelief;
+using Symu.DNA.TwoModesNetworks.AgentKnowledge;
 using Symu.DNA.TwoModesNetworks.Interactions;
 using Symu.DNA.TwoModesNetworks.Sphere;
 
@@ -73,6 +74,11 @@ namespace Symu.DNA
         ///     Who (agentId) knows what (Information)
         /// </summary>
         public KnowledgeNetwork Knowledge { get; } = new KnowledgeNetwork();
+        /// <summary>
+        ///     Knowledge network
+        ///     Who (agentId) knows what (Information)
+        /// </summary>
+        public AgentKnowledgeNetwork AgentKnowledge { get; } = new AgentKnowledgeNetwork();
 
         /// <summary>
         ///     Belief network
@@ -111,14 +117,12 @@ namespace Symu.DNA
             Roles.Clear();
             Resources.Clear();
             Knowledge.Clear();
+            AgentKnowledge.Clear();
             Belief.Clear();
             AgentBelief.Clear();
             Activities.Clear(); 
             Agents.Clear();
             Events.Clear();
-
-            //Enculturation.Clear();
-            //Influences.Clear();
         }
 
         public void RemoveAgent(IAgentId agentId)
@@ -127,12 +131,10 @@ namespace Symu.DNA
             Groups.RemoveAgent(agentId);
             Roles.RemoveAgent(agentId);
             Resources.RemoveAgent(agentId);
-            Knowledge.RemoveAgent(agentId);
+            AgentKnowledge.RemoveAgent(agentId);
             Activities.RemoveAgent(agentId);
             AgentBelief.RemoveAgent(agentId);
             Agents.RemoveAgent(agentId);
-            //Enculturation.RemoveAgent(agentId);
-            //Influences.RemoveAgent(agentId);
         }
 
         #endregion

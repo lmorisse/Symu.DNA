@@ -18,7 +18,7 @@ using SymuDNATests.Classes;
 namespace SymuDNATests.OneModeNetwork.Belief
 {
     [TestClass]
-    public class NetworkBeliefsTests
+    public class BeliefNetworkTests
     {
         private readonly TestBelief _belief = new TestBelief(1);
 

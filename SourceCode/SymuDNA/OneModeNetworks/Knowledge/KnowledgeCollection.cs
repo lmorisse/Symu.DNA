@@ -15,11 +15,11 @@ using Symu.Common.Interfaces.Entity;
 
 #endregion
 
-namespace Symu.DNA.Knowledges
+namespace Symu.DNA.OneModeNetworks.Knowledge
 {
     /// <summary>
     ///     List of all the knowledges
-    ///     Use by NetworkKnowledge
+    ///     Used by AgentKnowledgeNetwork
     /// </summary>
     /// <example>
     ///     hard skills

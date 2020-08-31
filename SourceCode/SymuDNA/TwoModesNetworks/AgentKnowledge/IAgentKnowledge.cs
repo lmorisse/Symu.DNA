@@ -7,18 +7,16 @@
 
 #endregion
 
+using Symu.Common.Interfaces;
 using Symu.Common.Interfaces.Entity;
 
-namespace Symu.DNA.Knowledges
-{    /// <summary>
-    ///     Describe an area of knowledge
+namespace Symu.DNA.TwoModesNetworks.AgentKnowledge
+{
+    /// <summary>
+    /// Defines how who knows what
     /// </summary>
-    public interface IKnowledge
+    public interface IAgentKnowledge : IComparable<IAgentKnowledge>
     {
-        /// <summary>
-        ///     Unique identifier af the knowledge
-        /// </summary>
-        IId Id { get; }        
-        bool Equals(IKnowledge knowledge);
+        IId KnowledgeId { get; }
     }
 }

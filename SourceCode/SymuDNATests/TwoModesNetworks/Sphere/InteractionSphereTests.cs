@@ -144,7 +144,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
         private void AddKnowledge(AgentId agentId, float knowledgeValue)
         {
             var agentKnowledge = new TestAgentKnowledge(_knowledge.Id);
-            _network.Knowledge.Add(agentId, agentKnowledge);
+            _network.AgentKnowledge.Add(agentId, agentKnowledge);
             agentKnowledge.Value = knowledgeValue;
         }
 
@@ -279,7 +279,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
         public void SetRelativeExpertiseTest()
         {
             Assert.AreEqual(0,
-                InteractionSphere.SetRelativeKnowledge(_agentId1, _agentId2, _network.Knowledge));
+                InteractionSphere.SetRelativeKnowledge(_agentId1, _agentId2, _network.AgentKnowledge));
         }
 
         /// <summary>
@@ -291,7 +291,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
             AddKnowledge(_agentId1, 1);
             AddKnowledge(_agentId2, 0);
             Assert.AreEqual(0,
-                InteractionSphere.SetRelativeKnowledge(_agentId1, _agentId2, _network.Knowledge));
+                InteractionSphere.SetRelativeKnowledge(_agentId1, _agentId2, _network.AgentKnowledge));
         }
 
         /// <summary>
@@ -303,7 +303,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
             AddKnowledge(_agentId1, 1);
             AddKnowledge(_agentId2, 1);
             Assert.AreEqual(1,
-                InteractionSphere.SetRelativeKnowledge(_agentId1, _agentId2, _network.Knowledge));
+                InteractionSphere.SetRelativeKnowledge(_agentId1, _agentId2, _network.AgentKnowledge));
         }
 
         #endregion

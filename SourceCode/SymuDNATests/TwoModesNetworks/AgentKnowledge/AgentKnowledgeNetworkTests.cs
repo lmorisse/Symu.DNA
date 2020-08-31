@@ -15,29 +15,29 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Interfaces.Entity;
-using Symu.DNA.Knowledges;
+using Symu.DNA.TwoModesNetworks.AgentKnowledge;
 using SymuDNATests.Classes;
 
 #endregion
 
-namespace SymuDNATests.Knowledges
+namespace SymuDNATests.TwoModesNetworks.AgentKnowledge
 {
     [TestClass]
-    public class NetworkKnowledgesTests
+    public class AgentKnowledgeNetworkTests
     {
         private readonly AgentId _agentId = new AgentId(1, 1);
 
         private readonly TestKnowledge _knowledge =
             new TestKnowledge(1);
 
-        private readonly KnowledgeNetwork _knowledgeNetwork = new KnowledgeNetwork();
+        private readonly AgentKnowledgeNetwork _knowledgeNetwork = new AgentKnowledgeNetwork();
         private TestAgentKnowledge _agentKnowledge;
 
         [TestInitialize]
         public void Initialize()
         {
             _agentKnowledge = new TestAgentKnowledge(_knowledge.Id);
-            _knowledgeNetwork.AddKnowledge(_knowledge);
+            //_knowledgeNetwork.AddKnowledge(_knowledge);
         }
 
 

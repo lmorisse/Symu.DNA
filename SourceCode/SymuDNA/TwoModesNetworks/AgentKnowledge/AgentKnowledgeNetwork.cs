@@ -13,14 +13,12 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Symu.Common;
-using Symu.Common.Classes;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Interfaces.Entity;
 
 #endregion
 
-namespace Symu.DNA.Knowledges
+namespace Symu.DNA.TwoModesNetworks.AgentKnowledge
 {
     /// <summary>
     ///     Knowledge network
@@ -29,91 +27,33 @@ namespace Symu.DNA.Knowledges
     ///     Value : the list of NetworkInformation the agent knows
     /// </summary>
     /// <example></example>
-    public class KnowledgeNetwork
+    public class AgentKnowledgeNetwork
     {
-        /// <summary>
-        ///     Describe the knowledge model :
-        ///     How to generate knowledge Network
-        /// </summary>
-        public RandomGenerator Model { get; set; } = RandomGenerator.RandomBinary;
-
-        /// <summary>
-        ///     Repository of all the knowledges used during the simulation
-        /// </summary>
-        public KnowledgeCollection Repository { get; } = new KnowledgeCollection();
-
         /// <summary>
         ///     List
         ///     Key => ComponentId
         ///     Values => AgentExpertise : list of KnowledgeIds/KnowledgeBits/KnowledgeLevel of an agent
         /// </summary>
-        public ConcurrentDictionary<IAgentId, AgentExpertise> AgentKnowledgeNetwork { get; } =
+        public ConcurrentDictionary<IAgentId, AgentExpertise> List { get; } =
             new ConcurrentDictionary<IAgentId, AgentExpertise>();
 
         public bool Any()
         {
-            return AgentKnowledgeNetwork.Any();
+            return List.Any();
         }
 
         public void Clear()
         {
-            Repository.Clear();
-            AgentKnowledgeNetwork.Clear();
+            List.Clear();
         }
-
-        #region Knowledge repository
-
-        public IKnowledge GetKnowledge(IId knowledgeId)
-        {
-            return Repository.GetKnowledge(knowledgeId);
-        }
-        public TKnowledge GetKnowledge<TKnowledge>(IId knowledgeId) where TKnowledge : IKnowledge
-        {
-            return (TKnowledge) GetKnowledge(knowledgeId);
-        }
-
-        /// <summary>
-        ///     Add a Knowledge to the repository
-        ///     Should be called only by NetWork, not directly to add belief in parallel
-        /// </summary>
-        public void AddKnowledge(IKnowledge knowledge)
-        {
-            if (Repository.Contains(knowledge))
-            {
-                return;
-            }
-
-            Repository.Add(knowledge);
-        }
-
-        /// <summary>
-        ///     Add a set of Knowledge to the repository
-        /// </summary>
-        public void AddKnowledges(IEnumerable<IKnowledge> knowledges)
-        {
-            if (knowledges is null)
-            {
-                throw new ArgumentNullException(nameof(knowledges));
-            }
-
-            foreach (var knowledge in knowledges)
-            {
-                AddKnowledge(knowledge);
-            }
-        }
-
-        #endregion
-
-        #region Agent Knowledge
-
         public bool Exists(IAgentId agentId, IId knowledgeId)
         {
-            return Exists(agentId) && AgentKnowledgeNetwork[agentId].Contains(knowledgeId);
+            return Exists(agentId) && List[agentId].Contains(knowledgeId);
         }
 
         public bool Exists(IAgentId agentId)
         {
-            return AgentKnowledgeNetwork.ContainsKey(agentId);
+            return List.ContainsKey(agentId);
         }
 
         public void Add(IAgentId agentId, AgentExpertise expertise)
@@ -126,9 +66,9 @@ namespace Symu.DNA.Knowledges
             AddAgentId(agentId, expertise);
 
 
-            foreach (var agentKnowledge in expertise.List.Where(a => !AgentKnowledgeNetwork[agentId].Contains(a)))
+            foreach (var agentKnowledge in expertise.List.Where(a => !List[agentId].Contains(a)))
             {
-                AgentKnowledgeNetwork[agentId].Add(agentKnowledge);
+                List[agentId].Add(agentKnowledge);
             }
         }
 
@@ -154,7 +94,7 @@ namespace Symu.DNA.Knowledges
 
             if (!Exists(agentId, agentKnowledge.KnowledgeId))
             {
-                AgentKnowledgeNetwork[agentId].Add(agentKnowledge);
+                List[agentId].Add(agentKnowledge);
             }
         }
 
@@ -162,7 +102,7 @@ namespace Symu.DNA.Knowledges
         {
             if (!Exists(agentId))
             {
-                AgentKnowledgeNetwork.TryAdd(agentId, agentExpertise);
+                List.TryAdd(agentId, agentExpertise);
             }
         }
 
@@ -170,7 +110,7 @@ namespace Symu.DNA.Knowledges
         {
             if (!Exists(agentId))
             {
-                AgentKnowledgeNetwork.TryAdd(agentId, new AgentExpertise());
+                List.TryAdd(agentId, new AgentExpertise());
             }
         }
 
@@ -181,7 +121,7 @@ namespace Symu.DNA.Knowledges
                 throw new ArgumentNullException(nameof(agentIds));
             }
 
-            return agentIds.Where(agentId => Exists(agentId) && AgentKnowledgeNetwork[agentId].Contains(knowledgeId))
+            return agentIds.Where(agentId => Exists(agentId) && List[agentId].Contains(knowledgeId))
                 .ToList();
         }
 
@@ -192,12 +132,12 @@ namespace Symu.DNA.Knowledges
                 throw new NullReferenceException(nameof(agentId));
             }
 
-            return AgentKnowledgeNetwork[agentId].GetKnowledgeIds();
+            return List[agentId].GetKnowledgeIds();
         }
 
         public void RemoveAgent(IAgentId agentId)
         {
-            AgentKnowledgeNetwork.TryRemove(agentId, out _);
+            List.TryRemove(agentId, out _);
         }
 
         /// <summary>
@@ -212,7 +152,7 @@ namespace Symu.DNA.Knowledges
                 throw new NullReferenceException(nameof(agentId));
             }
 
-            return AgentKnowledgeNetwork[agentId];
+            return List[agentId];
         }
 
         /// <summary>
@@ -228,7 +168,7 @@ namespace Symu.DNA.Knowledges
                 throw new NullReferenceException(nameof(agentId));
             }
 
-            return AgentKnowledgeNetwork[agentId].GetAgentKnowledge(knowledgeId);
+            return List[agentId].GetAgentKnowledge(knowledgeId);
         }
 
         /// <summary>
@@ -241,7 +181,5 @@ namespace Symu.DNA.Knowledges
         {
             return (TAgentKnowledge)GetAgentKnowledge(agentId, knowledgeId);
         }
-
-        #endregion
     }
 }

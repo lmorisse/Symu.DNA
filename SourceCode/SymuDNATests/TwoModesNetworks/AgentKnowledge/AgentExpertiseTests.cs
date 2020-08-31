@@ -11,12 +11,12 @@
 
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.DNA.Knowledges;
+using Symu.DNA.TwoModesNetworks.AgentKnowledge;
 using SymuDNATests.Classes;
 
 #endregion
 
-namespace SymuDNATests.Knowledges
+namespace SymuDNATests.TwoModesNetworks.AgentKnowledge
 {
     [TestClass]
     public class AgentExpertiseTests
