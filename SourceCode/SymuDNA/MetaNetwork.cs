@@ -20,6 +20,7 @@ using Symu.DNA.Resources;
 using Symu.DNA.Roles;
 using Symu.DNA.TwoModesNetworks.Interactions;
 using Symu.DNA.TwoModesNetworks.Sphere;
+using Symu.Repository.Networks.Events;
 
 #endregion
 
@@ -84,6 +85,11 @@ namespace Symu.DNA
         public ActivityNetwork Activities { get; } = new ActivityNetwork();
 
         /// <summary>
+        /// occurrences or phenomena that happen
+        /// </summary>
+        public EventNetwork Events { get; } = new EventNetwork();
+
+        /// <summary>
         ///     Derived Parameters from others networks.
         ///     these parameters are use indirectly to change agent behavior.
         /// </summary>
@@ -101,6 +107,7 @@ namespace Symu.DNA
             Beliefs.Clear();
             Activities.Clear(); 
             Agents.Clear();
+            Events.Clear();
 
             //Enculturation.Clear();
             //Influences.Clear();
