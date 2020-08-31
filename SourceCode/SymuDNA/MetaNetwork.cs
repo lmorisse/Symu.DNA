@@ -12,15 +12,16 @@
 using System;
 using Symu.Common.Interfaces.Agent;
 using Symu.DNA.Activities;
-using Symu.DNA.Agent;
-using Symu.DNA.Beliefs;
 using Symu.DNA.Groups;
 using Symu.DNA.Knowledges;
+using Symu.DNA.OneModeNetworks.Agent;
+using Symu.DNA.OneModeNetworks.Belief;
+using Symu.DNA.OneModeNetworks.Event;
 using Symu.DNA.Resources;
 using Symu.DNA.Roles;
+using Symu.DNA.TwoModesNetworks.AgentBelief;
 using Symu.DNA.TwoModesNetworks.Interactions;
 using Symu.DNA.TwoModesNetworks.Sphere;
-using Symu.Repository.Networks.Events;
 
 #endregion
 
@@ -34,6 +35,7 @@ namespace Symu.DNA
         public MetaNetwork(InteractionSphereModel interactionSphere)
         {
             InteractionSphere = new InteractionSphere(interactionSphere);
+            AgentBelief = new AgentBeliefNetwork();
         }
 
 
@@ -74,9 +76,14 @@ namespace Symu.DNA
 
         /// <summary>
         ///     Belief network
+        ///     List of Beliefs
+        /// </summary>
+        public BeliefNetwork Belief { get; } = new BeliefNetwork();
+        /// <summary>
+        ///     Agent * belief network
         ///     Who (agentId) believes what (Information)
         /// </summary>
-        public BeliefNetwork Beliefs { get; } = new BeliefNetwork();
+        public AgentBeliefNetwork AgentBelief { get; } 
 
         /// <summary>
         ///     Kanban activities network
@@ -104,7 +111,8 @@ namespace Symu.DNA
             Roles.Clear();
             Resources.Clear();
             Knowledge.Clear();
-            Beliefs.Clear();
+            Belief.Clear();
+            AgentBelief.Clear();
             Activities.Clear(); 
             Agents.Clear();
             Events.Clear();
@@ -121,7 +129,7 @@ namespace Symu.DNA
             Resources.RemoveAgent(agentId);
             Knowledge.RemoveAgent(agentId);
             Activities.RemoveAgent(agentId);
-            Beliefs.RemoveAgent(agentId);
+            AgentBelief.RemoveAgent(agentId);
             Agents.RemoveAgent(agentId);
             //Enculturation.RemoveAgent(agentId);
             //Influences.RemoveAgent(agentId);

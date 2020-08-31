@@ -7,19 +7,16 @@
 
 #endregion
 
-using System;
-using System.Data.SqlTypes;
-using Symu.Common.Interfaces.Agent;
+using Symu.Common.Interfaces;
+using Symu.Common.Interfaces.Entity;
 
-namespace Symu.DNA.Agent
+namespace Symu.DNA.TwoModesNetworks.AgentBelief
 {
     /// <summary>
-    /// Interface for agent used in the MetaNetwork
+    /// Defines how who beliefs what
     /// </summary>
-    public interface IAgent: INullable, IDisposable
+    public interface IAgentBelief: IComparable<IAgentBelief>
     {
-        IAgentId AgentId {get;
-            set;
-        }
+        IId BeliefId { get; }
     }
 }

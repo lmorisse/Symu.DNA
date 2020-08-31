@@ -10,20 +10,17 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.Common;
-using Symu.Common.Classes;
-using Symu.DNA.Beliefs;
+using Symu.DNA.TwoModesNetworks.AgentBelief;
 using SymuDNATests.Classes;
 
 #endregion
 
 
-namespace SymuDNATests.Beliefs
+namespace SymuDNATests.TwoModesNetworks.AgentBelief
 {
     [TestClass]
     public class AgentBeliefsTests
     {
-        private const RandomGenerator Model = new RandomGenerator();
         private TestAgentBelief _agentBelief ;
         private readonly TestBelief _belief = new TestBelief(1);
         private readonly AgentBeliefs _beliefs = new AgentBeliefs();

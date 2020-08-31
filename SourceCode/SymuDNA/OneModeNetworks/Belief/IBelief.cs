@@ -7,16 +7,19 @@
 
 #endregion
 
-using Symu.Common.Interfaces;
 using Symu.Common.Interfaces.Entity;
 
-namespace Symu.DNA.Beliefs
+namespace Symu.DNA.OneModeNetworks.Belief
 {
     /// <summary>
-    /// Defines how who beliefs what
+    ///     Describe a belief, based on knowledge/fact
     /// </summary>
-    public interface IAgentBelief: IComparable<IAgentBelief>
+    public interface IBelief
     {
-        IId BeliefId { get; }
+        /// <summary>
+        ///     Unique identifier af the knowledge
+        /// </summary>
+        IId Id { get; }        
+        bool Equals(IBelief belief);
     }
 }

@@ -7,7 +7,7 @@
 
 #endregion
 
-namespace Symu.Repository.Networks.Events
+namespace Symu.DNA.OneModeNetworks.Event
 {
     /// <summary>
     /// Interface of event :

@@ -16,8 +16,9 @@ using Symu.Common;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Math.ProbabilityDistributions;
 using Symu.DNA.Activities;
-using Symu.DNA.Beliefs;
 using Symu.DNA.Knowledges;
+using Symu.DNA.OneModeNetworks.Belief;
+using Symu.DNA.TwoModesNetworks.AgentBelief;
 using Symu.DNA.TwoModesNetworks.Interactions;
 
 #endregion
@@ -227,7 +228,7 @@ namespace Symu.DNA.TwoModesNetworks.Sphere
                 : 0;
 
             var relativeBelief = _model.RelativeBeliefWeight > Constants.Tolerance
-                ? SetRelativeBelief(agentI, agentJ, network.Beliefs)
+                ? SetRelativeBelief(agentI, agentJ, network.AgentBelief)
                 : 0;
             var relativeKnowledge = _model.RelativeKnowledgeWeight > Constants.Tolerance
                 ? SetRelativeKnowledge(agentI, agentJ, network.Knowledge)
@@ -244,7 +245,7 @@ namespace Symu.DNA.TwoModesNetworks.Sphere
         /// <summary>
         ///     The closer two agents are in the belief area, the more likely they will be to interact.
         /// </summary>
-        public static float SetRelativeBelief(IAgentId agentId1, IAgentId agentId2, BeliefNetwork beliefNetwork)
+        public static float SetRelativeBelief(IAgentId agentId1, IAgentId agentId2, AgentBeliefNetwork beliefNetwork)
         {
             if (beliefNetwork == null)
             {

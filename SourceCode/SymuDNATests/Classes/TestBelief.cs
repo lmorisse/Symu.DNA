@@ -8,7 +8,7 @@
 #endregion
 
 using Symu.Common.Interfaces.Entity;
-using Symu.DNA.Beliefs;
+using Symu.DNA.OneModeNetworks.Belief;
 
 namespace SymuDNATests.Classes
 {

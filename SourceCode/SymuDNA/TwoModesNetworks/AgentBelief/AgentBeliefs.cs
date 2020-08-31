@@ -16,7 +16,7 @@ using Symu.Common.Interfaces.Entity;
 
 #endregion
 
-namespace Symu.DNA.Beliefs
+namespace Symu.DNA.TwoModesNetworks.AgentBelief
 {
     /// <summary>
     ///     Expertise of an agent is defined by the list of all its knowledge (hard skills)  x KnowledgeLevel

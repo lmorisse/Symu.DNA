@@ -17,7 +17,7 @@ using Symu.Common.Interfaces.Entity;
 
 #endregion
 
-namespace Symu.DNA.Agent
+namespace Symu.DNA.OneModeNetworks.Agent
 {
     /// <summary>
     ///     Network agents of this environment

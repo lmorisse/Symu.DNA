@@ -16,7 +16,7 @@ using Symu.Common.Interfaces.Entity;
 
 #endregion
 
-namespace Symu.DNA.Beliefs
+namespace Symu.DNA.OneModeNetworks.Belief
 {
     /// <summary>
     ///     List of all the Beliefs
@@ -63,11 +63,6 @@ namespace Symu.DNA.Beliefs
         public IBelief GetBelief(IId beliefId)
         {
             return List.Find(k => k.Id.Equals(beliefId));
-        }
-
-        public TBelief GetBelief<TBelief>(IId beliefId) where TBelief : IBelief
-        {
-            return (TBelief)GetBelief(beliefId);
         }
 
         public bool Exists(IId beliefId)

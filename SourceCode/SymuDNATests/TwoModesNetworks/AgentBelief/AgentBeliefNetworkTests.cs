@@ -12,51 +12,33 @@
 using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.Common;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Interfaces.Entity;
-using Symu.DNA.Beliefs;
+using Symu.DNA.TwoModesNetworks.AgentBelief;
 using SymuDNATests.Classes;
 
 #endregion
 
-namespace SymuDNATests.Beliefs
+namespace SymuDNATests.TwoModesNetworks.AgentBelief
 {
     [TestClass]
-    public class NetworkBeliefsTests
+    public class AgentBeliefNetworkTests
     {
         private readonly AgentId _agentId = new AgentId(1, 1);
         private readonly TestBelief _belief = new TestBelief(1);
-
-        private readonly BeliefNetwork _network = new BeliefNetwork();
+        private AgentBeliefNetwork _network ;
         private TestAgentBelief _agentBelief;
 
         [TestInitialize]
         public void Initialize()
         {
+            _network = new AgentBeliefNetwork();
             _agentBelief = new TestAgentBelief(_belief.Id);
         }
-        [TestMethod]
-        public void AddBeliefTest()
-        {
-            Assert.IsFalse(_network.Exists(_belief));
-            _network.AddBelief(_belief);
-            Assert.IsTrue(_network.Exists(_belief));
-        }
-
-        [TestMethod]
-        public void AddBeliefTest1()
-        {
-            Assert.IsFalse(_network.Exists(_belief.Id));
-            _network.AddBelief(_belief);
-            Assert.IsTrue(_network.Exists(_belief.Id));
-        }
-
+        
         [TestMethod]
         public void AnyTest()
         {
-            Assert.IsFalse(_network.Any());
-            _network.AddBelief(_belief);
             Assert.IsFalse(_network.Any());
             _network.Add(_agentId, _agentBelief);
             Assert.IsTrue(_network.Any());
@@ -65,18 +47,9 @@ namespace SymuDNATests.Beliefs
         [TestMethod]
         public void ClearTest()
         {
-            _network.AddBelief(_belief);
             _network.AddAgentId(_agentId);
             _network.Clear();
             Assert.IsFalse(_network.Any());
-        }
-
-        [TestMethod]
-        public void GetBeliefTest()
-        {
-            Assert.IsNull(_network.GetBelief(_belief.Id));
-            _network.AddBelief(_belief);
-            Assert.IsNotNull(_network.GetBelief(_belief.Id));
         }
 
         [TestMethod]
@@ -103,7 +76,7 @@ namespace SymuDNATests.Beliefs
             _network.RemoveAgent(_agentId);
             _network.Add(_agentId, _agentBelief);
             _network.RemoveAgent(_agentId);
-            Assert.IsFalse(_network.Exists(_belief));
+            Assert.IsFalse(_network.Any());
         }
 
         [TestMethod]

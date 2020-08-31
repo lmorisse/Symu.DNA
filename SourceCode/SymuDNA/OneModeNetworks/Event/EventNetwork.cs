@@ -13,12 +13,11 @@
 
 #region using directives
 
-using System;
 using System.Collections.Generic;
 
 #endregion
 
-namespace Symu.Repository.Networks.Events
+namespace Symu.DNA.OneModeNetworks.Event
 {
     /// <summary>
     ///     EventNetwork helps you schedule one shot events that happen during the simulation

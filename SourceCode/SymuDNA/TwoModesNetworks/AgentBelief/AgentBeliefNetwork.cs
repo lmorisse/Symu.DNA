@@ -13,13 +13,12 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Symu.Common;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Interfaces.Entity;
 
 #endregion
 
-namespace Symu.DNA.Beliefs
+namespace Symu.DNA.TwoModesNetworks.AgentBelief
 {
     /// <summary>
     ///     Belief network
@@ -28,83 +27,37 @@ namespace Symu.DNA.Beliefs
     ///     Value : the list of NetworkInformation the agent knows
     /// </summary>
     /// <example></example>
-    public class BeliefNetwork
+    public class AgentBeliefNetwork
     {
-
-        //public RandomGenerator Model { get; set; } = new RandomGenerator();
-
-        /// <summary>
-        ///     Repository of all the Beliefs used during the simulation
-        /// </summary>
-        public BeliefCollection Repository { get; } = new BeliefCollection();
 
         /// <summary>
         ///     List
         ///     Key => ComponentId
         ///     Values => AgentBelief : list of BeliefIds/BeliefBits/BeliefLevel of an agent
         /// </summary>
-        public ConcurrentDictionary<IAgentId, AgentBeliefs> AgentsRepository { get; } =
+        public ConcurrentDictionary<IAgentId, AgentBeliefs> List { get; } =
             new ConcurrentDictionary<IAgentId, AgentBeliefs>();
 
-        public int Count => AgentsRepository.Count;
+        public int Count => List.Count;
 
         public bool Any()
         {
-            return AgentsRepository.Any();
+            return List.Any();
         }
 
         public void Clear()
         {
-            Repository.Clear();
-            AgentsRepository.Clear();
+            List.Clear();
         }
-
-        #region Beliefs repository
-
-        public IBelief GetBelief(IId beliefId)
-        {
-            return Repository.GetBelief(beliefId);
-        }
-        public TBelief GetBelief<TBelief>(IId beliefId) where TBelief : IBelief
-        {
-            return (TBelief)GetBelief(beliefId);
-        }
-
-        /// <summary>
-        ///     Add a Belief to the repository
-        /// </summary>
-        public void AddBelief(IBelief belief)
-        {
-            if (Exists(belief))
-            {
-                return;
-            }
-
-            Repository.Add(belief);
-        }
-
-        public bool Exists(IBelief belief)
-        {
-            return Repository.Contains(belief);
-        }
-
-        public bool Exists(IId beliefId)
-        {
-            return Repository.Exists(beliefId);
-        }
-
-        #endregion
-
-        #region Agent Beliefs
 
         public bool Exists(IAgentId agentId)
         {
-            return AgentsRepository.ContainsKey(agentId);
+            return List.ContainsKey(agentId);
         }
 
         public bool Exists(IAgentId agentId, IId beliefId)
         {
-            return Exists(agentId) && AgentsRepository[agentId].Contains(beliefId);
+            return Exists(agentId) && List[agentId].Contains(beliefId);
         }
 
         public void Add(IAgentId agentId, IAgentBelief agentBelief)
@@ -127,9 +80,9 @@ namespace Symu.DNA.Beliefs
                 throw new ArgumentNullException(nameof(agentBelief));
             }
 
-            if (!AgentsRepository[agentId].Contains(agentBelief.BeliefId))
+            if (!List[agentId].Contains(agentBelief.BeliefId))
             {
-                AgentsRepository[agentId].Add(agentBelief);
+                List[agentId].Add(agentBelief);
             }
         }
 
@@ -137,13 +90,13 @@ namespace Symu.DNA.Beliefs
         {
             if (!Exists(agentId))
             {
-                AgentsRepository.TryAdd(agentId, new AgentBeliefs());
+                List.TryAdd(agentId, new AgentBeliefs());
             }
         }
 
         public void RemoveAgent(IAgentId agentId)
         {
-            AgentsRepository.TryRemove(agentId, out _);
+            List.TryRemove(agentId, out _);
         }
 
         /// <summary>
@@ -158,7 +111,7 @@ namespace Symu.DNA.Beliefs
                 throw new NullReferenceException(nameof(agentId));
             }
 
-            return AgentsRepository[agentId];
+            return List[agentId];
         }
 
         public IEnumerable<IId> GetBeliefIds(IAgentId agentId)
@@ -168,7 +121,7 @@ namespace Symu.DNA.Beliefs
                 throw new NullReferenceException(nameof(agentId));
             }
 
-            return AgentsRepository[agentId].GetBeliefIds();
+            return List[agentId].GetBeliefIds();
         }
 
         /// <summary>
@@ -198,6 +151,5 @@ namespace Symu.DNA.Beliefs
         {
             return (TAgentBelief) GetAgentBelief(agentId, beliefId);
         }
-        #endregion
     }
 }

@@ -49,7 +49,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
             _agents.Add(_agentId1);
             _agents.Add(_agentId2);
             _network.Knowledge.AddKnowledge(_knowledge);
-            _network.Beliefs.AddBelief(_belief);
+            _network.Belief.AddBelief(_belief);
             _network.Activities.AddActivity(_activity, _groupId);
         }
 
@@ -157,7 +157,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
         private void AddBelief(AgentId agentId, float beliefValue)
         {
             var agentBelief = new TestAgentBelief(_belief.Id);
-            _network.Beliefs.Add(agentId, agentBelief);
+            _network.AgentBelief.Add(agentId, agentBelief);
             agentBelief.Value = beliefValue;
         }
 
@@ -221,7 +221,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
         [TestMethod]
         public void SetRelativeBeliefTest()
         {
-            Assert.AreEqual(0, InteractionSphere.SetRelativeBelief(_agentId1, _agentId2, _network.Beliefs));
+            Assert.AreEqual(0, InteractionSphere.SetRelativeBelief(_agentId1, _agentId2, _network.AgentBelief));
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
         {
             AddBelief(_agentId1, 1);
             AddBelief(_agentId2, 1);
-            Assert.AreEqual(1, InteractionSphere.SetRelativeBelief(_agentId1, _agentId2, _network.Beliefs));
+            Assert.AreEqual(1, InteractionSphere.SetRelativeBelief(_agentId1, _agentId2, _network.AgentBelief));
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
         {
             AddBelief(_agentId1, -1);
             AddBelief(_agentId2, -1);
-            Assert.AreEqual(1, InteractionSphere.SetRelativeBelief(_agentId1, _agentId2, _network.Beliefs));
+            Assert.AreEqual(1, InteractionSphere.SetRelativeBelief(_agentId1, _agentId2, _network.AgentBelief));
         }
 
         /// <summary>
@@ -254,7 +254,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
         {
             AddBelief(_agentId1, 0);
             AddBelief(_agentId2, 0);
-            Assert.AreEqual(0, InteractionSphere.SetRelativeBelief(_agentId1, _agentId2, _network.Beliefs));
+            Assert.AreEqual(0, InteractionSphere.SetRelativeBelief(_agentId1, _agentId2, _network.AgentBelief));
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
         {
             AddBelief(_agentId1, -1);
             AddBelief(_agentId2, 1);
-            Assert.AreEqual(-1, InteractionSphere.SetRelativeBelief(_agentId1, _agentId2, _network.Beliefs));
+            Assert.AreEqual(-1, InteractionSphere.SetRelativeBelief(_agentId1, _agentId2, _network.AgentBelief));
         }
 
         #endregion

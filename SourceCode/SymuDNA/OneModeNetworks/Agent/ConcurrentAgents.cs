@@ -17,7 +17,7 @@ using Symu.Common.Interfaces.Agent;
 
 #endregion
 
-namespace Symu.DNA.Agent
+namespace Symu.DNA.OneModeNetworks.Agent
 {
     /// <summary>
     ///     thread-safe list of agents that can be accessed by multiple threads concurrently
