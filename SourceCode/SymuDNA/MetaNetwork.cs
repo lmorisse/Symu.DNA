@@ -12,6 +12,7 @@
 using System;
 using Symu.Common.Interfaces.Agent;
 using Symu.DNA.Activities;
+using Symu.DNA.Agent;
 using Symu.DNA.Beliefs;
 using Symu.DNA.Groups;
 using Symu.DNA.Knowledges;
@@ -33,6 +34,12 @@ namespace Symu.DNA
         {
             InteractionSphere = new InteractionSphere(interactionSphere);
         }
+
+
+        /// <summary>
+        ///     Local agents of this environment
+        /// </summary>
+        public AgentNetwork Agents { get; } = new AgentNetwork();
 
         /// <summary>
         ///     Directory of social links between AgentIds, with their interaction type
@@ -92,7 +99,9 @@ namespace Symu.DNA
             Resources.Clear();
             Knowledge.Clear();
             Beliefs.Clear();
-            Activities.Clear();
+            Activities.Clear(); 
+            Agents.Clear();
+
             //Enculturation.Clear();
             //Influences.Clear();
         }
@@ -106,6 +115,7 @@ namespace Symu.DNA
             Knowledge.RemoveAgent(agentId);
             Activities.RemoveAgent(agentId);
             Beliefs.RemoveAgent(agentId);
+            Agents.RemoveAgent(agentId);
             //Enculturation.RemoveAgent(agentId);
             //Influences.RemoveAgent(agentId);
         }
