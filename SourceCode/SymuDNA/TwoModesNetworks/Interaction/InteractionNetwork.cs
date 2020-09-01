@@ -16,7 +16,7 @@ using Symu.Common.Interfaces.Agent;
 using static Symu.Common.Constants;
 #endregion
 
-namespace Symu.DNA.TwoModesNetworks.Interactions
+namespace Symu.DNA.TwoModesNetworks.Interaction
 {
     /// <summary>
     ///     Network of all the interactions between agent

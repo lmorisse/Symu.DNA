@@ -12,16 +12,17 @@
 using System;
 using Symu.Common.Interfaces.Agent;
 using Symu.DNA.Activities;
-using Symu.DNA.Groups;
 using Symu.DNA.OneModeNetworks.Agent;
 using Symu.DNA.OneModeNetworks.Belief;
 using Symu.DNA.OneModeNetworks.Event;
 using Symu.DNA.OneModeNetworks.Knowledge;
-using Symu.DNA.Resources;
+using Symu.DNA.OneModeNetworks.Resource;
 using Symu.DNA.Roles;
 using Symu.DNA.TwoModesNetworks.AgentBelief;
+using Symu.DNA.TwoModesNetworks.AgentGroup;
 using Symu.DNA.TwoModesNetworks.AgentKnowledge;
-using Symu.DNA.TwoModesNetworks.Interactions;
+using Symu.DNA.TwoModesNetworks.AgentResource;
+using Symu.DNA.TwoModesNetworks.Interaction;
 using Symu.DNA.TwoModesNetworks.Sphere;
 
 #endregion
@@ -43,31 +44,36 @@ namespace Symu.DNA
         /// <summary>
         ///     Local agents of this environment
         /// </summary>
-        public AgentNetwork Agents { get; } = new AgentNetwork();
+        public AgentNetwork Agent { get; } = new AgentNetwork();
 
         /// <summary>
         ///     Directory of social links between AgentIds, with their interaction type
         ///     Who report/communicate to who
         ///     Sphere of interaction of agents
         /// </summary>
-        public InteractionNetwork Interactions { get; } = new InteractionNetwork();
+        public InteractionNetwork Interaction { get; } = new InteractionNetwork();
 
         /// <summary>
         ///     Directory of the groups of the organizationEntity :
         ///     Team, task force, workgroup, circles, community of practices, ...
         /// </summary>
-        public GroupNetwork Groups { get; } = new GroupNetwork();
+        public AgentGroupNetwork AgentGroup { get; } = new AgentGroupNetwork();
 
         /// <summary>
         ///     Directory of the roles the agent are playing in the organizationEntity
         /// </summary>
-        public RoleNetwork Roles { get; } = new RoleNetwork();
+        public RoleNetwork Role { get; } = new RoleNetwork();
 
         /// <summary>
         ///     Directory of objects used by the agentIds
         ///     using, working, support
         /// </summary>
-        public ResourceNetwork Resources { get; } = new ResourceNetwork();
+        public ResourceNetwork Resource { get; } = new ResourceNetwork();
+        /// <summary>
+        ///     Directory of objects used by the agentIds
+        ///     using, working, support
+        /// </summary>
+        public AgentResourceNetwork AgentResource { get; } = new AgentResourceNetwork();
 
         /// <summary>
         ///     Knowledge network
@@ -100,7 +106,7 @@ namespace Symu.DNA
         /// <summary>
         /// occurrences or phenomena that happen
         /// </summary>
-        public EventNetwork Events { get; } = new EventNetwork();
+        public EventNetwork Event { get; } = new EventNetwork();
 
         /// <summary>
         ///     Derived Parameters from others networks.
@@ -112,29 +118,30 @@ namespace Symu.DNA
 
         public void Clear()
         {
-            Interactions.Clear();
-            Groups.Clear();
-            Roles.Clear();
-            Resources.Clear();
+            Interaction.Clear();
+            AgentGroup.Clear();
+            Role.Clear();
+            Resource.Clear();
+            AgentResource.Clear();
             Knowledge.Clear();
             AgentKnowledge.Clear();
             Belief.Clear();
             AgentBelief.Clear();
             Activities.Clear(); 
-            Agents.Clear();
-            Events.Clear();
+            Agent.Clear();
+            Event.Clear();
         }
 
         public void RemoveAgent(IAgentId agentId)
         {
-            Interactions.RemoveAgent(agentId);
-            Groups.RemoveAgent(agentId);
-            Roles.RemoveAgent(agentId);
-            Resources.RemoveAgent(agentId);
+            Interaction.RemoveAgent(agentId);
+            AgentGroup.RemoveAgent(agentId);
+            Role.RemoveAgent(agentId);
+            AgentResource.RemoveAgent(agentId);
             AgentKnowledge.RemoveAgent(agentId);
             Activities.RemoveAgent(agentId);
             AgentBelief.RemoveAgent(agentId);
-            Agents.RemoveAgent(agentId);
+            Agent.RemoveAgent(agentId);
         }
 
         #endregion
@@ -154,13 +161,13 @@ namespace Symu.DNA
                 throw new ArgumentNullException(nameof(agentGroup));
             }
 
-            lock (Groups)
+            lock (AgentGroup)
             {
-                Groups.AddGroup(groupId);
-                Groups.AddAgent(agentGroup, groupId);
+                AgentGroup.AddGroup(groupId);
+                AgentGroup.AddAgent(agentGroup, groupId);
             }
 
-            Resources.AddMemberToGroup(agentGroup.AgentId, groupId);
+            AgentResource.AddMemberToGroup(agentGroup.AgentId, groupId);
         }
 
         /// <summary>
@@ -176,19 +183,19 @@ namespace Symu.DNA
                 throw new ArgumentNullException(nameof(agentId));
             }
 
-            if (!Groups.Exists(groupId))
+            if (!AgentGroup.Exists(groupId))
             {
                 return;
             }
 
-            foreach (var agentIdToRemove in Groups.GetAgents(groupId, agentId.ClassId))
+            foreach (var agentIdToRemove in AgentGroup.GetAgents(groupId, agentId.ClassId))
             {
-                Interactions.DecreaseInteraction(agentId, agentIdToRemove);
+                Interaction.DecreaseInteraction(agentId, agentIdToRemove);
             }
 
-            Groups.RemoveMember(agentId, groupId);
-            Roles.RemoveMember(agentId, groupId);
-            Resources.RemoveMemberFromGroup(agentId, groupId);
+            AgentGroup.RemoveMember(agentId, groupId);
+            Role.RemoveMember(agentId, groupId);
+            AgentResource.RemoveMemberFromGroup(agentId, groupId);
 
             // Remove all the groupId activities to the AgentId
             Activities.RemoveMember(agentId, groupId);

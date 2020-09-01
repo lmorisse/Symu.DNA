@@ -11,12 +11,12 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces.Entity;
-using Symu.DNA.Resources;
+using Symu.DNA.OneModeNetworks.Resource;
 using SymuDNATests.Classes;
 
 #endregion
 
-namespace SymuDNATests.Resources
+namespace SymuDNATests.OneModeNetwork.Resource
 {
     [TestClass]
     public class ResourceCollectionTests

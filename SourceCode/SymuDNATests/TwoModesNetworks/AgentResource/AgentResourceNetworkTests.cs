@@ -12,15 +12,15 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces.Agent;
-using Symu.DNA.Resources;
+using Symu.DNA.TwoModesNetworks.AgentResource;
 using SymuDNATests.Classes;
 
 #endregion
 
-namespace SymuDNATests.Resources
+namespace SymuDNATests.TwoModesNetworks.AgentResource
 {
     [TestClass]
-    public class ResourceNetworkTests
+    public class AgentResourceNetworkTests
     {
         private const byte IsSupportOn = 1;
         private const byte IsWorkingOn = 2;
@@ -28,7 +28,7 @@ namespace SymuDNATests.Resources
         private readonly AgentId _agentId = new AgentId(3, 3);
         private readonly AgentId _groupId = new AgentId(1, 1);
         private readonly TestResource _resource = new TestResource(2);
-        private readonly ResourceNetwork _resources = new ResourceNetwork();
+        private readonly AgentResourceNetwork _resources = new AgentResourceNetwork();
         private TestAgentResource _agentResourceSupportOn;
         private TestAgentResource _agentResourceWorkingOn;
         private TestAgentResource _agentResourceUsing;
@@ -50,14 +50,6 @@ namespace SymuDNATests.Resources
         }
 
         [TestMethod]
-        public void ExistsTest1()
-        {
-            Assert.IsFalse(_resources.Exists(_resource));
-            _resources.Add(_resource);
-            Assert.IsTrue(_resources.Exists(_resource));
-        }
-
-        [TestMethod]
         public void ExistsTest2()
         {
             Assert.IsFalse(_resources.HasResource(_groupId, new TestResourceUsage(IsSupportOn)));
@@ -75,25 +67,6 @@ namespace SymuDNATests.Resources
         }
 
         [TestMethod]
-        public void AddTest()
-        {
-            Assert.IsFalse(_resources.Any());
-            _resources.Add(_groupId, _resource, _agentResourceSupportOn);
-            Assert.IsTrue(_resources.Any());
-            Assert.IsTrue(_resources.Exists(_resource));
-            Assert.IsTrue(_resources.HasResource(_groupId, new TestResourceUsage(IsSupportOn)));
-        }
-
-        [TestMethod]
-        public void AddTest1()
-        {
-            Assert.IsFalse(_resources.Any());
-            _resources.Add(_resource);
-            Assert.IsFalse(_resources.Any());
-            Assert.IsTrue(_resources.Exists(_resource));
-        }
-
-        [TestMethod]
         public void AddAgentIdTest()
         {
             _resources.AddAgentId(_agentId);
@@ -108,7 +81,6 @@ namespace SymuDNATests.Resources
             _resources.AddAgentId(_agentId);
             _resources.RemoveAgent(_agentId);
             Assert.IsFalse(_resources.Any());
-            Assert.IsFalse(_resources.Exists(_resource));
         }
 
         /// <summary>
@@ -118,30 +90,15 @@ namespace SymuDNATests.Resources
         public void RemoveAgentTest1()
         {
             _resources.RemoveAgent(_groupId);
-            _resources.Add(_groupId, _resource, _agentResourceSupportOn);
+            _resources.Add(_groupId,  _agentResourceSupportOn);
             _resources.RemoveAgent(_groupId);
             Assert.IsFalse(_resources.Any());
-            Assert.IsTrue(_resources.Exists(_resource));
             Assert.IsFalse(_resources.HasResource(_groupId, new TestResourceUsage(IsSupportOn)));
-        }
-
-        [TestMethod]
-        public void RemoveTest()
-        {
-            _resources.Remove(_resource);
-            _resources.Add(_resource);
-            _resources.Remove(_resource);
-            Assert.IsFalse(_resources.Any());
-            Assert.IsFalse(_resources.Exists(_resource));
         }
 
         [TestMethod]
         public void GetAllocationTest()
         {
-            // componentId don't exists
-            Assert.AreEqual(0, _resources.GetAllocation(_groupId, _resource.Id, new TestResourceUsage(IsWorkingOn)));
-            // componentId exists
-            _resources.Add(_resource);
             Assert.AreEqual(0, _resources.GetAllocation(_groupId, _resource.Id, new TestResourceUsage(IsWorkingOn)));
             _resources.Add(_groupId, _agentResourceWorkingOn);
             Assert.AreEqual(100, _resources.GetAllocation(_groupId, _resource.Id, new TestResourceUsage(IsWorkingOn)));
@@ -184,7 +141,6 @@ namespace SymuDNATests.Resources
         public void CopyToTest()
         {
             var teamId = new AgentId(3, 3);
-            _resources.Add(_resource);
             _resources.Add(teamId, _agentResourceSupportOn);
             _resources.Add(teamId, _agentResourceWorkingOn);
             _resources.Add(teamId, _agentResourceUsing);

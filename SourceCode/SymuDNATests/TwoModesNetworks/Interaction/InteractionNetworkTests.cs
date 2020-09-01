@@ -12,13 +12,13 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces.Agent;
-using Symu.DNA.TwoModesNetworks.Interactions;
+using Symu.DNA.TwoModesNetworks.Interaction;
 using SymuDNATests.Classes;
 
 #endregion
 
 
-namespace SymuDNATests.TwoModesNetworks.Interactions
+namespace SymuDNATests.TwoModesNetworks.Interaction
 {
     [TestClass]
     public class InteractionNetworkTests

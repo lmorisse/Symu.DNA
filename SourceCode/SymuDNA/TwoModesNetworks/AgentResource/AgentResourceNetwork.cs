@@ -15,21 +15,18 @@ using System.Collections.Generic;
 using System.Linq;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Interfaces.Entity;
+using Symu.DNA.OneModeNetworks.Resource;
 
 #endregion
 
-namespace Symu.DNA.Resources
+namespace Symu.DNA.TwoModesNetworks.AgentResource
 {
     /// <summary>
     ///     All resources in the network
     /// </summary>
     /// <example>database, products, routines, processes, ...</example>
-    public class ResourceNetwork
+    public class AgentResourceNetwork
     {
-        /// <summary>
-        ///     Repository of all the resources used during the simulation
-        /// </summary>
-        public ResourceCollection Repository { get; } = new ResourceCollection();
 
         /// <summary>
         ///     AgentResources.Key = IAgentId
@@ -46,65 +43,8 @@ namespace Symu.DNA.Resources
 
         public void Clear()
         {
-            Repository.Clear();
             AgentResources.Clear();
         }
-
-        #region Repository
-        /// <summary>
-        /// Get the resource from its Id
-        /// </summary>
-        /// <param name="resourceId"></param>
-        /// <returns></returns>
-        public IResource GetResource(IId resourceId)
-        {
-            return Repository.Get(resourceId);
-        }
-
-        /// <summary>
-        ///     Add a resource to the repository
-        /// </summary>
-        public void Add(IResource resource)
-        {
-            if (Exists(resource))
-            {
-                return;
-            }
-
-            Repository.Add(resource);
-        }
-
-        public bool Exists(IResource resource)
-        {
-            return Repository.Contains(resource);
-        }
-
-        public bool Exists(IId resourceId)
-        {
-            return Repository.Exists(resourceId);
-        }
-
-        public void Remove(IResource resource)
-        {
-            if (resource == null)
-            {
-                throw new ArgumentNullException(nameof(resource));
-            }
-
-            RemoveResource(resource.Id);
-        }
-        public void RemoveResource(IId resourceId)
-        {
-            foreach (var key in AgentResources.Keys)
-            {
-                AgentResources[key].RemoveAll(n => n.Equals(resourceId));
-            }
-
-            Repository.List.RemoveAll(x => x.Id.Equals(resourceId));
-        }
-        #endregion
-
-        #region Agent resource
 
         /// <summary>
         ///     Remove agent from network
@@ -130,26 +70,11 @@ namespace Symu.DNA.Resources
         }
 
         /// <summary>
-        /// Add a resource to the resource repository
         /// Add an agentResource to an agentId 
+        /// Resource need to be added to the resource network
         /// </summary>
         /// <param name="agentId"></param>
-        /// <param name="resource"></param>
         /// <param name="agentResource"></param>
-        public void Add(IAgentId agentId, IResource resource, IAgentResource agentResource)
-        //public void Add(IAgentId agentId, IResource resource, IResourceUsage resourceUsage, float allocation = 100)
-        {
-            if (resource is null)
-            {
-                throw new ArgumentNullException(nameof(resource));
-            }
-
-            Add(resource);
-            AddAgentId(agentId);
-            //var agentResource = new IAgentResource(resource.Id, resourceUsage, allocation);
-            AddAgentResource(agentId, agentResource);
-        }
-
         public void Add(IAgentId agentId, IAgentResource agentResource)
         {
             if (agentResource == null)
@@ -228,26 +153,26 @@ namespace Symu.DNA.Resources
 
             return 0;
         }
-        /// <summary>
-        ///     Get the IResource used by an agent via its resourceId
-        /// </summary>
-        /// <param name="agentId"></param>
-        /// <param name="resourceId"></param>
-        /// <returns></returns>
-        public IResource GetResource(IAgentId agentId, IId resourceId)
-        {
-            return HasResource(agentId, resourceId) ? Repository.Get(resourceId) : null;
-        }
-        /// <summary>
-        ///     Get the IResource used by an agent via its resourceId
-        /// </summary>
-        /// <param name="agentId"></param>
-        /// <param name="resourceId"></param>
-        /// <returns></returns>
-        public TResource GetResource<TResource>(IAgentId agentId, IId resourceId) where TResource : IResource
-        {
-            return HasResource(agentId, resourceId) ? (TResource)Repository.Get(resourceId) : default;
-        }
+        ///// <summary>
+        /////     Get the IResource used by an agent via its resourceId
+        ///// </summary>
+        ///// <param name="agentId"></param>
+        ///// <param name="resourceId"></param>
+        ///// <returns></returns>
+        //public IResource GetResource(IAgentId agentId, IId resourceId)
+        //{
+        //    return HasResource(agentId, resourceId) ? Repository.Get(resourceId) : null;
+        //}
+        ///// <summary>
+        /////     Get the IResource used by an agent via its resourceId
+        ///// </summary>
+        ///// <param name="agentId"></param>
+        ///// <param name="resourceId"></param>
+        ///// <returns></returns>
+        //public TResource GetResource<TResource>(IAgentId agentId, IId resourceId) where TResource : IResource
+        //{
+        //    return HasResource(agentId, resourceId) ? (TResource)Repository.Get(resourceId) : default;
+        //}
         /// <summary>
         ///     Get the IAgentResource used by an agent with a specific type of use
         /// </summary>
@@ -388,23 +313,18 @@ namespace Symu.DNA.Resources
         ///     Make a clone of Portfolios from modeling to Symu
         /// </summary>
         /// <param name="resources"></param>
-        public void CopyTo(ResourceNetwork resources)
+        public void CopyTo(AgentResourceNetwork resources)
         {
             if (resources is null)
             {
                 throw new ArgumentNullException(nameof(resources));
             }
 
-            foreach (var resource in Repository.List)
-            {
-                resources.Add(resource);
-            }
             foreach (var networkPortfolio in AgentResources)
             foreach (var portfolio in networkPortfolio.Value)
             {
                 resources.Add(networkPortfolio.Key, portfolio);
             }
         }
-        #endregion
     }
 }

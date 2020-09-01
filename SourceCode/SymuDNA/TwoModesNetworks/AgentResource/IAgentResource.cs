@@ -8,8 +8,9 @@
 #endregion
 
 using Symu.Common.Interfaces.Entity;
+using Symu.DNA.OneModeNetworks.Resource;
 
-namespace Symu.DNA.Resources
+namespace Symu.DNA.TwoModesNetworks.AgentResource
 {
     /// <summary>
     /// Interface to define the node Agent/resource : define who is using a resource and how
@@ -34,7 +35,6 @@ namespace Symu.DNA.Resources
         IAgentResource Clone();
 
         bool Equals(IResourceUsage resourceUsage);
-        //bool IsResourceUsageAndClassId(IResourceUsage resourceUsage, IClassId classId);
         bool Equals(IId resourceId, IResourceUsage resourceUsage);
         bool Equals(IId resourceId);
         bool Equals(object obj);

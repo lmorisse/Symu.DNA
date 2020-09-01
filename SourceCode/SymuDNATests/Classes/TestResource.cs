@@ -10,7 +10,7 @@
 #region using directives
 
 using Symu.Common.Interfaces.Entity;
-using Symu.DNA.Resources;
+using Symu.DNA.OneModeNetworks.Resource;
 
 #endregion
 

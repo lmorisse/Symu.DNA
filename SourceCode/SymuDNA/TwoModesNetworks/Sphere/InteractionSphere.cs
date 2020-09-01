@@ -20,7 +20,7 @@ using Symu.DNA.OneModeNetworks.Belief;
 using Symu.DNA.OneModeNetworks.Knowledge;
 using Symu.DNA.TwoModesNetworks.AgentBelief;
 using Symu.DNA.TwoModesNetworks.AgentKnowledge;
-using Symu.DNA.TwoModesNetworks.Interactions;
+using Symu.DNA.TwoModesNetworks.Interaction;
 
 #endregion
 
@@ -67,7 +67,7 @@ namespace Symu.DNA.TwoModesNetworks.Sphere
                 return;
             }
 
-            network.Interactions.SetMaxLinksCount();
+            network.Interaction.SetMaxLinksCount();
             if (_model.RandomlyGeneratedSphere)
             {
                 if (initialization)
@@ -225,7 +225,7 @@ namespace Symu.DNA.TwoModesNetworks.Sphere
         private DerivedParameter SetDerivedParameter(MetaNetwork network, IAgentId agentI, IAgentId agentJ)
         {
             var socialProximity = _model.SocialDemographicWeight > Constants.Tolerance
-                ? SetSocialProximity(agentI, agentJ, network.Interactions)
+                ? SetSocialProximity(agentI, agentJ, network.Interaction)
                 : 0;
 
             var relativeBelief = _model.RelativeBeliefWeight > Constants.Tolerance

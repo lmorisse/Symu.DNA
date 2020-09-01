@@ -11,11 +11,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Symu.Common.Interfaces.Entity;
 
 #endregion
 
-namespace Symu.DNA.Resources
+namespace Symu.DNA.OneModeNetworks.Resource
 {
     /// <summary>
     ///     List of all the resources 
@@ -28,6 +29,13 @@ namespace Symu.DNA.Resources
         ///     Values => List of Resources
         /// </summary>
         public List<IResource> List { get; } = new List<IResource>();
+
+        public int Count => List.Count;
+
+        public bool Any()
+        {
+            return List.Any();
+        }
 
         public void Add(IResource resource)
         {

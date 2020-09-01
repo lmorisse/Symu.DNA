@@ -9,7 +9,7 @@
 
 using Symu.Common.Interfaces.Agent;
 
-namespace Symu.DNA.TwoModesNetworks.Interactions
+namespace Symu.DNA.TwoModesNetworks.Interaction
 {
     /// <summary>
     ///     Defines the interaction between two agents used by InteractionNetwork

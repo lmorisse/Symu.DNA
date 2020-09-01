@@ -13,17 +13,17 @@ using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces.Agent;
-using Symu.DNA.Groups;
+using Symu.DNA.TwoModesNetworks.AgentGroup;
 using SymuDNATests.Classes;
 
 #endregion
 
-namespace SymuDNATests.Groups
+namespace SymuDNATests.TwoModesNetworks.AgentGroup
 {
     [TestClass]
-    public class GroupNetworkTests
+    public class AgentGroupNetworkTests
     {
-        private readonly GroupNetwork _group = new GroupNetwork();
+        private readonly AgentGroupNetwork _group = new AgentGroupNetwork();
         private readonly AgentId _teamId = new AgentId(1, 1);
         private readonly AgentId _teamId2 = new AgentId(2, 1);
         private readonly AgentId _teammateId = new AgentId(3, 2);
@@ -74,7 +74,7 @@ namespace SymuDNATests.Groups
             Assert.IsFalse(_group.Any());
             _group.AddAgent(_agentGroup, _teamId);
             Assert.IsTrue(_group.Any());
-            Assert.IsTrue(_group.AgentGroups[_teamId][0].AgentId.Equals(_teammateId));
+            Assert.IsTrue(_group.List[_teamId][0].AgentId.Equals(_teammateId));
         }
 
         [TestMethod]

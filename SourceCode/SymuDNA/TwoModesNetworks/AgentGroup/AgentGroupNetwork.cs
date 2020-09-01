@@ -17,7 +17,7 @@ using Symu.Common.Interfaces.Agent;
 using static Symu.Common.Constants;
 #endregion
 
-namespace Symu.DNA.Groups
+namespace Symu.DNA.TwoModesNetworks.AgentGroup
 {
     /// <summary>
     ///     Dictionary of all the group of the network
@@ -26,13 +26,13 @@ namespace Symu.DNA.Groups
     ///     Value => List of AgentIds
     /// </summary>
     /// <example>Groups : team, task force, quality circle, community of practices, committees, ....</example>
-    public class GroupNetwork
+    public class AgentGroupNetwork
     {
         /// <summary>
         ///     Key => groupId
         ///     Value => list of group allocation : AgentId, Allocation of the agentId to the groupId
         /// </summary>
-        public ConcurrentDictionary<IAgentId, List<IAgentGroup>> AgentGroups { get; } =
+        public ConcurrentDictionary<IAgentId, List<IAgentGroup>> List { get; } =
             new ConcurrentDictionary<IAgentId, List<IAgentGroup>>();
 
         /// <summary>
@@ -62,13 +62,13 @@ namespace Symu.DNA.Groups
         {
             if (Exists(groupId))
             {
-                AgentGroups[groupId].RemoveAll(g => g.AgentId.Equals(agentId));
+                List[groupId].RemoveAll(g => g.AgentId.Equals(agentId));
             }
         }
 
         public IEnumerable<IAgentId> GetGroups()
         {
-            return AgentGroups.Any() ? AgentGroups.Keys : new List<IAgentId>();
+            return List.Any() ? List.Keys : new List<IAgentId>();
         }
 
         /// <summary>
@@ -78,29 +78,29 @@ namespace Symu.DNA.Groups
         /// <returns></returns>
         public bool Exists(IAgentId groupId)
         {
-            return AgentGroups.ContainsKey(groupId);
+            return List.ContainsKey(groupId);
         }
 
         public void RemoveGroup(IAgentId groupId)
         {
-            AgentGroups.TryRemove(groupId, out _);
+            List.TryRemove(groupId, out _);
         }
 
         public bool Any()
         {
-            return AgentGroups.Any();
+            return List.Any();
         }
 
         public void Clear()
         {
-            AgentGroups.Clear();
+            List.Clear();
         }
 
         public void AddGroup(IAgentId groupId)
         {
             if (!Exists(groupId))
             {
-                AgentGroups.TryAdd(groupId, new List<IAgentGroup>());
+                List.TryAdd(groupId, new List<IAgentGroup>());
             }
         }
 
@@ -114,7 +114,7 @@ namespace Symu.DNA.Groups
             AddGroup(groupId);
             if (!IsMemberOfGroup(agentGroup.AgentId, groupId))
             {
-                AgentGroups[groupId].Add(agentGroup);
+                List[groupId].Add(agentGroup);
             }
             else
             {
@@ -136,7 +136,7 @@ namespace Symu.DNA.Groups
         public IEnumerable<IAgentId> GetAgents(IAgentId groupId)
         {
             return Exists(groupId)
-                ? AgentGroups[groupId].Select(x => x.AgentId)
+                ? List[groupId].Select(x => x.AgentId)
                 : null;
         }
 
@@ -149,7 +149,7 @@ namespace Symu.DNA.Groups
         public IEnumerable<IAgentId> GetAgents(IAgentId groupId, IClassId classId)
         {
             return Exists(groupId)
-                ? AgentGroups[groupId].FindAll(x => x.AgentId.ClassId.Equals(classId)).Select(x => x.AgentId)
+                ? List[groupId].FindAll(x => x.AgentId.ClassId.Equals(classId)).Select(x => x.AgentId)
                 : null;
         }
 
@@ -160,7 +160,7 @@ namespace Symu.DNA.Groups
         /// <returns></returns>
         public byte GetAgentsCount(IAgentId groupId)
         {
-            return Exists(groupId) ? Convert.ToByte(AgentGroups[groupId].Count) : (byte) 0;
+            return Exists(groupId) ? Convert.ToByte(List[groupId].Count) : (byte) 0;
         }
 
         /// <summary>
@@ -176,27 +176,27 @@ namespace Symu.DNA.Groups
                 return 0;
             }
 
-            lock (AgentGroups[groupId])
+            lock (List[groupId])
             {
-                return Convert.ToByte(AgentGroups[groupId].Count(x => x.AgentId.ClassId.Equals(classId)));
+                return Convert.ToByte(List[groupId].Count(x => x.AgentId.ClassId.Equals(classId)));
             }
         }
 
         public bool IsMemberOfGroup(IAgentId agentId, IAgentId groupId)
         {
-            return Exists(groupId) && AgentGroups[groupId].Exists(g => g != null && g.AgentId.Equals(agentId));
+            return Exists(groupId) && List[groupId].Exists(g => g != null && g.AgentId.Equals(agentId));
         }
 
         public IAgentGroup GetGroupAllocation(IAgentId agentId, IAgentId groupId)
         {
-            return Exists(groupId) ? AgentGroups[groupId].Find(g => g != null && g.AgentId.Equals(agentId)) : null;
+            return Exists(groupId) ? List[groupId].Find(g => g != null && g.AgentId.Equals(agentId)) : null;
         }
 
         public float GetAllocation(IAgentId agentId, IAgentId groupId)
         {
             if (IsMemberOfGroup(agentId, groupId))
             {
-                return AgentGroups[groupId].Find(g => g != null && g.AgentId.Equals(agentId)).Allocation;
+                return List[groupId].Find(g => g != null && g.AgentId.Equals(agentId)).Allocation;
             }
 
             return 0;
@@ -211,7 +211,7 @@ namespace Symu.DNA.Groups
         public IEnumerable<IAgentId> GetGroups(IAgentId agentId, IClassId groupClassId)
         {
             var groupIds = new List<IAgentId>();
-            if (!AgentGroups.Any())
+            if (!List.Any())
             {
                 return groupIds;
             }
@@ -229,7 +229,7 @@ namespace Symu.DNA.Groups
         public IEnumerable<IAgentId> GetGroups(IClassId groupClassId)
         {
             var groupIds = new List<IAgentId>();
-            if (!AgentGroups.Any())
+            if (!List.Any())
             {
                 return groupIds;
             }
@@ -256,7 +256,7 @@ namespace Symu.DNA.Groups
 
             foreach (var groupId in groupIds)
             {
-                coMemberIds.AddRange(AgentGroups[groupId].FindAll(x => !x.AgentId.Equals(agentId)).Select(x => x.AgentId));
+                coMemberIds.AddRange(List[groupId].FindAll(x => !x.AgentId.Equals(agentId)).Select(x => x.AgentId));
             }
 
             return coMemberIds.Distinct();
@@ -271,7 +271,7 @@ namespace Symu.DNA.Groups
         public IEnumerable<IAgentGroup> GetAgentGroupsOfAnAgentId(IAgentId agentId, IClassId classId)
         {
             var groupAllocations = new List<IAgentGroup>();
-            if (!AgentGroups.Any())
+            if (!List.Any())
             {
                 return groupAllocations;
             }
@@ -279,7 +279,7 @@ namespace Symu.DNA.Groups
             foreach (var group in GetGroups().ToList()
                 .Where(g => g.ClassId.Equals(classId) && IsMemberOfGroup(agentId, g)))
             {
-                groupAllocations.AddRange(AgentGroups[group].FindAll(x => x.AgentId.Equals(agentId)));
+                groupAllocations.AddRange(List[group].FindAll(x => x.AgentId.Equals(agentId)));
             }
 
             return groupAllocations;
@@ -294,7 +294,7 @@ namespace Symu.DNA.Groups
         public IEnumerable<IAgentGroup> GetAgentGroupsOfAGroupId(IAgentId groupId, IClassId classId)
         {
             return Exists(groupId)
-                ? AgentGroups[groupId].FindAll(x => x.AgentId.ClassId.Equals(classId))
+                ? List[groupId].FindAll(x => x.AgentId.ClassId.Equals(classId))
                 : new List<IAgentGroup>();
         }
 
@@ -305,7 +305,7 @@ namespace Symu.DNA.Groups
         /// <returns>allocation</returns>
         public float GetAgentAllocations(IAgentId groupId)
         {
-            return Exists(groupId) ? AgentGroups[groupId].Sum(a => a.Allocation) : 0;
+            return Exists(groupId) ? List[groupId].Sum(a => a.Allocation) : 0;
         }
 
         /// <summary>
@@ -382,7 +382,7 @@ namespace Symu.DNA.Groups
             }
             var max = GetAgentGroupsOfAnAgentId(agentId, classId).OrderByDescending(ga => ga.Allocation).First().Allocation;
 
-            return groups.FirstOrDefault(group => AgentGroups[group].Exists(x => Math.Abs(x.Allocation - max) < Tolerance));
+            return groups.FirstOrDefault(group => List[group].Exists(x => Math.Abs(x.Allocation - max) < Tolerance));
         }
 
         /// <summary>
@@ -393,9 +393,9 @@ namespace Symu.DNA.Groups
         public void CopyTo(IAgentId groupSourceId, IAgentId groupTargetId)
         {
             AddGroup(groupTargetId);
-            foreach (var groupAllocation in AgentGroups[groupSourceId])
+            foreach (var groupAllocation in List[groupSourceId])
             {
-                AgentGroups[groupTargetId].Add(groupAllocation);
+                List[groupTargetId].Add(groupAllocation);
             }
         }
     }

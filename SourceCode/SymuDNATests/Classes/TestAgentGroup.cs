@@ -8,7 +8,7 @@
 #endregion
 
 using Symu.Common.Interfaces.Agent;
-using Symu.DNA.Groups;
+using Symu.DNA.TwoModesNetworks.AgentGroup;
 
 namespace SymuDNATests.Classes
 {

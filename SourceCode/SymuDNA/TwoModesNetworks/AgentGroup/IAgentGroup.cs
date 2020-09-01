@@ -9,7 +9,7 @@
 
 using Symu.Common.Interfaces.Agent;
 
-namespace Symu.DNA.Groups
+namespace Symu.DNA.TwoModesNetworks.AgentGroup
 {
     /// <summary>
     /// Interface to define who is member of a group and how

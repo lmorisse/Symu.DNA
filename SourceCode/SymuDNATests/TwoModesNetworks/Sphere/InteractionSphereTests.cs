@@ -138,7 +138,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
         private void AddLink()
         {
             var interaction = new TestInteraction(_agentId1, _agentId2);
-            _network.Interactions.AddInteraction(interaction);
+            _network.Interaction.AddInteraction(interaction);
         }
 
         private void AddKnowledge(AgentId agentId, float knowledgeValue)
@@ -316,8 +316,8 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
         [TestMethod]
         public void SetSocialProximityTest()
         {
-            _network.Interactions.SetMaxLinksCount();
-            Assert.AreEqual(0, InteractionSphere.SetSocialProximity(_agentId1, _agentId2, _network.Interactions));
+            _network.Interaction.SetMaxLinksCount();
+            Assert.AreEqual(0, InteractionSphere.SetSocialProximity(_agentId1, _agentId2, _network.Interaction));
         }
 
         /// <summary>
@@ -327,8 +327,8 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
         public void SetSocialProximityTest1()
         {
             AddLink();
-            _network.Interactions.SetMaxLinksCount();
-            Assert.AreEqual(1, InteractionSphere.SetSocialProximity(_agentId1, _agentId2, _network.Interactions));
+            _network.Interaction.SetMaxLinksCount();
+            Assert.AreEqual(1, InteractionSphere.SetSocialProximity(_agentId1, _agentId2, _network.Interaction));
         }
 
         /// <summary>
@@ -339,8 +339,8 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
         {
             var networkLink = new TestInteraction(_agentId1, _agentId2);
             networkLink.DecreaseWeight();
-            _network.Interactions.AddInteraction(networkLink);
-            Assert.AreEqual(0F, InteractionSphere.SetSocialProximity(_agentId1, _agentId2, _network.Interactions));
+            _network.Interaction.AddInteraction(networkLink);
+            Assert.AreEqual(0F, InteractionSphere.SetSocialProximity(_agentId1, _agentId2, _network.Interaction));
         }
 
         #endregion

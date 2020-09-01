@@ -13,7 +13,7 @@ using Symu.Common.Interfaces.Entity;
 
 #endregion
 
-namespace Symu.DNA.Resources
+namespace Symu.DNA.OneModeNetworks.Resource
 {
     /// <summary>
     /// The interface that let you define a resource
