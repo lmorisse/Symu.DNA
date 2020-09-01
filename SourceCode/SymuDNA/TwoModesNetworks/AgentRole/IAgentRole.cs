@@ -8,8 +8,9 @@
 #endregion
 
 using Symu.Common.Interfaces.Agent;
+using Symu.DNA.OneModeNetworks.Role;
 
-namespace Symu.DNA.Roles
+namespace Symu.DNA.TwoModesNetworks.AgentRole
 {
     public interface IAgentRole
     {

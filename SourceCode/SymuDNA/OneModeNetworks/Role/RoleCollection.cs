@@ -11,10 +11,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 #endregion
 
-namespace Symu.DNA.Roles
+namespace Symu.DNA.OneModeNetworks.Role
 {
     /// <summary>
     ///     List of all the roles 
@@ -48,6 +49,10 @@ namespace Symu.DNA.Roles
         public void Clear()
         {
             List.Clear();
+        }
+        public bool Any()
+        {
+            return List.Any();
         }
     }
 }

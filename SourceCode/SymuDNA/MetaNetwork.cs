@@ -17,11 +17,12 @@ using Symu.DNA.OneModeNetworks.Belief;
 using Symu.DNA.OneModeNetworks.Event;
 using Symu.DNA.OneModeNetworks.Knowledge;
 using Symu.DNA.OneModeNetworks.Resource;
-using Symu.DNA.Roles;
+using Symu.DNA.OneModeNetworks.Role;
 using Symu.DNA.TwoModesNetworks.AgentBelief;
 using Symu.DNA.TwoModesNetworks.AgentGroup;
 using Symu.DNA.TwoModesNetworks.AgentKnowledge;
 using Symu.DNA.TwoModesNetworks.AgentResource;
+using Symu.DNA.TwoModesNetworks.AgentRole;
 using Symu.DNA.TwoModesNetworks.Interaction;
 using Symu.DNA.TwoModesNetworks.Sphere;
 
@@ -37,7 +38,6 @@ namespace Symu.DNA
         public MetaNetwork(InteractionSphereModel interactionSphere)
         {
             InteractionSphere = new InteractionSphere(interactionSphere);
-            AgentBelief = new AgentBeliefNetwork();
         }
 
 
@@ -63,6 +63,10 @@ namespace Symu.DNA
         ///     Directory of the roles the agent are playing in the organizationEntity
         /// </summary>
         public RoleNetwork Role { get; } = new RoleNetwork();
+        /// <summary>
+        ///     Directory of the roles the agent are playing in the organizationEntity
+        /// </summary>
+        public AgentRoleNetwork AgentRole { get; } = new AgentRoleNetwork();
 
         /// <summary>
         ///     Directory of objects used by the agentIds
@@ -95,7 +99,7 @@ namespace Symu.DNA
         ///     Agent * belief network
         ///     Who (agentId) believes what (Information)
         /// </summary>
-        public AgentBeliefNetwork AgentBelief { get; } 
+        public AgentBeliefNetwork AgentBelief { get; } = new AgentBeliefNetwork();
 
         /// <summary>
         ///     Kanban activities network
@@ -121,6 +125,7 @@ namespace Symu.DNA
             Interaction.Clear();
             AgentGroup.Clear();
             Role.Clear();
+            AgentRole.Clear();
             Resource.Clear();
             AgentResource.Clear();
             Knowledge.Clear();
@@ -136,7 +141,7 @@ namespace Symu.DNA
         {
             Interaction.RemoveAgent(agentId);
             AgentGroup.RemoveAgent(agentId);
-            Role.RemoveAgent(agentId);
+            AgentRole.RemoveAgent(agentId);
             AgentResource.RemoveAgent(agentId);
             AgentKnowledge.RemoveAgent(agentId);
             Activities.RemoveAgent(agentId);
@@ -194,7 +199,7 @@ namespace Symu.DNA
             }
 
             AgentGroup.RemoveMember(agentId, groupId);
-            Role.RemoveMember(agentId, groupId);
+            AgentRole.RemoveMember(agentId, groupId);
             AgentResource.RemoveMemberFromGroup(agentId, groupId);
 
             // Remove all the groupId activities to the AgentId

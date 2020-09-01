@@ -68,7 +68,7 @@ namespace SymuDNATests
             var interaction = new TestInteraction(TeammateId, _managerId);
             _network.Interaction.AddInteraction(interaction);
             _network.AgentGroup.AddGroup(_teamId);
-            _network.Role.Add(_testAgentRole);
+            _network.AgentRole.Add(_testAgentRole);
             _network.Resource.Add(_component);
             _network.Knowledge.AddKnowledge(_knowledge);
             _network.AgentKnowledge.Add(TeammateId, _agentKnowledge);
@@ -149,7 +149,7 @@ namespace SymuDNATests
             _network.Agent.Add(_agent);
             _network.Interaction.AddInteraction(interaction);
             _network.AgentGroup.AddAgent(_agentGroup1, _teamId);
-            _network.Role.Add(_testAgentRole);
+            _network.AgentRole.Add(_testAgentRole);
             _network.AgentResource.Add(TeammateId, _agentResource);
             _network.AgentKnowledge.Add(TeammateId, _agentKnowledge);
             _network.Belief.AddBelief(_belief);
@@ -157,7 +157,7 @@ namespace SymuDNATests
             _network.RemoveAgent(TeammateId);
             Assert.IsFalse(_network.Interaction.Any());
             Assert.AreEqual(0, _network.AgentGroup.GetAgentsCount(_teamId, TeammateId.ClassId));
-            Assert.IsFalse(_network.Role.IsMember(TeammateId, _teamId.ClassId));
+            Assert.IsFalse(_network.AgentRole.IsMember(TeammateId, _teamId.ClassId));
             Assert.IsFalse(_network.AgentResource.HasResource(TeammateId, _component.Id, new TestResourceUsage(IsWorkingOn)));
             Assert.IsFalse(_network.AgentKnowledge.Any());
             Assert.IsFalse(_network.AgentBelief.Any());

@@ -12,17 +12,17 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces.Agent;
-using Symu.DNA.Roles;
+using Symu.DNA.TwoModesNetworks.AgentRole;
 using SymuDNATests.Classes;
 
 #endregion
 
-namespace SymuDNATests.Roles
+namespace SymuDNATests.TwoModesNetworks.AgentRole
 {
     [TestClass]
     public class RoleNetworkTests
     {
-        private readonly RoleNetwork _roles = new RoleNetwork();
+        private readonly AgentRoleNetwork _roles = new AgentRoleNetwork();
         private readonly AgentId _teamId = new AgentId(1, 1);
         private readonly AgentId _teamId2 = new AgentId(2, 1);
         private readonly AgentId _teammateId = new AgentId(2, 2);

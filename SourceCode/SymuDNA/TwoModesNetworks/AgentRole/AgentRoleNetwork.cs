@@ -13,17 +13,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Symu.Common.Interfaces.Agent;
+using Symu.DNA.OneModeNetworks.Role;
 
 #endregion
 
-namespace Symu.DNA.Roles
+namespace Symu.DNA.TwoModesNetworks.AgentRole
 {
-    public class RoleNetwork
+    public class AgentRoleNetwork
     {
-        /// <summary>
-        ///     Repository of all the resources used during the simulation
-        /// </summary>
-        public RoleCollection Repository { get; } = new RoleCollection();
         public List<IAgentRole> AgentRoles { get; } = new List<IAgentRole>();
 
         /// <summary>
