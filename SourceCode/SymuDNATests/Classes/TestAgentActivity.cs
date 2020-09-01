@@ -10,7 +10,8 @@
 #region using directives
 
 using Symu.Common.Interfaces.Agent;
-using Symu.DNA.Activities;
+using Symu.DNA.OneModeNetworks.Activity;
+using Symu.DNA.TwoModesNetworks.Assignment;
 
 #endregion
 

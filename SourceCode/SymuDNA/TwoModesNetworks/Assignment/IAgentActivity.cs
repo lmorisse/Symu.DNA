@@ -8,9 +8,9 @@
 #endregion
 
 using Symu.Common.Interfaces.Agent;
-using Symu.Common.Interfaces.Entity;
+using Symu.DNA.OneModeNetworks.Activity;
 
-namespace Symu.DNA.Activities
+namespace Symu.DNA.TwoModesNetworks.Assignment
 {
     public interface IAgentActivity
     {

@@ -50,7 +50,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
             _agents.Add(_agentId2);
             _network.Knowledge.AddKnowledge(_knowledge);
             _network.Belief.AddBelief(_belief);
-            _network.Activities.AddActivity(_activity, _groupId);
+            _network.Assignment.AddActivity(_activity, _groupId);
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
         private void AddActivity(AgentId agentId)
         {
             var agentActivity = new TestAgentActivity(agentId, _activity);
-            _network.Activities.AddAgentActivity(agentId, _groupId, agentActivity);
+            _network.Assignment.AddAgentActivity(agentId, _groupId, agentActivity);
         }
 
         private void AddBelief(AgentId agentId, float beliefValue)
@@ -353,7 +353,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
         [TestMethod]
         public void SetRelativeActivityTest()
         {
-            Assert.AreEqual(0, InteractionSphere.SetRelativeActivity(_agentId1, _agentId2, _network.Activities));
+            Assert.AreEqual(0, InteractionSphere.SetRelativeActivity(_agentId1, _agentId2, _network.Assignment));
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
         {
             AddActivity(_agentId1);
             AddActivity(_agentId2);
-            Assert.AreEqual(1, InteractionSphere.SetRelativeActivity(_agentId1, _agentId2, _network.Activities));
+            Assert.AreEqual(1, InteractionSphere.SetRelativeActivity(_agentId1, _agentId2, _network.Assignment));
         }
 
         #endregion

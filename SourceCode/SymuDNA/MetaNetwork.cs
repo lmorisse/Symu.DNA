@@ -11,7 +11,7 @@
 
 using System;
 using Symu.Common.Interfaces.Agent;
-using Symu.DNA.Activities;
+using Symu.DNA.OneModeNetworks.Activity;
 using Symu.DNA.OneModeNetworks.Agent;
 using Symu.DNA.OneModeNetworks.Belief;
 using Symu.DNA.OneModeNetworks.Event;
@@ -23,6 +23,7 @@ using Symu.DNA.TwoModesNetworks.AgentGroup;
 using Symu.DNA.TwoModesNetworks.AgentKnowledge;
 using Symu.DNA.TwoModesNetworks.AgentResource;
 using Symu.DNA.TwoModesNetworks.AgentRole;
+using Symu.DNA.TwoModesNetworks.Assignment;
 using Symu.DNA.TwoModesNetworks.Interaction;
 using Symu.DNA.TwoModesNetworks.Sphere;
 
@@ -105,7 +106,12 @@ namespace Symu.DNA
         ///     Kanban activities network
         ///     Who (agentId) works on what activities (Kanban)
         /// </summary>
-        public ActivityNetwork Activities { get; } = new ActivityNetwork();
+        public ActivityNetwork Activity { get; } = new ActivityNetwork();
+        /// <summary>
+        ///     Kanban activities network
+        ///     Who (agentId) works on what activities (Kanban)
+        /// </summary>
+        public AssignmentNetwork Assignment { get; } = new AssignmentNetwork();
 
         /// <summary>
         /// occurrences or phenomena that happen
@@ -132,7 +138,7 @@ namespace Symu.DNA
             AgentKnowledge.Clear();
             Belief.Clear();
             AgentBelief.Clear();
-            Activities.Clear(); 
+            Assignment.Clear(); 
             Agent.Clear();
             Event.Clear();
         }
@@ -144,7 +150,7 @@ namespace Symu.DNA
             AgentRole.RemoveAgent(agentId);
             AgentResource.RemoveAgent(agentId);
             AgentKnowledge.RemoveAgent(agentId);
-            Activities.RemoveAgent(agentId);
+            Assignment.RemoveAgent(agentId);
             AgentBelief.RemoveAgent(agentId);
             Agent.RemoveAgent(agentId);
         }
@@ -203,7 +209,7 @@ namespace Symu.DNA
             AgentResource.RemoveMemberFromGroup(agentId, groupId);
 
             // Remove all the groupId activities to the AgentId
-            Activities.RemoveMember(agentId, groupId);
+            Assignment.RemoveMember(agentId, groupId);
         }
 
         #endregion

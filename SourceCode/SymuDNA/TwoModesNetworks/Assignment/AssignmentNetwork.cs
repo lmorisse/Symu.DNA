@@ -15,19 +15,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Interfaces.Entity;
+using Symu.DNA.OneModeNetworks.Activity;
 using IKnowledge = Symu.DNA.OneModeNetworks.Knowledge.IKnowledge;
 
 #endregion
 
-namespace Symu.DNA.Activities
+namespace Symu.DNA.TwoModesNetworks.Assignment
 {
     /// <summary>
-    ///     Dictionary of all the activities of the network
-    ///     for every groupId, the list of all the AgentActivity having activities in a group
+    ///     Agent x Activity network : all the activities used by the agents of the network, categorized by group
+    ///     The network provides the list of all the AgentActivity having activities in a groupId
     ///     Key => GroupId
     ///     Value => List of AgentActivity : AgentId, activity
     /// </summary>
-    public class ActivityNetwork
+    public class AssignmentNetwork
     {
         /// <summary>
         ///     List of all GroupIds and their activities

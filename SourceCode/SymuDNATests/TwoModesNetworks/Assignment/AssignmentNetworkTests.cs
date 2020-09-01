@@ -10,21 +10,20 @@
 #region using directives
 
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces.Agent;
-using Symu.Common.Interfaces.Entity;
-using Symu.DNA.Activities;
+using Symu.DNA.OneModeNetworks.Activity;
+using Symu.DNA.TwoModesNetworks.Assignment;
 using SymuDNATests.Classes;
 
 #endregion
 
 
-namespace SymuDNATests.Activities
+namespace SymuDNATests.TwoModesNetworks.Assignment
 {
     [TestClass]
-    public class ActivityNetworkTests
+    public class AssignmentNetworkTests
     {
         private const string StrActivity1 = "a1";
         private const string StrActivity2 = "a2";
@@ -43,7 +42,7 @@ namespace SymuDNATests.Activities
         private readonly TestKnowledge _knowledge2 =
             new TestKnowledge(2);
 
-        private readonly ActivityNetwork _network = new ActivityNetwork();
+        private readonly AssignmentNetwork _network = new AssignmentNetwork();
 
         [TestInitialize]
         public void Initialize()

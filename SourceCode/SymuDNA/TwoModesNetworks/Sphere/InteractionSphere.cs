@@ -15,11 +15,11 @@ using System.Linq;
 using Symu.Common;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Math.ProbabilityDistributions;
-using Symu.DNA.Activities;
 using Symu.DNA.OneModeNetworks.Belief;
 using Symu.DNA.OneModeNetworks.Knowledge;
 using Symu.DNA.TwoModesNetworks.AgentBelief;
 using Symu.DNA.TwoModesNetworks.AgentKnowledge;
+using Symu.DNA.TwoModesNetworks.Assignment;
 using Symu.DNA.TwoModesNetworks.Interaction;
 
 #endregion
@@ -235,7 +235,7 @@ namespace Symu.DNA.TwoModesNetworks.Sphere
                 ? SetRelativeKnowledge(agentI, agentJ, network.AgentKnowledge)
                 : 0;
             var relativeActivity = _model.RelativeActivityWeight > Constants.Tolerance
-                ? SetRelativeActivity(agentI, agentJ, network.Activities)
+                ? SetRelativeActivity(agentI, agentJ, network.Assignment)
                 : 0;
 
             var derivedParameter =
@@ -332,7 +332,7 @@ namespace Symu.DNA.TwoModesNetworks.Sphere
         /// <param name="activityNetwork"></param>
         /// <returns></returns>
         public static float SetRelativeActivity(IAgentId agentId1, IAgentId agentId2,
-            ActivityNetwork activityNetwork)
+            AssignmentNetwork activityNetwork)
         {
             if (activityNetwork == null)
             {

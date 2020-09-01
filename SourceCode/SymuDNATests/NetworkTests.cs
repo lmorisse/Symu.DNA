@@ -15,7 +15,7 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces.Agent;
 using Symu.DNA;
-using Symu.DNA.Activities;
+using Symu.DNA.TwoModesNetworks.Assignment;
 using Symu.DNA.TwoModesNetworks.Sphere;
 using SymuDNATests.Classes;
 
@@ -54,7 +54,7 @@ namespace SymuDNATests
             var interactionSphereModel = new InteractionSphereModel();
             _network = new MetaNetwork(interactionSphereModel);
             _agent = new TestAgent(4, 2);
-            _network.Activities.AddActivities(new List<TestActivity> {_activity}, _teamId);
+            _network.Assignment.AddActivities(new List<TestActivity> {_activity}, _teamId);
             _testAgentRole = new TestAgentRole(_managerId, _teamId, 1);
             _agentResource = new TestAgentResource(_component.Id, new TestResourceUsage(IsSupportOn), 100);
             _agentGroup1 = new TestAgentGroup(TeammateId, 100);
@@ -75,7 +75,7 @@ namespace SymuDNATests
             _network.Belief.AddBelief(_belief);
             var agentBelief = new TestAgentBelief(_belief.Id);
             _network.AgentBelief.Add(TeammateId, agentBelief);
-            _network.Activities.AddActivities(TeammateId, _teamId, new List<IAgentActivity> { new TestAgentActivity(TeammateId, _activity) });
+            _network.Assignment.AddActivities(TeammateId, _teamId, new List<IAgentActivity> { new TestAgentActivity(TeammateId, _activity) });
             _network.Clear();
             Assert.IsFalse(_network.Interaction.Any());
             Assert.IsFalse(_network.AgentGroup.Any());
@@ -83,7 +83,7 @@ namespace SymuDNATests
             Assert.IsFalse(_network.Resource.Any());
             Assert.IsFalse(_network.Knowledge.Any());
             Assert.IsFalse(_network.AgentKnowledge.Any());
-            Assert.IsFalse(_network.Activities.Any());
+            Assert.IsFalse(_network.Assignment.Any());
             Assert.IsFalse(_network.Belief.Any());
             Assert.IsFalse(_network.AgentBelief.Any());
         }
@@ -153,7 +153,7 @@ namespace SymuDNATests
             _network.AgentResource.Add(TeammateId, _agentResource);
             _network.AgentKnowledge.Add(TeammateId, _agentKnowledge);
             _network.Belief.AddBelief(_belief);
-            _network.Activities.AddActivities(TeammateId, _teamId, new List<IAgentActivity> {new TestAgentActivity(TeammateId, _activity)});
+            _network.Assignment.AddActivities(TeammateId, _teamId, new List<IAgentActivity> {new TestAgentActivity(TeammateId, _activity)});
             _network.RemoveAgent(TeammateId);
             Assert.IsFalse(_network.Interaction.Any());
             Assert.AreEqual(0, _network.AgentGroup.GetAgentsCount(_teamId, TeammateId.ClassId));
@@ -162,7 +162,7 @@ namespace SymuDNATests
             Assert.IsFalse(_network.AgentKnowledge.Any());
             Assert.IsFalse(_network.AgentBelief.Any());
             Assert.IsFalse(_network.Agent.Any());
-            Assert.IsFalse(_network.Activities.AgentHasActivitiesOn(TeammateId, _teamId));
+            Assert.IsFalse(_network.Assignment.AgentHasActivitiesOn(TeammateId, _teamId));
         }
 
         [TestMethod]
