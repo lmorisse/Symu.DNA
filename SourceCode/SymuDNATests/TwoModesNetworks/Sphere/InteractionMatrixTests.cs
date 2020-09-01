@@ -14,7 +14,6 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces.Agent;
 using Symu.DNA;
-using Symu.DNA.OneModeNetworks.Knowledge;
 using Symu.DNA.TwoModesNetworks.AgentKnowledge;
 using Symu.DNA.TwoModesNetworks.Sphere;
 using SymuDNATests.Classes;

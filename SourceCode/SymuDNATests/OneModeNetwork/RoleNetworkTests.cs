@@ -10,12 +10,12 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.DNA.OneModeNetworks.Role;
+using Symu.DNA.OneModeNetworks;
 using SymuDNATests.Classes;
 
 #endregion
 
-namespace SymuDNATests.OneModeNetwork.Role
+namespace SymuDNATests.OneModeNetwork
 {
     [TestClass]
     public class RoleNetworkTests

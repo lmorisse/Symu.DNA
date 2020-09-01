@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces.Agent;
-using Symu.DNA.OneModeNetworks.Activity;
+using Symu.DNA.OneModeNetworks;
 using Symu.DNA.TwoModesNetworks.Assignment;
 using SymuDNATests.Classes;
 

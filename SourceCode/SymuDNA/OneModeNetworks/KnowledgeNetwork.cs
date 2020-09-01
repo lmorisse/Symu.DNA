@@ -11,11 +11,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Symu.Common.Interfaces.Entity;
 
 #endregion
 
-namespace Symu.DNA.OneModeNetworks.Knowledge
+namespace Symu.DNA.OneModeNetworks
 {
     /// <summary>
     ///    Knowledge network
@@ -26,46 +27,49 @@ namespace Symu.DNA.OneModeNetworks.Knowledge
     {
 
         /// <summary>
-        ///     Repository of all the knowledges used during the simulation
+        ///     Repository of all the knowledges used in the network
         /// </summary>
-        public KnowledgeCollection Repository { get; } = new KnowledgeCollection();
+        public List<IKnowledge> List { get; } = new List<IKnowledge>();
 
         public bool Any()
         {
-            return Repository.Any();
+            return List.Any();
         }
 
         public void Clear()
         {
-            Repository.Clear();
+            List.Clear();
         }
-        public IKnowledge GetKnowledge(IId knowledgeId)
+        public IKnowledge Get(IId knowledgeId)
         {
-            return Repository.GetKnowledge(knowledgeId);
+            return List.Find(k => k.Id.Equals(knowledgeId));
         }
-        public TKnowledge GetKnowledge<TKnowledge>(IId knowledgeId) where TKnowledge : IKnowledge
+        public TKnowledge Get<TKnowledge>(IId knowledgeId) where TKnowledge : IKnowledge
         {
-            return (TKnowledge) GetKnowledge(knowledgeId);
+            return (TKnowledge) Get(knowledgeId);
         }
-
+        public IEnumerable<IId> GetIds()
+        {
+            return List.Select(x => x.Id);
+        }
         /// <summary>
         ///     Add a Knowledge to the repository
         ///     Should be called only by NetWork, not directly to add belief in parallel
         /// </summary>
-        public void AddKnowledge(IKnowledge knowledge)
+        public void Add(IKnowledge knowledge)
         {
-            if (Repository.Contains(knowledge))
+            if (List.Contains(knowledge))
             {
                 return;
             }
 
-            Repository.Add(knowledge);
+            List.Add(knowledge);
         }
 
         /// <summary>
         ///     Add a set of Knowledge to the repository
         /// </summary>
-        public void AddKnowledges(IEnumerable<IKnowledge> knowledges)
+        public void Add(IEnumerable<IKnowledge> knowledges)
         {
             if (knowledges is null)
             {
@@ -74,8 +78,9 @@ namespace Symu.DNA.OneModeNetworks.Knowledge
 
             foreach (var knowledge in knowledges)
             {
-                AddKnowledge(knowledge);
+                Add(knowledge);
             }
         }
+
     }
 }

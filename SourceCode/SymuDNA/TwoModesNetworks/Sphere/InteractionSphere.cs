@@ -15,8 +15,6 @@ using System.Linq;
 using Symu.Common;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Math.ProbabilityDistributions;
-using Symu.DNA.OneModeNetworks.Belief;
-using Symu.DNA.OneModeNetworks.Knowledge;
 using Symu.DNA.TwoModesNetworks.AgentBelief;
 using Symu.DNA.TwoModesNetworks.AgentKnowledge;
 using Symu.DNA.TwoModesNetworks.Assignment;

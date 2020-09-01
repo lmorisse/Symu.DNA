@@ -10,6 +10,7 @@
 #region using directives
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Symu.Common.Interfaces.Agent;
@@ -17,7 +18,7 @@ using Symu.Common.Interfaces.Entity;
 
 #endregion
 
-namespace Symu.DNA.OneModeNetworks.Agent
+namespace Symu.DNA.OneModeNetworks
 {
     /// <summary>
     ///     Network agents of this environment
@@ -25,17 +26,16 @@ namespace Symu.DNA.OneModeNetworks.Agent
     /// <remarks>Also named Actor in social network analysis</remarks>
     public class AgentNetwork
     {
-
-        public ConcurrentAgents Agents { get; } = new ConcurrentAgents();
-        public int Count => Agents.Count;
+        public readonly ConcurrentDictionary<IAgentId, IAgent> List = new ConcurrentDictionary<IAgentId, IAgent>();
+        public int Count => List.Count;
 
         public bool Any()
         {
-            return Agents.Count > 0;
+            return List.Count > 0;
         }
         public void Clear()
         {
-            Agents.Clear();
+            List.Clear();
         }
 
         public void Add(IAgent agent)
@@ -47,54 +47,78 @@ namespace Symu.DNA.OneModeNetworks.Agent
 
             if (!Exists(agent.AgentId))
             {
-                Agents.Add(agent);
+                List[agent.AgentId] = agent;
             }
         }
 
-        public void RemoveAgent(IAgentId agentId)
-        {
-            Agents.Remove(agentId);
+        public void Remove(IAgentId agentId)
+        {      
+            if (Exists(agentId))
+            {
+                var remove = List.TryRemove(agentId, out _);
+                if (!remove)
+                {
+                    throw new Exception("Concurrent access");
+                }
+            }
+            else
+            {
+                throw new Exception("Agent " + agentId + " does not exist (ConcurrentEnvironment.Remove)");
+            }
         }
 
         public bool Exists(IAgentId agentId)
         {
-            return Agents.Exists(agentId);
+            if (agentId == null)
+            {
+                throw new ArgumentNullException(nameof(agentId));
+            }
+
+            return List.ContainsKey(agentId);
         }
 
+        /// <summary>
+        ///     Get a typed agent by its agentId
+        /// </summary>
+        /// <typeparam name="TAgent"></typeparam>
+        /// <param name="agentId"></param>
+        /// <returns>The typed agent</returns>
         public TAgent Get<TAgent>(IAgentId agentId) where TAgent : IAgent
         {
-            return Agents.Get<TAgent>(agentId);
+            return (TAgent) Get(agentId);
         }
+        
 
         public IAgent Get(IAgentId agentId)
         {
-            return Agents.Get(agentId);
+            return Exists(agentId) ? List[agentId] : default;
         }
 
         /// <summary>
         ///     Returns a list with the names of all the agents.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IAgentId> GetKeys()
+        public IEnumerable<IAgentId> GetIds()
         {
-            return Agents.GetKeys();
+            return List.Keys;
         }
 
         /// <summary>
         ///     Returns a list with the names of all the agents.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IAgent> GetValues()
+        public IEnumerable<IAgent> Gets()
         {
-            return Agents.GetValues();
+            return List.Values;
         }
 
         /// <summary>
         ///     The number of agents in the environment
         /// </summary>
-        public ushort CountByClassId(IClassId classKey)
+        public ushort CountByClassId(IClassId classId)
         {
-            return Agents.CountByClassId(classKey);
+            var count = List.Values.Count(a => a.AgentId.Equals(classId));
+            return Convert.ToUInt16(count);
         }
 
         /// <summary>
@@ -103,7 +127,7 @@ namespace Symu.DNA.OneModeNetworks.Agent
         /// <returns>The name fragment that the agent names should contain</returns>
         public IEnumerable<IAgentId> FilteredKeysByClassId(IClassId classId)
         {
-            return Agents.FilteredKeysByClassId(classId);
+            return List.Keys.Where(a => a.Equals(classId));
         }
 
         /// <summary>
@@ -112,12 +136,13 @@ namespace Symu.DNA.OneModeNetworks.Agent
         /// <returns>The name fragment that the agent names should contain</returns>
         public IEnumerable<IAgent> FilteredByClassId(IClassId classId)
         {
-            return Agents.FilteredByClassId(classId);
+            return List.Values.Where(a => a.AgentId.Equals(classId));
         }
 
-        public IAgentId GetAgentId(IId id)
+        public IAgentId GetId(IId id)
         {
-            return Agents.GetKeys().ToList().Find(x => x.Id.Equals(id));
+            return List.Keys.ToList().Find(x => x.Id.Equals(id));
         }
+
     }
 }

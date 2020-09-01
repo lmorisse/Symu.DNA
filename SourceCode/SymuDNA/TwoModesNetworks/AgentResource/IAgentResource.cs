@@ -8,7 +8,7 @@
 #endregion
 
 using Symu.Common.Interfaces.Entity;
-using Symu.DNA.OneModeNetworks.Resource;
+using Symu.DNA.OneModeNetworks;
 
 namespace Symu.DNA.TwoModesNetworks.AgentResource
 {

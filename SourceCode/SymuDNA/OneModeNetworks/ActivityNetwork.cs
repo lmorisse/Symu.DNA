@@ -11,25 +11,26 @@
 
 #endregion
 
-using Symu.DNA.OneModeNetworks.Role;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Symu.DNA.OneModeNetworks.Activity
+namespace Symu.DNA.OneModeNetworks
 {
     public class ActivityNetwork
     {
         /// <summary>
         ///     Repository of all the activity (Tasks) used in the network
         /// </summary>
-        public ActivityCollection Repository { get; } = new ActivityCollection();
+        public List<IActivity> List { get; } = new List<IActivity>();
 
         public void Clear()
         {
-            Repository.Clear();
+            List.Clear();
         }
 
         public bool Any()
         {
-            return Repository.Any();
+            return List.Any();
         }
 
         public void Add(IActivity activity)
@@ -39,12 +40,12 @@ namespace Symu.DNA.OneModeNetworks.Activity
                 return;
             }
 
-            Repository.Add(activity);
+            List.Add(activity);
         }
 
         public bool Exists(IActivity activity)
         {
-            return Repository.Contains(activity);
+            return List.Contains(activity);
         }
     }
 }

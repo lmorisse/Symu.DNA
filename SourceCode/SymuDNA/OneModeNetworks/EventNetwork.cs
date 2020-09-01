@@ -17,7 +17,7 @@ using System.Collections.Generic;
 
 #endregion
 
-namespace Symu.DNA.OneModeNetworks.Event
+namespace Symu.DNA.OneModeNetworks
 {
     /// <summary>
     ///     EventNetwork helps you schedule one shot events that happen during the simulation

@@ -7,14 +7,14 @@
 
 #endregion
 
-using Symu.Common.Interfaces.Agent;
-using Symu.DNA.OneModeNetworks;
-
-namespace Symu.DNA.TwoModesNetworks.Assignment
+namespace Symu.DNA.OneModeNetworks
 {
-    public interface IAgentActivity
+    /// <summary>
+    /// Interface of event :
+    /// occurrences or phenomena that happen
+    /// </summary>
+    public interface IEvent
     {
-        IAgentId Id { get; }
-        IActivity Activity { get; set; }
+
     }
 }

@@ -48,8 +48,8 @@ namespace SymuDNATests.TwoModesNetworks.Sphere
             _network = new MetaNetwork(_interactionSphereModel);
             _agents.Add(_agentId1);
             _agents.Add(_agentId2);
-            _network.Knowledge.AddKnowledge(_knowledge);
-            _network.Belief.AddBelief(_belief);
+            _network.Knowledge.Add(_knowledge);
+            _network.Belief.Add(_belief);
             _network.Assignment.AddActivity(_activity, _groupId);
         }
 

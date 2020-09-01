@@ -112,7 +112,7 @@ namespace SymuDNATests.TwoModesNetworks.AgentBelief
         {
             _network.AddAgentId(_agentId);
             Assert.AreEqual(0, _network.GetBeliefIds(_agentId).Count());
-            _network.AddBelief(_agentId, _agentBelief);
+            _network.AddAgentBelief(_agentId, _agentBelief);
             Assert.AreEqual(1, _network.GetBeliefIds(_agentId).Count());
         }
     }

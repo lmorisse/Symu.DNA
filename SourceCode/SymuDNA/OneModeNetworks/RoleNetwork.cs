@@ -11,23 +11,26 @@
 
 #endregion
 
-namespace Symu.DNA.OneModeNetworks.Role
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Symu.DNA.OneModeNetworks
 {
     public class RoleNetwork
     {
         /// <summary>
-        ///     Repository of all the resources used during the simulation
+        ///     Repository of all the resources used in the network
         /// </summary>
-        public RoleCollection Repository { get; } = new RoleCollection();
+        public List<IRole> List { get; } = new List<IRole>();
 
         public void Clear()
         {
-            Repository.Clear();
+            List.Clear();
         }
 
         public bool Any()
         {
-            return Repository.Any();
+            return List.Any();
         }
 
         public void Add(IRole role)
@@ -37,12 +40,12 @@ namespace Symu.DNA.OneModeNetworks.Role
                 return;
             }
 
-            Repository.Add(role);
+            List.Add(role);
         }
 
         public bool Exists(IRole role)
         {
-            return Repository.Contains(role);
+            return List.Contains(role);
         }
     }
 }

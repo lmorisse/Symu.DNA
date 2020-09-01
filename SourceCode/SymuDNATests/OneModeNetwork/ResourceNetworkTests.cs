@@ -10,13 +10,12 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.Common.Interfaces.Agent;
-using Symu.DNA.OneModeNetworks.Resource;
+using Symu.DNA.OneModeNetworks;
 using SymuDNATests.Classes;
 
 #endregion
 
-namespace SymuDNATests.OneModeNetwork.Resource
+namespace SymuDNATests.OneModeNetwork
 {
     [TestClass]
     public class ResourceNetworkTests
@@ -47,6 +46,9 @@ namespace SymuDNATests.OneModeNetwork.Resource
             _resources.Add(_resource);
             Assert.IsTrue(_resources.Any());
             Assert.IsTrue(_resources.Exists(_resource));
+            // Duplicate
+            _resources.Add(_resource);
+            Assert.AreEqual(1, _resources.List.Count);
         }
 
         [TestMethod]
@@ -57,6 +59,16 @@ namespace SymuDNATests.OneModeNetwork.Resource
             _resources.Remove(_resource);
             Assert.IsFalse(_resources.Any());
             Assert.IsFalse(_resources.Exists(_resource));
+        }
+
+
+        [TestMethod]
+        public void GetDatabaseTest()
+        {
+            Assert.IsNull(_resources.Get(_resource.Id));
+            _resources.Add(_resource);
+            Assert.IsNotNull(_resources.Get(_resource.Id));
+            Assert.AreEqual(_resource, _resources.Get(_resource.Id));
         }
     }
 }

@@ -63,7 +63,7 @@ namespace Symu.DNA.TwoModesNetworks.AgentBelief
         public void Add(IAgentId agentId, IAgentBelief agentBelief)
         {
             AddAgentId(agentId);
-            AddBelief(agentId, agentBelief);
+            AddAgentBelief(agentId, agentBelief);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Symu.DNA.TwoModesNetworks.AgentBelief
         /// </summary>
         /// <param name="agentId"></param>
         /// <param name="agentBelief"></param>
-        public void AddBelief(IAgentId agentId, IAgentBelief agentBelief)
+        public void AddAgentBelief(IAgentId agentId, IAgentBelief agentBelief)
         {
             if (agentBelief == null)
             {

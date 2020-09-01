@@ -15,8 +15,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Interfaces.Entity;
-using Symu.DNA.OneModeNetworks.Activity;
-using IKnowledge = Symu.DNA.OneModeNetworks.Knowledge.IKnowledge;
+using Symu.DNA.OneModeNetworks;
+using IKnowledge = Symu.DNA.OneModeNetworks.IKnowledge;
 
 #endregion
 

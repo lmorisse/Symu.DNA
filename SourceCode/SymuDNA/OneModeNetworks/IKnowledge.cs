@@ -9,17 +9,16 @@
 
 using Symu.Common.Interfaces.Entity;
 
-namespace Symu.DNA.OneModeNetworks.Belief
-{
-    /// <summary>
-    ///     Describe a belief, based on knowledge/fact
+namespace Symu.DNA.OneModeNetworks
+{    /// <summary>
+    ///     Describe an area of knowledge
     /// </summary>
-    public interface IBelief
+    public interface IKnowledge
     {
         /// <summary>
         ///     Unique identifier af the knowledge
         /// </summary>
         IId Id { get; }        
-        bool Equals(IBelief belief);
+        bool Equals(IKnowledge knowledge);
     }
 }

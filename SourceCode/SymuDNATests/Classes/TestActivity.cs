@@ -11,8 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Symu.Common.Interfaces.Entity;
-using Symu.DNA.OneModeNetworks.Activity;
-using Symu.DNA.OneModeNetworks.Knowledge;
+using Symu.DNA.OneModeNetworks;
 
 namespace SymuDNATests.Classes
 {

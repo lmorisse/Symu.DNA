@@ -70,9 +70,9 @@ namespace SymuDNATests
             _network.AgentGroup.AddGroup(_teamId);
             _network.AgentRole.Add(_testAgentRole);
             _network.Resource.Add(_component);
-            _network.Knowledge.AddKnowledge(_knowledge);
+            _network.Knowledge.Add(_knowledge);
             _network.AgentKnowledge.Add(TeammateId, _agentKnowledge);
-            _network.Belief.AddBelief(_belief);
+            _network.Belief.Add(_belief);
             var agentBelief = new TestAgentBelief(_belief.Id);
             _network.AgentBelief.Add(TeammateId, agentBelief);
             _network.Assignment.AddActivities(TeammateId, _teamId, new List<IAgentActivity> { new TestAgentActivity(TeammateId, _activity) });
@@ -152,7 +152,7 @@ namespace SymuDNATests
             _network.AgentRole.Add(_testAgentRole);
             _network.AgentResource.Add(TeammateId, _agentResource);
             _network.AgentKnowledge.Add(TeammateId, _agentKnowledge);
-            _network.Belief.AddBelief(_belief);
+            _network.Belief.Add(_belief);
             _network.Assignment.AddActivities(TeammateId, _teamId, new List<IAgentActivity> {new TestAgentActivity(TeammateId, _activity)});
             _network.RemoveAgent(TeammateId);
             Assert.IsFalse(_network.Interaction.Any());

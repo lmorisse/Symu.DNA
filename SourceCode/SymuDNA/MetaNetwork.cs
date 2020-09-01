@@ -11,13 +11,7 @@
 
 using System;
 using Symu.Common.Interfaces.Agent;
-using Symu.DNA.OneModeNetworks.Activity;
-using Symu.DNA.OneModeNetworks.Agent;
-using Symu.DNA.OneModeNetworks.Belief;
-using Symu.DNA.OneModeNetworks.Event;
-using Symu.DNA.OneModeNetworks.Knowledge;
-using Symu.DNA.OneModeNetworks.Resource;
-using Symu.DNA.OneModeNetworks.Role;
+using Symu.DNA.OneModeNetworks;
 using Symu.DNA.TwoModesNetworks.AgentBelief;
 using Symu.DNA.TwoModesNetworks.AgentGroup;
 using Symu.DNA.TwoModesNetworks.AgentKnowledge;
@@ -152,7 +146,7 @@ namespace Symu.DNA
             AgentKnowledge.RemoveAgent(agentId);
             Assignment.RemoveAgent(agentId);
             AgentBelief.RemoveAgent(agentId);
-            Agent.RemoveAgent(agentId);
+            Agent.Remove(agentId);
         }
 
         #endregion

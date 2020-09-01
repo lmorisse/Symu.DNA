@@ -87,7 +87,7 @@ namespace SymuDNATests.TwoModesNetworks.AgentKnowledge
         {
             _knowledgeNetwork.AddAgentId(_agentId);
             Assert.IsFalse(_knowledgeNetwork.Exists(_agentId, _knowledge.Id));
-            _knowledgeNetwork.AddKnowledge(_agentId, _agentKnowledge);
+            _knowledgeNetwork.AddAgentKnowledge(_agentId, _agentKnowledge);
             Assert.IsTrue(_knowledgeNetwork.Exists(_agentId, _knowledge.Id));
         }
 
@@ -96,7 +96,7 @@ namespace SymuDNATests.TwoModesNetworks.AgentKnowledge
         {
             _knowledgeNetwork.AddAgentId(_agentId);
             Assert.AreEqual(0, _knowledgeNetwork.GetKnowledgeIds(_agentId).Count());
-            _knowledgeNetwork.AddKnowledge(_agentId, _agentKnowledge);
+            _knowledgeNetwork.AddAgentKnowledge(_agentId, _agentKnowledge);
             Assert.AreEqual(1, _knowledgeNetwork.GetKnowledgeIds(_agentId).Count());
         }
 

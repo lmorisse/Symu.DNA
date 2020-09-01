@@ -9,9 +9,9 @@
 
 using System.Collections.Generic;
 using Symu.Common.Interfaces.Entity;
-using IKnowledge = Symu.DNA.OneModeNetworks.Knowledge.IKnowledge;
+using IKnowledge = Symu.DNA.OneModeNetworks.IKnowledge;
 
-namespace Symu.DNA.OneModeNetworks.Activity
+namespace Symu.DNA.OneModeNetworks
 {
     /// <summary>
     ///     Defines an activity (a task type)

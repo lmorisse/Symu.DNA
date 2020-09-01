@@ -7,14 +7,19 @@
 
 #endregion
 
-namespace Symu.DNA.OneModeNetworks.Event
+using System;
+using System.Data.SqlTypes;
+using Symu.Common.Interfaces.Agent;
+
+namespace Symu.DNA.OneModeNetworks
 {
     /// <summary>
-    /// Interface of event :
-    /// occurrences or phenomena that happen
+    /// Interface for agent used in the MetaNetwork
     /// </summary>
-    public interface IEvent
+    public interface IAgent: INullable, IDisposable
     {
-
+        IAgentId AgentId {get;
+            set;
+        }
     }
 }

@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Symu.Common.Interfaces.Agent;
-using Symu.DNA.OneModeNetworks.Role;
+using Symu.DNA.OneModeNetworks;
 
 #endregion
 

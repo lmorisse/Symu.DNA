@@ -7,7 +7,7 @@
 
 #endregion
 
-namespace Symu.DNA.OneModeNetworks.Role
+namespace Symu.DNA.OneModeNetworks
 {
     /// <summary>
     /// Defines the role of an agent for the RoleNetwork

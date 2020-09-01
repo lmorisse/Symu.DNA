@@ -75,7 +75,7 @@ namespace Symu.DNA.TwoModesNetworks.AgentKnowledge
         public void Add(IAgentId agentId, IAgentKnowledge agentKnowledge)
         {
             AddAgentId(agentId);
-            AddKnowledge(agentId, agentKnowledge);
+            AddAgentKnowledge(agentId, agentKnowledge);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Symu.DNA.TwoModesNetworks.AgentKnowledge
         /// </summary>
         /// <param name="agentKnowledge"></param>
         /// <param name="agentId"></param>
-        public void AddKnowledge(IAgentId agentId, IAgentKnowledge agentKnowledge)
+        public void AddAgentKnowledge(IAgentId agentId, IAgentKnowledge agentKnowledge)
         {
             if (agentKnowledge == null)
             {

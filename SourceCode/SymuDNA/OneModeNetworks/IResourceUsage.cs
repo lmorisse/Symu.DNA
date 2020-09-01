@@ -7,7 +7,7 @@
 
 #endregion
 
-namespace Symu.DNA.OneModeNetworks.Resource
+namespace Symu.DNA.OneModeNetworks
 {
     /// <summary>
     /// Define the type of usage done of a resource,

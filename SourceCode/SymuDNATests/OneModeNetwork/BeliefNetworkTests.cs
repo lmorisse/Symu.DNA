@@ -10,12 +10,12 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.DNA.OneModeNetworks.Belief;
+using Symu.DNA.OneModeNetworks;
 using SymuDNATests.Classes;
 
 #endregion
 
-namespace SymuDNATests.OneModeNetwork.Belief
+namespace SymuDNATests.OneModeNetwork
 {
     [TestClass]
     public class BeliefNetworkTests
@@ -29,7 +29,7 @@ namespace SymuDNATests.OneModeNetwork.Belief
         public void AddBeliefTest()
         {
             Assert.IsFalse(_network.Exists(_belief));
-            _network.AddBelief(_belief);
+            _network.Add(_belief);
             Assert.IsTrue(_network.Exists(_belief));
         }
 
@@ -37,7 +37,7 @@ namespace SymuDNATests.OneModeNetwork.Belief
         public void AddBeliefTest1()
         {
             Assert.IsFalse(_network.Exists(_belief.Id));
-            _network.AddBelief(_belief);
+            _network.Add(_belief);
             Assert.IsTrue(_network.Exists(_belief.Id));
         }
 
@@ -45,14 +45,14 @@ namespace SymuDNATests.OneModeNetwork.Belief
         public void AnyTest()
         {
             Assert.IsFalse(_network.Any());
-            _network.AddBelief(_belief);
+            _network.Add(_belief);
             Assert.IsTrue(_network.Any());
         }
 
         [TestMethod]
         public void ClearTest()
         {
-            _network.AddBelief(_belief);
+            _network.Add(_belief);
             _network.Clear();
             Assert.IsFalse(_network.Any());
         }
@@ -60,11 +60,17 @@ namespace SymuDNATests.OneModeNetwork.Belief
         [TestMethod]
         public void GetBeliefTest()
         {
-            Assert.IsNull(_network.GetBelief(_belief.Id));
-            _network.AddBelief(_belief);
-            Assert.IsNotNull(_network.GetBelief(_belief.Id));
+            Assert.IsNull(_network.Get(_belief.Id));
+            _network.Add(_belief);
+            Assert.IsNotNull(_network.Get(_belief.Id));
         }
 
-     
+        [TestMethod]
+        public void ExistsTest()
+        {
+            Assert.IsFalse(_network.Exists(_belief.Id));
+            _network.Add(_belief);
+            Assert.IsTrue(_network.Exists(_belief.Id));
+        }
     }
 }

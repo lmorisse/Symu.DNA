@@ -10,11 +10,13 @@
 #region using directives
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Symu.Common.Interfaces.Entity;
 
 #endregion
 
-namespace Symu.DNA.OneModeNetworks.Resource
+namespace Symu.DNA.OneModeNetworks
 {
     /// <summary>
     ///     All resources in the network
@@ -25,18 +27,24 @@ namespace Symu.DNA.OneModeNetworks.Resource
         /// <summary>
         ///     Repository of all the resources used during the simulation
         /// </summary>
-        public ResourceCollection Repository { get; } = new ResourceCollection();
+        public List<IResource> List { get; } = new List<IResource>();
 
-        public int Count => Repository.Count;
+        public int Count => List.Count;
 
         public bool Any()
         {
-            return Repository.Any();
+            return List.Any();
         }
 
         public void Clear()
         {
-            Repository.Clear();
+            List.Clear();
+        }
+
+
+        public IResource Get(IId resourceId)
+        {
+            return List.Find(k => k.Id.Equals(resourceId));
         }
 
         /// <summary>
@@ -44,19 +52,9 @@ namespace Symu.DNA.OneModeNetworks.Resource
         /// </summary>
         /// <param name="resourceId"></param>
         /// <returns></returns>
-        public IResource GetResource(IId resourceId)
+        public TResource Get<TResource >(IId resourceId) where TResource : IResource
         {
-            return Repository.Get(resourceId);
-        }
-
-        /// <summary>
-        /// Get the resource from its Id
-        /// </summary>
-        /// <param name="resourceId"></param>
-        /// <returns></returns>
-        public TResource GetResource<TResource >(IId resourceId) where TResource : IResource
-        {
-            return (TResource)Repository.Get(resourceId);
+            return (TResource)Get(resourceId);
         }
 
         /// <summary>
@@ -69,17 +67,17 @@ namespace Symu.DNA.OneModeNetworks.Resource
                 return;
             }
 
-            Repository.Add(resource);
+            List.Add(resource);
         }
 
         public bool Exists(IResource resource)
         {
-            return Repository.Contains(resource);
+            return List.Contains(resource);
         }
 
         public bool Exists(IId resourceId)
         {
-            return Repository.Exists(resourceId);
+            return List.Exists(k => k.Id.Equals(resourceId));
         }
 
         public void Remove(IResource resource)
@@ -89,11 +87,11 @@ namespace Symu.DNA.OneModeNetworks.Resource
                 throw new ArgumentNullException(nameof(resource));
             }
 
-            RemoveResource(resource.Id);
+            Remove(resource.Id);
         }
-        public void RemoveResource(IId resourceId)
+        public void Remove(IId resourceId)
         {
-            Repository.List.RemoveAll(x => x.Id.Equals(resourceId));
+            List.RemoveAll(x => x.Id.Equals(resourceId));
         }
     }
 }

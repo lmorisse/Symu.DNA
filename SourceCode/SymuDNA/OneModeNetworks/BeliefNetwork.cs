@@ -9,11 +9,13 @@
 
 #region using directives
 
+using System.Collections.Generic;
+using System.Linq;
 using Symu.Common.Interfaces.Entity;
 
 #endregion
 
-namespace Symu.DNA.OneModeNetworks.Belief
+namespace Symu.DNA.OneModeNetworks
 {
     /// <summary>
     ///     Belief network
@@ -25,49 +27,49 @@ namespace Symu.DNA.OneModeNetworks.Belief
     public class BeliefNetwork
     {
         /// <summary>
-        ///     Repository of all the Beliefs used during the simulation
+        ///     Repository of all the Beliefs used in the network
         /// </summary>
-        public BeliefCollection Repository { get; } = new BeliefCollection();
+        public List<IBelief> List { get; } = new List<IBelief>();
         public bool Any()
         {
-            return Repository.Any();
+            return List.Any();
         }
 
         public void Clear()
         {
-            Repository.Clear();
+            List.Clear();
+        }
+        public TBelief Get<TBelief>(IId beliefId) where TBelief : IBelief
+        {
+            return (TBelief)Get(beliefId);
         }
 
-        public IBelief GetBelief(IId beliefId)
+        public IBelief Get(IId beliefId)
         {
-            return Repository.GetBelief(beliefId);
-        }
-        public TBelief GetBelief<TBelief>(IId beliefId) where TBelief : IBelief
-        {
-            return (TBelief)GetBelief(beliefId);
+            return List.Find(k => k.Id.Equals(beliefId));
         }
 
         /// <summary>
         ///     Add a Belief to the repository
         /// </summary>
-        public void AddBelief(IBelief belief)
+        public void Add(IBelief belief)
         {
             if (Exists(belief))
             {
                 return;
             }
 
-            Repository.Add(belief);
+            List.Add(belief);
         }
 
         public bool Exists(IBelief belief)
         {
-            return Repository.Contains(belief);
+            return List.Contains(belief);
         }
 
         public bool Exists(IId beliefId)
         {
-            return Repository.Exists(beliefId);
+            return List.Exists(k => k.Id.Equals(beliefId));
         }
     }
 }
