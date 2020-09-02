@@ -10,8 +10,8 @@
 #region using directives
 
 using Symu.Common.Interfaces.Agent;
-using Symu.DNA.OneModeNetworks;
-using Symu.DNA.TwoModesNetworks.Assignment;
+using Symu.DNA.Networks.OneModeNetworks;
+using Symu.DNA.Networks.TwoModesNetworks.Assignment;
 
 #endregion
 
@@ -27,5 +27,11 @@ namespace SymuDNATests.Classes
 
         public IAgentId Id { get; }
         public IActivity Activity { get; set; }
+
+        /// <summary>
+        /// The value used to feed the matrix network
+        /// For a binary matrix network, the value is 1
+        /// </summary>
+        public float Value => 1;
     }
 }

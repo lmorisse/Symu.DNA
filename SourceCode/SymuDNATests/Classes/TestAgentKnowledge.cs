@@ -8,7 +8,7 @@
 #endregion
 
 using Symu.Common.Interfaces.Entity;
-using Symu.DNA.TwoModesNetworks.AgentKnowledge;
+using Symu.DNA.Networks.TwoModesNetworks.AgentKnowledge;
 
 namespace SymuDNATests.Classes
 {    /// <summary>
@@ -16,7 +16,7 @@ namespace SymuDNATests.Classes
     /// </summary>
     public class TestAgentKnowledge : IAgentKnowledge
     {
-        internal float Value { get; set; }
+        public float Value { get; set; }
         public IId KnowledgeId { get; }
         public TestAgentKnowledge(IId knowledgeId)
         {

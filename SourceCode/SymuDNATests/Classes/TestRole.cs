@@ -7,7 +7,8 @@
 
 #endregion
 
-using Symu.DNA.OneModeNetworks;
+using Symu.Common.Interfaces.Entity;
+using Symu.DNA.Networks.OneModeNetworks;
 
 namespace SymuDNATests.Classes
 {
@@ -17,6 +18,7 @@ namespace SymuDNATests.Classes
         {
             Role = role;
         }
+        public IId Id => new UId(Role);
         public readonly byte Role;
         public bool Equals(IRole role)
         {

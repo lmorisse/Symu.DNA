@@ -10,7 +10,7 @@
 #region using directives
 
 using Symu.Common.Interfaces.Entity;
-using Symu.DNA.TwoModesNetworks.AgentBelief;
+using Symu.DNA.Networks.TwoModesNetworks.AgentBelief;
 
 #endregion
 
@@ -18,7 +18,7 @@ namespace SymuDNATests.Classes
 {
     public class TestAgentBelief : IAgentBelief
     {
-        internal float Value { get; set; }
+        public float Value { get; set; }
         public TestAgentBelief(IId beliefId)
         {
             BeliefId = beliefId;

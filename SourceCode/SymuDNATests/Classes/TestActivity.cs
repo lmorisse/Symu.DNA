@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Symu.Common.Interfaces.Entity;
-using Symu.DNA.OneModeNetworks;
+using Symu.DNA.Networks.OneModeNetworks;
 
 namespace SymuDNATests.Classes
 {
@@ -21,12 +21,16 @@ namespace SymuDNATests.Classes
     /// <remarks>This entity is called a Task in classical organization network analysis theory, but it's confusing with a task on which agent works</remarks>
     public class TestActivity: IActivity
     {
-        public TestActivity(string name)
+        public TestActivity(byte id)
         {
-            Name = name;
+            Id = new UId(id);
         }
 
-        public string Name { get; set; }
+        /// <summary>
+        ///     Unique identifier of the activity
+        /// </summary>
+        public IId Id { get; }
+
         /// <summary>
         ///     List of knowledges required to work on this activity
         /// </summary>
@@ -64,7 +68,7 @@ namespace SymuDNATests.Classes
         public bool Equals(IActivity activity)
         {
             return activity is TestActivity test &&
-                   Name == test.Name;
+                   Id == test.Id;
         }
     }
 }

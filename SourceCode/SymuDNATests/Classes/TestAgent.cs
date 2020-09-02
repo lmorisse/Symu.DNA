@@ -9,7 +9,7 @@
 
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Interfaces.Entity;
-using Symu.DNA.OneModeNetworks;
+using Symu.DNA.Networks.OneModeNetworks;
 
 namespace SymuDNATests.Classes
 {
