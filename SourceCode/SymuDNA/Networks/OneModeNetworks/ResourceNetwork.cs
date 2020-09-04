@@ -102,5 +102,10 @@ namespace Symu.DNA.Networks.OneModeNetworks
         {
             return List.Select(x => x.Id);
         }
+
+        public IReadOnlyList<IId> ToVector()
+        {
+            return GetIds().OrderBy(x => x).ToList();
+        }
     }
 }

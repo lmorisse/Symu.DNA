@@ -82,5 +82,9 @@ namespace Symu.DNA.Networks.OneModeNetworks
             }
         }
 
+        public IReadOnlyList<IId> ToVector()
+        {
+            return GetIds().OrderBy(x => x).ToList();
+        }
     }
 }

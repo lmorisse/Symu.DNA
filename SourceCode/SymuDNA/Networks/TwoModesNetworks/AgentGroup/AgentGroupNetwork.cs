@@ -449,5 +449,10 @@ namespace Symu.DNA.Networks.TwoModesNetworks.AgentGroup
             }
             return matrix;
         }
+
+        public IReadOnlyList<IAgentId> ToVector()
+        {
+            return GetGroups().OrderBy(x => x.Id).ToList();
+        }
     }
 }

@@ -33,14 +33,14 @@ namespace Symu.DNA.MatrixNetworks
         {
             #region One mode networks
 
-            Agent = new VectorNetwork<IAgentId>(metaNetwork.Agent.GetIds().ToList());
-            Role = new VectorNetwork<IId>(metaNetwork.Role.GetIds().ToList());
-            Resource = new VectorNetwork<IId>(metaNetwork.Resource.GetIds().ToList());
-            Knowledge = new VectorNetwork<IId>(metaNetwork.Knowledge.GetIds().ToList());
-            Belief = new VectorNetwork<IId>(metaNetwork.Belief.GetIds().ToList());
-            Activity = new VectorNetwork<IId>(metaNetwork.Activity.GetIds().ToList());
-            Event = new VectorNetwork<IId>(metaNetwork.Event.GetIds().ToList());
-            Group = new VectorNetwork<IAgentId>(metaNetwork.AgentGroup.GetGroups().ToList());
+            Agent = new VectorNetwork<IAgentId>(metaNetwork.Agent.ToVector());
+            Role = new VectorNetwork<IId>(metaNetwork.Role.ToVector());
+            Resource = new VectorNetwork<IId>(metaNetwork.Resource.ToVector());
+            Knowledge = new VectorNetwork<IId>(metaNetwork.Knowledge.ToVector());
+            Belief = new VectorNetwork<IId>(metaNetwork.Belief.ToVector());
+            Activity = new VectorNetwork<IId>(metaNetwork.Activity.ToVector());
+            Event = new VectorNetwork<IId>(metaNetwork.Event.ToVector());
+            Group = new VectorNetwork<IAgentId>(metaNetwork.AgentGroup.ToVector());
 
             #endregion
 
@@ -60,43 +60,43 @@ namespace Symu.DNA.MatrixNetworks
         /// <summary>
         ///     List of the agents of this network
         /// </summary>
-        public VectorNetwork<IAgentId> Agent { get; }
+        public VectorNetwork<IAgentId> Agent { get; set; }
         /// <summary>
         ///     List of the groups of this network
         /// </summary>
-        public VectorNetwork<IAgentId> Group { get; }
+        public VectorNetwork<IAgentId> Group { get; set; }
 
         /// <summary>
         ///     Directory of the roles the agent are playing in the organizationEntity
         /// </summary>
-        public VectorNetwork<IId> Role { get; } 
+        public VectorNetwork<IId> Role { get; set; } 
 
         /// <summary>
         ///     Directory of objects used by the agentIds
         ///     using, working, support
         /// </summary>
-        public VectorNetwork<IId> Resource { get; } 
+        public VectorNetwork<IId> Resource { get; set; } 
         /// <summary>
         ///     Knowledge network
         ///     Who (agentId) knows what (Information)
         /// </summary>
-        public VectorNetwork<IId> Knowledge { get; } 
+        public VectorNetwork<IId> Knowledge { get; set; } 
 
         /// <summary>
         ///     Belief network
         ///     List of Beliefs
         /// </summary>
-        public VectorNetwork<IId> Belief { get; } 
+        public VectorNetwork<IId> Belief { get; set; } 
         /// <summary>
         ///     Activities network
         ///     Who (agentId) works on what activities (Kanban)
         /// </summary>
-        public VectorNetwork<IId> Activity { get; } 
+        public VectorNetwork<IId> Activity { get; set; } 
 
         /// <summary>
         /// occurrences or phenomena that happen
         /// </summary>
-        public VectorNetwork<IId> Event { get; } 
+        public VectorNetwork<IId> Event { get; set; } 
 
         #endregion
 
@@ -108,49 +108,50 @@ namespace Symu.DNA.MatrixNetworks
         ///     Who report/communicate to who
         ///     Sphere of interaction of agents
         /// </summary>
-        public Matrix<float> Interaction { get; } 
+        public Matrix<float> Interaction { get; set; } 
 
         /// <summary>
         ///     Agent x Group network
         ///     Directory of the groups of the organizationEntity :
         ///     Team, task force, workgroup, circles, community of practices, ...
         /// </summary>
-        public Matrix<float> AgentGroup { get; }
+        public Matrix<float> AgentGroup { get; set; }
         /// <summary>
         ///     Agent x Role network
         ///     Directory of the roles the agent are playing in the organizationEntity
         /// </summary>
-        public Matrix<float> AgentRole { get; }
+        public Matrix<float> AgentRole { get; set; }
         /// <summary>
         ///     Agent x Resource network
         ///     Directory of objects used by the agentIds
         ///     using, working, support
         /// </summary>
-        public Matrix<float> AgentResource { get; } 
+        public Matrix<float> AgentResource { get; set; } 
 
         /// <summary>
         ///     Agent * Knowledge network
         ///     Who (agentId) knows what (Information)
         /// </summary>
-        public Matrix<float> AgentKnowledge { get; } 
+        public Matrix<float> AgentKnowledge { get; set; } 
         /// <summary>
         ///     Agent * belief network
         ///     Who (agentId) believes what (Information)
         /// </summary>
-        public Matrix<float> AgentBelief { get; } 
+        public Matrix<float> AgentBelief { get; set; } 
 
         /// <summary>
         ///     Agent x Activity network
         ///     Who (agentId) works on what activities (Kanban)
         /// </summary>
-        public Matrix<float> Assignment { get; } 
+        public Matrix<float> Assignment { get; set; } 
 
         /// <summary>
         ///     Agent x Agent network
         ///     Derived Parameters from others networks.
         ///     these parameters are use indirectly to change agent behavior.
         /// </summary>
-        public InteractionSphere InteractionSphere { get; }
+        /// todo 
+        public InteractionSphere InteractionSphere { get; set; }
         #endregion
 
         /// <summary>

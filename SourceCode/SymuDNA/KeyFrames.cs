@@ -9,14 +9,19 @@
 
 #region using directives
 
-using MathNet.Numerics.LinearAlgebra;
 using Symu.Common.Classes;
 
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
+using System.Globalization;
 using System.Linq;
 using Symu.Common.Interfaces;
+using Symu.Common.Interfaces.Agent;
+using Symu.Common.Interfaces.Entity;
 using Symu.DNA.MatrixNetworks;
+using Symu.DNA.Metrics;
+using Symu.DNA.Metrics.TwoModes;
 
 #endregion
 
@@ -45,17 +50,62 @@ namespace Symu.DNA
         public IEnumerable<MatrixMetaNetwork> GetNetworks => _list.Values;
         public List<ushort> GetFrames => _list.Keys.ToList();
 
+        #region Initialization
+
+        private MatrixMetaNetwork _refMetaNetwork;
+        /// <summary>
+        /// Networks may have different lengths over time.
+        /// Initialize analysis normalizes all the network over the time 
+        /// </summary>
+        /// <example>An AgentGroup network may have 1 group at frame 1 and 2 groups at frame 2.
+        /// the MatrixAgentGroup may have 1 column at frame 1 and two columns at frame 2.
+        /// If it is the case, the initialization will add a new column filled with 0 at frame 1 for the second new group</example>
+        public void InitializeAnalysis()
+        {
+            _refMetaNetwork = InitializeKeyFrames.InitializeAnalysis(_list);
+        }
+
+        public IAgentId[] AgentIds => _refMetaNetwork.Agent.IndexItem;
+
+        public IAgentId[] GroupsIds => _refMetaNetwork.Group.IndexItem;
+
+        public IId[] RoleIds => _refMetaNetwork.Role.IndexItem;
+
+        public IId[] ResourceIds => _refMetaNetwork.Resource.IndexItem;
+        
+        public IId[] KnowledgeIds => _refMetaNetwork.Knowledge.IndexItem;
+        
+        public IId[] BeliefIds => _refMetaNetwork.Belief.IndexItem;
+        
+        public IId[] ActivityIds => _refMetaNetwork.Activity.IndexItem;
+        
+        public IId[] EventIds => _refMetaNetwork.Event.IndexItem;
+
+        #endregion
+
+
+        #region Analyis
+
+        public const int NoFilter = -1;
         /// <summary>
         /// Get a specific analysis about a network over-time
         /// </summary>
-        /// <param name="analysisType"></param>
+        /// <param name="metricType"></param>
         /// <param name="networkType"></param>
+        /// <param name="id">If you want to filter a specific agentId</param>
         /// <returns></returns>
-        public List<float> Analysis(NetworkAnalysisType analysisType, NetworkType networkType)
+        public List<object> Analysis(NetworkMetricType metricType, NetworkType networkType, IId id)
         {
-
-            return GetNetworks.Select(network => NetworkAnalysis.Analysis(analysisType, network.Get(networkType))).ToList();
+            var filter = NoFilter;
+            if (id != null && !id.IsNull)
+            {
+                var agentId = _refMetaNetwork.Agent.ItemIndex.Keys.ToList().Find(x => x.Id.Equals(id));
+                filter = _refMetaNetwork.Agent.ItemIndex[agentId];
+            }
+            return GetNetworks.Select(network => TwoModesMetrics.Analysis(metricType, network.Get(networkType), filter))
+                    .ToList();
         }
+        #endregion
 
         #region IResult interface   
         /// <summary>
@@ -114,5 +164,6 @@ namespace Symu.DNA
             return clone;
         }
         #endregion
+
     }
 }

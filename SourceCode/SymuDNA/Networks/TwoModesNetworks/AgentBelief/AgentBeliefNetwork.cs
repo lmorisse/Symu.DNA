@@ -177,7 +177,6 @@ namespace Symu.DNA.Networks.TwoModesNetworks.AgentBelief
                 foreach (var agentBelief in agentBeliefs.Value.List)
                 {
                     if (!beliefIds.ItemIndex.ContainsKey(agentBelief.BeliefId))
-                    //if (!beliefIds.ItemIndex.Keys.ToList().Exists(x => x.Equals(agentBelief.BeliefId)))
                     {
                         throw new NullReferenceException(nameof(beliefIds.ItemIndex));
                     }

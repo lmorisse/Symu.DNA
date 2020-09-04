@@ -95,7 +95,7 @@ namespace Symu.DNA.Networks.OneModeNetworks
         }
 
         /// <summary>
-        ///     Returns a list with the names of all the agents.
+        ///     Returns a list with the agentIds.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<IAgentId> GetIds()
@@ -104,7 +104,7 @@ namespace Symu.DNA.Networks.OneModeNetworks
         }
 
         /// <summary>
-        ///     Returns a list with the names of all the agents.
+        ///     Returns a list with the agents.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<IAgent> Gets()
@@ -144,5 +144,9 @@ namespace Symu.DNA.Networks.OneModeNetworks
             return List.Keys.ToList().Find(x => x.Id.Equals(id));
         }
 
+        public IReadOnlyList<IAgentId> ToVector()
+        {
+            return GetIds().OrderBy(x => x.Id).ToList();
+        }
     }
 }
