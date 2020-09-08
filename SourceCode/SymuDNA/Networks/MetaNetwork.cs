@@ -192,12 +192,7 @@ namespace Symu.DNA.Networks
                 throw new ArgumentNullException(nameof(agentOrganization));
             }
 
-            lock (AgentOrganization)
-            {
-                AgentOrganization.AddKey(groupId);
-                AgentOrganization.Add(groupId, agentOrganization);
-            }
-
+            AgentOrganization.Add(groupId, agentOrganization);
             AgentResource.AddMemberToGroup(agentOrganization.AgentId, groupId);
         }
 
@@ -227,9 +222,6 @@ namespace Symu.DNA.Networks
             AgentOrganization.RemoveMember(agentId, groupId);
             AgentRole.RemoveMember(agentId, groupId);
             AgentResource.RemoveMemberFromGroup(agentId, groupId);
-
-            // Remove all the groupId activities to the AgentId
-            //AgentTask.RemoveMember(agentId, groupId);
         }
 
         #endregion

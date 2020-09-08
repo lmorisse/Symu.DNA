@@ -13,7 +13,7 @@ namespace Symu.DNA.Networks.TwoModesNetworks
 {
     /// <summary>
     ///     Who works where
-    /// By default how is characterized by an allocation of capacity to define part-time membership
+    ///     By default how is characterized by an allocation of capacity to define part-time membership
     /// </summary>
     public interface IAgentOrganization
     {

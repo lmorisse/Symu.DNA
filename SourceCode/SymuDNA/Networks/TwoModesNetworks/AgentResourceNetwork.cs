@@ -51,14 +51,7 @@ namespace Symu.DNA.Networks.TwoModesNetworks
             }
 
             List[key].Add(value);
-            // Reallocation
-            //var resourceIds = GetResourceIds(agentId, agentResource.ResourceUsage);
-            //if (resourceIds is null)
-            //{
-            //    return;
-            //}
 
-            //var resourceCollection = resourceIds.ToList();
             var totalAllocation =
                 List[key].Sum(x => x.Allocation);
 
