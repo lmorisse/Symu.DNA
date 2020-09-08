@@ -12,7 +12,7 @@ using Symu.Common.Interfaces.Entity;
 namespace Symu.DNA.Networks.OneModeNetworks
 {
     /// <summary>
-    /// Defines the role of an agent for the RoleNetwork
+    ///     A role describe functions of agents
     /// </summary>
     public interface IRole
     {

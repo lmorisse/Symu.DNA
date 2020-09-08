@@ -13,7 +13,6 @@ using MathNet.Numerics.LinearAlgebra;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Interfaces.Entity;
 using Symu.DNA.MatrixNetworks;
-using Symu.DNA.MatrixNetworks.OneModeNetworks;
 
 namespace Symu.DNA
 {
@@ -42,15 +41,15 @@ namespace Symu.DNA
                 Resource = new VectorNetwork<IId>(GetIdsOverTime(list.Values.Select(x => x.Resource))),
                 Knowledge = new VectorNetwork<IId>(GetIdsOverTime(list.Values.Select(x => x.Knowledge))),
                 Belief = new VectorNetwork<IId>(GetIdsOverTime(list.Values.Select(x => x.Belief))),
-                Activity = new VectorNetwork<IId>(GetIdsOverTime(list.Values.Select(x => x.Activity))),
+                Task = new VectorNetwork<IId>(GetIdsOverTime(list.Values.Select(x => x.Task))),
                 Event = new VectorNetwork<IId>(GetIdsOverTime(list.Values.Select(x => x.Event))),
-                Group = new VectorNetwork<IAgentId>(GetAgentIdsOverTime(list.Values.Select(x => x.Group)))
+                Organization = new VectorNetwork<IAgentId>(GetAgentIdsOverTime(list.Values.Select(x => x.Organization)))
             };
 
             foreach (var frame in list.Values)
             {
                 frame.AgentBelief = InitializeMatrix(refMetaNetwork.Agent, refMetaNetwork.Belief, frame.Agent, frame.Belief, frame.AgentBelief);
-                frame.AgentGroup = InitializeMatrix(refMetaNetwork.Agent, refMetaNetwork.Group, frame.Agent, frame.Group, frame.AgentGroup);
+                frame.AgentOrganization = InitializeMatrix(refMetaNetwork.Agent, refMetaNetwork.Organization, frame.Agent, frame.Organization, frame.AgentOrganization);
                 frame.AgentKnowledge = InitializeMatrix(refMetaNetwork.Agent, refMetaNetwork.Knowledge, frame.Agent, frame.Knowledge, frame.AgentKnowledge);
                 frame.AgentResource = InitializeMatrix(refMetaNetwork.Agent, refMetaNetwork.Resource, frame.Agent, frame.Resource, frame.AgentResource);
                 frame.AgentRole = InitializeMatrix(refMetaNetwork.Agent, refMetaNetwork.Role, frame.Agent, frame.Role, frame.AgentRole);

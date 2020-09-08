@@ -14,8 +14,9 @@ using Symu.Common.Interfaces.Agent;
 namespace Symu.DNA.Networks.OneModeNetworks
 {
     /// <summary>
-    /// Interface for agent used in the MetaNetwork
+    ///     An agent is an individual decision makers
     /// </summary>
+    /// <remarks>Also named Actor in social network analysis</remarks>
     public interface IAgent: INullable, IDisposable
     {
         IAgentId AgentId {get;

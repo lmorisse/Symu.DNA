@@ -67,7 +67,7 @@ namespace Symu.DNA
 
         public IAgentId[] AgentIds => _refMetaNetwork.Agent.IndexItem;
 
-        public IAgentId[] GroupsIds => _refMetaNetwork.Group.IndexItem;
+        public IAgentId[] GroupsIds => _refMetaNetwork.Organization.IndexItem;
 
         public IId[] RoleIds => _refMetaNetwork.Role.IndexItem;
 
@@ -77,7 +77,7 @@ namespace Symu.DNA
         
         public IId[] BeliefIds => _refMetaNetwork.Belief.IndexItem;
         
-        public IId[] ActivityIds => _refMetaNetwork.Activity.IndexItem;
+        public IId[] ActivityIds => _refMetaNetwork.Task.IndexItem;
         
         public IId[] EventIds => _refMetaNetwork.Event.IndexItem;
 

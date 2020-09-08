@@ -12,8 +12,7 @@ using Symu.Common.Interfaces.Entity;
 namespace Symu.DNA.Networks.OneModeNetworks
 {
     /// <summary>
-    /// Interface of event :
-    /// occurrences or phenomena that happen
+    ///     An Event is occurrences or phenomena that happen
     /// </summary>
     public interface IEvent
     {

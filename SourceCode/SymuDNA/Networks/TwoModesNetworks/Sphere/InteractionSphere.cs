@@ -15,11 +15,7 @@ using System.Linq;
 using Symu.Common;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Math.ProbabilityDistributions;
-using Symu.DNA.MatrixNetworks.OneModeNetworks;
-using Symu.DNA.Networks.TwoModesNetworks.AgentBelief;
-using Symu.DNA.Networks.TwoModesNetworks.AgentKnowledge;
-using Symu.DNA.Networks.TwoModesNetworks.Assignment;
-using Symu.DNA.Networks.TwoModesNetworks.Interaction;
+using Symu.DNA.MatrixNetworks;
 
 #endregion
 
@@ -32,15 +28,16 @@ namespace Symu.DNA.Networks.TwoModesNetworks.Sphere
     /// </summary>
     public class InteractionSphere
     {
-        private readonly InteractionSphereModel _model;
-        //private Dictionary<IAgentId, int> _vector.ItemIndex;
-        //private Dictionary<int, IAgentId> _vector.IndexItem;
+        public InteractionSphereModel Model
+        {
+            get;
+        }
         private VectorNetwork<IAgentId> _vector;
         private DerivedParameter _lastAverage;
 
         public InteractionSphere(InteractionSphereModel model)
         {
-            _model = model ?? throw new ArgumentNullException(nameof(model));
+            Model = model ?? throw new ArgumentNullException(nameof(model));
         }
 
         /// <summary>
@@ -60,15 +57,15 @@ namespace Symu.DNA.Networks.TwoModesNetworks.Sphere
                 throw new ArgumentNullException(nameof(network));
             }
 
-            var modelOn = _model.On;
-            var sphereChange = initialization || _model.SphereUpdateOverTime;
+            var modelOn = Model.On;
+            var sphereChange = initialization || Model.SphereUpdateOverTime;
             if (!modelOn || !sphereChange)
             {
                 return;
             }
 
-            network.Interaction.SetMaxLinksCount();
-            if (_model.RandomlyGeneratedSphere)
+            network.AgentAgent.SetMaxLinksCount();
+            if (Model.RandomlyGeneratedSphere)
             {
                 if (initialization)
                 {
@@ -110,12 +107,12 @@ namespace Symu.DNA.Networks.TwoModesNetworks.Sphere
                 //_vector.ItemIndex[agentI] = i;
                 //_vector.IndexItem[i] = agentI;
 
-                var density = ContinuousUniform.Sample(_model.MinSphereDensity, _model.MaxSphereDensity);
+                var density = ContinuousUniform.Sample(Model.MinSphereDensity, Model.MaxSphereDensity);
                 for (var j = i + 1; j < count; j++)
                 {
                     var value = Bernoulli.Sample(density) ? ContinuousUniform.Sample(0F, 1F) : 0F;
                     Sphere[i, j] =
-                        new DerivedParameter(_model, value, value, value, value);
+                        new DerivedParameter(Model, value, value, value, value);
                     Sphere[j, i] = Sphere[i, j];
                 }
             }
@@ -174,10 +171,10 @@ namespace Symu.DNA.Networks.TwoModesNetworks.Sphere
                         else
                         {
                             //new agent
-                            var density = ContinuousUniform.Sample(_model.MinSphereDensity, _model.MaxSphereDensity);
+                            var density = ContinuousUniform.Sample(Model.MinSphereDensity, Model.MaxSphereDensity);
                             var value = Bernoulli.Sample(density) ? ContinuousUniform.Sample(0F, 1F) : 0F;
                             tempSphere[i, j] =
-                                new DerivedParameter(_model, value, value, value, value);
+                                new DerivedParameter(Model, value, value, value, value);
                         }
 
                         tempSphere[j, i] = tempSphere[i, j];
@@ -186,12 +183,12 @@ namespace Symu.DNA.Networks.TwoModesNetworks.Sphere
                 else
                 {
                     // new agent
-                    var density = ContinuousUniform.Sample(_model.MinSphereDensity, _model.MaxSphereDensity);
+                    var density = ContinuousUniform.Sample(Model.MinSphereDensity, Model.MaxSphereDensity);
                     for (var j = i + 1; j < count; j++)
                     {
                         var value = Bernoulli.Sample(density) ? ContinuousUniform.Sample(0F, 1F) : 0F;
                         tempSphere[i, j] =
-                            new DerivedParameter(_model, value, value,
+                            new DerivedParameter(Model, value, value,
                                 value, value);
                         tempSphere[j, i] = tempSphere[i, j];
                     }
@@ -228,22 +225,22 @@ namespace Symu.DNA.Networks.TwoModesNetworks.Sphere
 
         private DerivedParameter SetDerivedParameter(MetaNetwork network, IAgentId agentI, IAgentId agentJ)
         {
-            var socialProximity = _model.SocialDemographicWeight > Constants.Tolerance
-                ? SetSocialProximity(agentI, agentJ, network.Interaction)
+            var socialProximity = Model.SocialDemographicWeight > Constants.Tolerance
+                ? SetSocialProximity(agentI, agentJ, network.AgentAgent)
                 : 0;
 
-            var relativeBelief = _model.RelativeBeliefWeight > Constants.Tolerance
+            var relativeBelief = Model.RelativeBeliefWeight > Constants.Tolerance
                 ? SetRelativeBelief(agentI, agentJ, network.AgentBelief)
                 : 0;
-            var relativeKnowledge = _model.RelativeKnowledgeWeight > Constants.Tolerance
+            var relativeKnowledge = Model.RelativeKnowledgeWeight > Constants.Tolerance
                 ? SetRelativeKnowledge(agentI, agentJ, network.AgentKnowledge)
                 : 0;
-            var relativeActivity = _model.RelativeActivityWeight > Constants.Tolerance
-                ? SetRelativeActivity(agentI, agentJ, network.Assignment)
+            var relativeActivity = Model.RelativeActivityWeight > Constants.Tolerance
+                ? SetRelativeActivity(agentI, agentJ, network.AgentTask)
                 : 0;
 
             var derivedParameter =
-                new DerivedParameter(_model, socialProximity, relativeBelief, relativeKnowledge, relativeActivity);
+                new DerivedParameter(Model, socialProximity, relativeBelief, relativeKnowledge, relativeActivity);
             return derivedParameter;
         }
 
@@ -315,17 +312,17 @@ namespace Symu.DNA.Networks.TwoModesNetworks.Sphere
         /// </summary>
         /// <param name="agentId1"></param>
         /// <param name="agentId2"></param>
-        /// <param name="interactionNetwork"></param>
+        /// <param name="agentAgentNetwork"></param>
         /// <returns></returns>
-        public static float SetSocialProximity(IAgentId agentId1, IAgentId agentId2, InteractionNetwork interactionNetwork)
+        public static float SetSocialProximity(IAgentId agentId1, IAgentId agentId2, AgentAgentNetwork agentAgentNetwork)
         {
             //todo graph : number of nodes between agentId1 and agentId2
-            if (interactionNetwork == null)
+            if (agentAgentNetwork == null)
             {
-                throw new ArgumentNullException(nameof(interactionNetwork));
+                throw new ArgumentNullException(nameof(agentAgentNetwork));
             }
 
-            return interactionNetwork.NormalizedCountLinks(agentId1, agentId2);
+            return agentAgentNetwork.NormalizedCountLinks(agentId1, agentId2);
         }
 
         /// <summary>
@@ -333,20 +330,30 @@ namespace Symu.DNA.Networks.TwoModesNetworks.Sphere
         /// </summary>
         /// <param name="agentId1"></param>
         /// <param name="agentId2"></param>
-        /// <param name="activityNetwork"></param>
+        /// <param name="agentTaskNetwork"></param>
         /// <returns></returns>
         public static float SetRelativeActivity(IAgentId agentId1, IAgentId agentId2,
-            AssignmentNetwork activityNetwork)
+            AgentTaskNetwork agentTaskNetwork)
         {
-            if (activityNetwork == null)
+            if (agentTaskNetwork == null)
             {
-                throw new ArgumentNullException(nameof(activityNetwork));
+                throw new ArgumentNullException(nameof(agentTaskNetwork));
             }
 
-            var activity1 = activityNetwork.GetAgentActivities(agentId1).ToList();
-            var activity2 = activityNetwork.GetAgentActivities(agentId2).ToList();
-            var relativeActivity = activity1.Count(activity => activity2.Contains(activity));
-            return activity1.Any() ? relativeActivity / activity1.Count : 0;
+            var task1 = agentTaskNetwork.GetTasks(agentId1);
+            if (task1 == null)
+            {
+                return 0;
+            }
+            var task2 = agentTaskNetwork.GetTasks(agentId2); 
+            if (task2 == null)
+            {
+                return 0;
+            }
+
+            var taskList1 = task1.ToList();
+            var relativeActivity = taskList1.Count(activity => task2.Contains(activity));
+            return taskList1.Any() ? relativeActivity / taskList1.Count : 0;
         }
 
         /// <summary>
@@ -362,7 +369,7 @@ namespace Symu.DNA.Networks.TwoModesNetworks.Sphere
             InteractionStrategy interactionStrategy)
         {
 
-            if (!_model.On || _vector.ItemIndex is null || !_vector.ItemIndex.ContainsKey(agentId))
+            if (!Model.On || _vector.ItemIndex is null || !_vector.ItemIndex.ContainsKey(agentId))
             {
                 return new List<IAgentId>();
             }
@@ -483,7 +490,7 @@ namespace Symu.DNA.Networks.TwoModesNetworks.Sphere
                 throw new NullReferenceException("Sphere is not Setted");
             }
 
-            if (!_model.On || !_model.SphereUpdateOverTime || !_vector.ItemIndex.ContainsKey(agentId))
+            if (!Model.On || !Model.SphereUpdateOverTime || !_vector.ItemIndex.ContainsKey(agentId))
             {
                 return new List<IAgentId>();
             }
@@ -574,7 +581,7 @@ namespace Symu.DNA.Networks.TwoModesNetworks.Sphere
                 throw new NullReferenceException(nameof(_vector.ItemIndex));
             }
 
-            if (!_model.On || !_vector.ItemIndex.ContainsKey(agentId1) || !_vector.ItemIndex.ContainsKey(agentId2))
+            if (!Model.On || !_vector.ItemIndex.ContainsKey(agentId1) || !_vector.ItemIndex.ContainsKey(agentId2))
             {
                 return 0;
             }
@@ -586,7 +593,7 @@ namespace Symu.DNA.Networks.TwoModesNetworks.Sphere
 
         public float GetSphereWeight()
         {
-            if (!_model.On)
+            if (!Model.On)
             {
                 return 0;
             }
@@ -606,13 +613,13 @@ namespace Symu.DNA.Networks.TwoModesNetworks.Sphere
 
         public float GetMaxSphereWeight()
         {
-            if (!_model.On)
+            if (!Model.On)
             {
                 return 0;
             }
 
-            return (_model.SocialDemographicWeight + _model.RelativeBeliefWeight + _model.RelativeKnowledgeWeight +
-                    _model.RelativeActivityWeight) * Sphere.GetLength(0) * (Sphere.GetLength(0) - 1);
+            return (Model.SocialDemographicWeight + Model.RelativeBeliefWeight + Model.RelativeKnowledgeWeight +
+                    Model.RelativeActivityWeight) * Sphere.GetLength(0) * (Sphere.GetLength(0) - 1);
         }
     }
 }

@@ -19,29 +19,13 @@ using Symu.Common.Interfaces.Entity;
 namespace Symu.DNA.Networks.OneModeNetworks
 {
     /// <summary>
-    ///     All resources in the network
+    ///     List of the resources of the meta network:
+    ///     Resources are products, materials, or goods that are necessary to perform Tasks and Events
     /// </summary>
     /// <example>database, products, routines, processes, ...</example>
-    public class ResourceNetwork
+    public class ResourceNetwork : OneModeNetwork<IResource>
     {
-        /// <summary>
-        ///     Repository of all the resources used during the simulation
-        /// </summary>
-        public List<IResource> List { get; } = new List<IResource>();
-
-        public int Count => List.Count;
-
-        public bool Any()
-        {
-            return List.Any();
-        }
-
-        public void Clear()
-        {
-            List.Clear();
-        }
-
-
+       
         public IResource Get(IId resourceId)
         {
             return List.Find(k => k.Id.Equals(resourceId));
@@ -57,23 +41,7 @@ namespace Symu.DNA.Networks.OneModeNetworks
             return (TResource)Get(resourceId);
         }
 
-        /// <summary>
-        ///     Add a resource to the repository
-        /// </summary>
-        public void Add(IResource resource)
-        {
-            if (Exists(resource))
-            {
-                return;
-            }
-
-            List.Add(resource);
-        }
-
-        public bool Exists(IResource resource)
-        {
-            return List.Contains(resource);
-        }
+        
 
         public bool Exists(IId resourceId)
         {

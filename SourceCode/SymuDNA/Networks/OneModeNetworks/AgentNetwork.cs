@@ -21,12 +21,13 @@ using Symu.Common.Interfaces.Entity;
 namespace Symu.DNA.Networks.OneModeNetworks
 {
     /// <summary>
-    ///     Network agents of this environment
+    ///     List of the agents of the meta network
+    ///     An agent is an individual decision makers
     /// </summary>
     /// <remarks>Also named Actor in social network analysis</remarks>
     public class AgentNetwork
     {
-        public readonly ConcurrentDictionary<IAgentId, IAgent> List = new ConcurrentDictionary<IAgentId, IAgent>();
+        public ConcurrentDictionary<IAgentId, IAgent> List = new ConcurrentDictionary<IAgentId, IAgent>();
         public int Count => List.Count;
 
         public bool Any()
@@ -147,6 +148,13 @@ namespace Symu.DNA.Networks.OneModeNetworks
         public IReadOnlyList<IAgentId> ToVector()
         {
             return GetIds().OrderBy(x => x.Id).ToList();
+        }
+        public void CopyTo(AgentNetwork entity)
+        {
+            foreach (var agent in List)
+            {
+                entity.List.TryAdd(agent.Key, agent.Value);
+            }
         }
     }
 }

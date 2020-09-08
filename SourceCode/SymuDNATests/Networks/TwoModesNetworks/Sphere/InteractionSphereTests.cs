@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces.Agent;
+using Symu.DNA.Networks;
 using Symu.DNA.Networks.TwoModesNetworks.Sphere;
 using SymuDNATests.Classes;
 
@@ -23,31 +24,26 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
     [TestClass]
     public class InteractionSphereTests
     {
-        private readonly TestActivity _activity = new TestActivity(1);
+        private readonly TestTask _task = new TestTask(1);
         private readonly AgentId _agentId1 = new AgentId(1, 1);
         private readonly AgentId _agentId2 = new AgentId(2, 1);
-        private readonly List<AgentId> _agents = new List<AgentId>();
-        private List<IAgentId> Agents => _agents.Cast<IAgentId>().ToList();
-
-        private readonly TestBelief _belief =
-            new TestBelief(1);
-
-        private readonly AgentId _groupId = new AgentId(3, 2);
+        private readonly List<IAgentId> _agents = new List<IAgentId>();
+        private readonly TestBelief _belief = new TestBelief(1);
         private readonly TestKnowledge _knowledge = new TestKnowledge(1);
         private InteractionSphere InteractionSphere => _network.InteractionSphere;
-        private Symu.DNA.Networks.MetaNetwork _network;
+        private MetaNetwork _network;
         private InteractionSphereModel _interactionSphereModel;
 
         [TestInitialize]
         public void Initialize()
         {
             _interactionSphereModel = new InteractionSphereModel {On = true};
-            _network = new Symu.DNA.Networks.MetaNetwork(_interactionSphereModel);
+            _network = new MetaNetwork(_interactionSphereModel);
             _agents.Add(_agentId1);
             _agents.Add(_agentId2);
             _network.Knowledge.Add(_knowledge);
             _network.Belief.Add(_belief);
-            _network.Assignment.AddActivity(_activity, _groupId);
+            _network.Task.Add(_task);
         }
 
         /// <summary>
@@ -56,7 +52,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         [TestMethod]
         public void GeAgentIdsForInteractionsTest()
         {
-            InteractionSphere.SetSphere(true, Agents, _network);
+            InteractionSphere.SetSphere(true, _agents, _network);
             Assert.AreEqual(0, InteractionSphere.GetAgentIdsForInteractions(_agentId1, InteractionStrategy.Homophily).Count());
         }
 
@@ -66,7 +62,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         [TestMethod]
         public void GeAgentIdsForNewInteractionsTest()
         {
-            InteractionSphere.SetSphere(true, Agents, _network);
+            InteractionSphere.SetSphere(true, _agents, _network);
             Assert.AreEqual(0,
                 InteractionSphere.GetAgentIdsForNewInteractions(_agentId1, InteractionStrategy.Homophily).Count());
         }
@@ -78,7 +74,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         public void GeAgentIdsForNewInteractionsTest1()
         {
             _interactionSphereModel.SphereUpdateOverTime = true;
-            InteractionSphere.SetSphere(true, Agents, _network);
+            InteractionSphere.SetSphere(true, _agents, _network);
             Assert.AreEqual(1,
                 InteractionSphere.GetAgentIdsForNewInteractions(_agentId1, InteractionStrategy.Homophily).Count());
         }
@@ -91,7 +87,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         {
             _interactionSphereModel.SphereUpdateOverTime = true;
             AddLink();
-            InteractionSphere.SetSphere(true, Agents, _network);
+            InteractionSphere.SetSphere(true, _agents, _network);
             Assert.AreEqual(0,
                 InteractionSphere.GetAgentIdsForNewInteractions(_agentId1, InteractionStrategy.Homophily).Count());
         }
@@ -102,7 +98,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         [TestMethod]
         public void GetSphereWeightTest()
         {
-            InteractionSphere.SetSphere(true, Agents, _network);
+            InteractionSphere.SetSphere(true, _agents, _network);
             Assert.AreEqual(0, InteractionSphere.GetSphereWeight());
         }
 
@@ -119,14 +115,14 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
             AddLink();
             AddActivity(_agentId1);
             AddActivity(_agentId2);
-            InteractionSphere.SetSphere(true, Agents, _network);
+            InteractionSphere.SetSphere(true, _agents, _network);
             Assert.AreEqual(InteractionSphere.GetMaxSphereWeight(), InteractionSphere.GetSphereWeight());
         }
 
         [TestMethod]
         public void GetMaxSphereWeightTest()
         {
-            InteractionSphere.SetSphere(true, Agents, _network);
+            InteractionSphere.SetSphere(true, _agents, _network);
             Assert.AreEqual(8, InteractionSphere.GetMaxSphereWeight());
         }
 
@@ -134,8 +130,8 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
 
         private void AddLink()
         {
-            var interaction = new TestInteraction(_agentId1, _agentId2);
-            _network.Interaction.AddInteraction(interaction);
+            var interaction = new TestAgentAgent(_agentId1, _agentId2);
+            _network.AgentAgent.AddInteraction(interaction);
         }
 
         private void AddKnowledge(AgentId agentId, float knowledgeValue)
@@ -147,8 +143,8 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
 
         private void AddActivity(AgentId agentId)
         {
-            var agentActivity = new TestAgentActivity(agentId, _activity);
-            _network.Assignment.AddAgentActivity(agentId, _groupId, agentActivity);
+            var agentActivity = new TestAgentTask(agentId, _task);
+            _network.AgentTask.Add(agentId, agentActivity);
         }
 
         private void AddBelief(AgentId agentId, float beliefValue)
@@ -168,7 +164,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         [TestMethod]
         public void GetHomophilyTest()
         {
-            InteractionSphere.SetSphere(true, Agents, _network);
+            InteractionSphere.SetSphere(true, _agents, _network);
             Assert.AreEqual(0, InteractionSphere.GetHomophily(_agentId1, _agentId2));
         }
 
@@ -180,7 +176,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         {
             AddLink();
             _interactionSphereModel.SetInteractionPatterns(InteractionStrategy.SocialDemographics);
-            InteractionSphere.SetSphere(true, Agents, _network);
+            InteractionSphere.SetSphere(true, _agents, _network);
             Assert.AreEqual(1, InteractionSphere.GetHomophily(_agentId1, _agentId2));
         }
 
@@ -192,7 +188,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         {
             AddKnowledge(_agentId1, 1);
             AddKnowledge(_agentId2, 1);
-            InteractionSphere.SetSphere(true, Agents, _network);
+            InteractionSphere.SetSphere(true, _agents, _network);
             Assert.AreEqual(1, InteractionSphere.GetHomophily(_agentId1, _agentId2));
         }
 
@@ -204,7 +200,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         {
             AddBelief(_agentId1, 1);
             AddBelief(_agentId2, 1);
-            InteractionSphere.SetSphere(true, Agents, _network);
+            InteractionSphere.SetSphere(true, _agents, _network);
             Assert.AreEqual(1, InteractionSphere.GetHomophily(_agentId1, _agentId2));
         }
 
@@ -313,8 +309,8 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         [TestMethod]
         public void SetSocialProximityTest()
         {
-            _network.Interaction.SetMaxLinksCount();
-            Assert.AreEqual(0, InteractionSphere.SetSocialProximity(_agentId1, _agentId2, _network.Interaction));
+            _network.AgentAgent.SetMaxLinksCount();
+            Assert.AreEqual(0, InteractionSphere.SetSocialProximity(_agentId1, _agentId2, _network.AgentAgent));
         }
 
         /// <summary>
@@ -324,8 +320,8 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         public void SetSocialProximityTest1()
         {
             AddLink();
-            _network.Interaction.SetMaxLinksCount();
-            Assert.AreEqual(1, InteractionSphere.SetSocialProximity(_agentId1, _agentId2, _network.Interaction));
+            _network.AgentAgent.SetMaxLinksCount();
+            Assert.AreEqual(1, InteractionSphere.SetSocialProximity(_agentId1, _agentId2, _network.AgentAgent));
         }
 
         /// <summary>
@@ -334,10 +330,10 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         [TestMethod]
         public void SetSocialProximityTest2()
         {
-            var networkLink = new TestInteraction(_agentId1, _agentId2);
+            var networkLink = new TestAgentAgent(_agentId1, _agentId2);
             networkLink.DecreaseWeight();
-            _network.Interaction.AddInteraction(networkLink);
-            Assert.AreEqual(0F, InteractionSphere.SetSocialProximity(_agentId1, _agentId2, _network.Interaction));
+            _network.AgentAgent.AddInteraction(networkLink);
+            Assert.AreEqual(0F, InteractionSphere.SetSocialProximity(_agentId1, _agentId2, _network.AgentAgent));
         }
 
         #endregion
@@ -350,7 +346,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         [TestMethod]
         public void SetRelativeActivityTest()
         {
-            Assert.AreEqual(0, InteractionSphere.SetRelativeActivity(_agentId1, _agentId2, _network.Assignment));
+            Assert.AreEqual(0, InteractionSphere.SetRelativeActivity(_agentId1, _agentId2, _network.AgentTask));
         }
 
         /// <summary>
@@ -361,7 +357,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         {
             AddActivity(_agentId1);
             AddActivity(_agentId2);
-            Assert.AreEqual(1, InteractionSphere.SetRelativeActivity(_agentId1, _agentId2, _network.Assignment));
+            Assert.AreEqual(1, InteractionSphere.SetRelativeActivity(_agentId1, _agentId2, _network.AgentTask));
         }
 
         #endregion

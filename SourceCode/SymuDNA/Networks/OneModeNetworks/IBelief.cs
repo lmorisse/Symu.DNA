@@ -12,7 +12,7 @@ using Symu.Common.Interfaces.Entity;
 namespace Symu.DNA.Networks.OneModeNetworks
 {
     /// <summary>
-    ///     Describe a belief, based on knowledge/fact
+    ///     Beliefs are any form of religion or other persuasion.
     /// </summary>
     public interface IBelief
     {

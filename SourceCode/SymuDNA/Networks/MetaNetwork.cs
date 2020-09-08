@@ -13,13 +13,7 @@ using System;
 using Symu.Common.Interfaces.Agent;
 using Symu.DNA.MatrixNetworks;
 using Symu.DNA.Networks.OneModeNetworks;
-using Symu.DNA.Networks.TwoModesNetworks.AgentBelief;
-using Symu.DNA.Networks.TwoModesNetworks.AgentGroup;
-using Symu.DNA.Networks.TwoModesNetworks.AgentKnowledge;
-using Symu.DNA.Networks.TwoModesNetworks.AgentResource;
-using Symu.DNA.Networks.TwoModesNetworks.AgentRole;
-using Symu.DNA.Networks.TwoModesNetworks.Assignment;
-using Symu.DNA.Networks.TwoModesNetworks.Interaction;
+using Symu.DNA.Networks.TwoModesNetworks;
 using Symu.DNA.Networks.TwoModesNetworks.Sphere;
 
 #endregion
@@ -57,7 +51,7 @@ namespace Symu.DNA.Networks
         ///     Knowledge network
         ///     Who (agentId) knows what (Information)
         /// </summary>
-        public KnowledgeNetwork Knowledge { get; } = new KnowledgeNetwork();
+        public KnowledgeNetwork Knowledge { get; set; } = new KnowledgeNetwork();
 
         /// <summary>
         ///     Belief network
@@ -68,7 +62,7 @@ namespace Symu.DNA.Networks
         ///     Activities network
         ///     Who (agentId) works on what activities (Kanban)
         /// </summary>
-        public ActivityNetwork Activity { get; } = new ActivityNetwork();
+        public TaskNetwork Task { get; set; } = new TaskNetwork();
 
         /// <summary>
         /// occurrences or phenomena that happen
@@ -85,14 +79,14 @@ namespace Symu.DNA.Networks
         ///     Who report/communicate to who
         ///     Sphere of interaction of agents
         /// </summary>
-        public InteractionNetwork Interaction { get; } = new InteractionNetwork();
+        public AgentAgentNetwork AgentAgent { get; } = new AgentAgentNetwork();
 
         /// <summary>
         ///     Agent x Group network
         ///     Directory of the groups of the organizationEntity :
         ///     Team, task force, workgroup, circles, community of practices, ...
         /// </summary>
-        public AgentGroupNetwork AgentGroup { get; } = new AgentGroupNetwork();
+        public AgentOrganizationNetwork AgentOrganization { get; } = new AgentOrganizationNetwork();
         /// <summary>
         ///     Agent x Role network
         ///     Directory of the roles the agent are playing in the organizationEntity
@@ -117,10 +111,21 @@ namespace Symu.DNA.Networks
         public AgentBeliefNetwork AgentBelief { get; } = new AgentBeliefNetwork();
 
         /// <summary>
-        ///     Agent x Activity network
-        ///     Who (agentId) works on what activities (Kanban)
+        ///     Agent x Task network
+        ///     Who (agentId) works on what task
         /// </summary>
-        public AssignmentNetwork Assignment { get; } = new AssignmentNetwork();
+        public AgentTaskNetwork AgentTask { get; } = new AgentTaskNetwork();
+
+        /// <summary>
+        ///     Resource x Task network
+        ///     Who (agentId) works on what tasks 
+        /// </summary>
+        public ResourceTaskNetwork ResourceTask { get; } = new ResourceTaskNetwork();
+        /// <summary>
+        ///     Task * Knowledge network
+        ///     What knowledge is necessary for what Task
+        /// </summary>
+        public TaskKnowledgeNetwork TaskKnowledge { get; } = new TaskKnowledgeNetwork();
 
         /// <summary>
         ///     Agent x Agent network
@@ -139,30 +144,33 @@ namespace Symu.DNA.Networks
             Resource.Clear();
             Knowledge.Clear();
             Belief.Clear();
-            Activity.Clear();
+            Task.Clear();
             Agent.Clear();
             Event.Clear();
             #endregion
 
             #region two modes networks
-            Interaction.Clear();
-            AgentGroup.Clear();
+            AgentAgent.Clear();
+            AgentOrganization.Clear();
             AgentRole.Clear();
             AgentResource.Clear();
             AgentKnowledge.Clear();
             AgentBelief.Clear();
-            Assignment.Clear();
+            AgentTask.Clear();
+            ResourceTask.Clear();
+            TaskKnowledge.Clear();
+
             #endregion
         }
 
         public void RemoveAgent(IAgentId agentId)
         {
-            Interaction.RemoveAgent(agentId);
-            AgentGroup.RemoveAgent(agentId);
+            AgentAgent.RemoveAgent(agentId);
+            AgentOrganization.RemoveKey(agentId);
             AgentRole.RemoveAgent(agentId);
-            AgentResource.RemoveAgent(agentId);
+            AgentResource.RemoveKey(agentId);
             AgentKnowledge.RemoveAgent(agentId);
-            Assignment.RemoveAgent(agentId);
+            AgentTask.RemoveKey(agentId);
             AgentBelief.RemoveAgent(agentId);
             Agent.Remove(agentId);
         }
@@ -175,22 +183,22 @@ namespace Symu.DNA.Networks
         ///     Add an agent to a group
         ///     It doesn't handle roles' impact
         /// </summary>
-        /// <param name="agentGroup"></param>
+        /// <param name="agentOrganization"></param>
         /// <param name="groupId"></param>
-        public void AddAgentToGroup(IAgentGroup agentGroup, IAgentId groupId)
+        public void AddAgentToGroup(IAgentOrganization agentOrganization, IAgentId groupId)
         {
-            if (agentGroup == null)
+            if (agentOrganization == null)
             {
-                throw new ArgumentNullException(nameof(agentGroup));
+                throw new ArgumentNullException(nameof(agentOrganization));
             }
 
-            lock (AgentGroup)
+            lock (AgentOrganization)
             {
-                AgentGroup.AddGroup(groupId);
-                AgentGroup.AddAgent(agentGroup, groupId);
+                AgentOrganization.AddKey(groupId);
+                AgentOrganization.Add(groupId, agentOrganization);
             }
 
-            AgentResource.AddMemberToGroup(agentGroup.AgentId, groupId);
+            AgentResource.AddMemberToGroup(agentOrganization.AgentId, groupId);
         }
 
         /// <summary>
@@ -206,22 +214,22 @@ namespace Symu.DNA.Networks
                 throw new ArgumentNullException(nameof(agentId));
             }
 
-            if (!AgentGroup.Exists(groupId))
+            if (!AgentOrganization.Exists(groupId))
             {
                 return;
             }
 
-            foreach (var agentIdToRemove in AgentGroup.GetAgents(groupId, agentId.ClassId))
+            foreach (var agentIdToRemove in AgentOrganization.GetAgents(groupId, agentId.ClassId))
             {
-                Interaction.DecreaseInteraction(agentId, agentIdToRemove);
+                AgentAgent.DecreaseInteraction(agentId, agentIdToRemove);
             }
 
-            AgentGroup.RemoveMember(agentId, groupId);
+            AgentOrganization.RemoveMember(agentId, groupId);
             AgentRole.RemoveMember(agentId, groupId);
             AgentResource.RemoveMemberFromGroup(agentId, groupId);
 
             // Remove all the groupId activities to the AgentId
-            Assignment.RemoveMember(agentId, groupId);
+            //AgentTask.RemoveMember(agentId, groupId);
         }
 
         #endregion
@@ -233,6 +241,33 @@ namespace Symu.DNA.Networks
         public MatrixMetaNetwork ToMatrix()
         {
             return new MatrixMetaNetwork(this);
+        }
+
+        public void  CopyTo(MetaNetwork network)
+        {
+
+            #region One mode networks
+            Role.CopyTo(network.Role);
+            Resource.CopyTo(network.Resource);
+            Knowledge.CopyTo(network.Knowledge);
+            Belief.CopyTo(network.Belief);
+            Task.CopyTo(network.Task);
+            Agent.CopyTo(network.Agent);
+            Event.CopyTo(network.Event);
+            #endregion
+
+            #region two modes networks
+            AgentAgent.CopyTo(network.AgentAgent);
+            AgentOrganization.CopyTo(network.AgentOrganization);
+            AgentRole.CopyTo(network.AgentRole);
+            AgentResource.CopyTo(network.AgentResource);
+            AgentKnowledge.CopyTo(network.AgentKnowledge);
+            AgentBelief.CopyTo(network.AgentBelief);
+            AgentTask.CopyTo(network.AgentTask);
+            ResourceTask.CopyTo(network.ResourceTask);
+            TaskKnowledge.CopyTo(network.TaskKnowledge);
+            #endregion
+
         }
     }
 }

@@ -11,7 +11,7 @@
 
 using Symu.Common.Interfaces.Agent;
 using Symu.DNA.Networks.OneModeNetworks;
-using Symu.DNA.Networks.TwoModesNetworks.AgentRole;
+using Symu.DNA.Networks.TwoModesNetworks;
 
 #endregion
 

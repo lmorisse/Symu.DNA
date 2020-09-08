@@ -10,7 +10,7 @@
 #region using directives
 
 using Symu.Common.Interfaces.Entity;
-using Symu.DNA.Networks.TwoModesNetworks.AgentBelief;
+using Symu.DNA.Networks.TwoModesNetworks;
 
 #endregion
 

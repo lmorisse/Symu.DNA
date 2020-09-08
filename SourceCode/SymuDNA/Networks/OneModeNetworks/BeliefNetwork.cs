@@ -18,27 +18,12 @@ using Symu.Common.Interfaces.Entity;
 namespace Symu.DNA.Networks.OneModeNetworks
 {
     /// <summary>
-    ///     Belief network
-    ///     Who (agentId) knows what (Belief)
-    ///     Key => the agentId
-    ///     Value : the list of NetworkInformation the agent knows
+    ///     List of the beliefs of the meta network:
+    ///     Beliefs are any form of religion or other persuasion.
     /// </summary>
-    /// <example></example>
-    public class BeliefNetwork
+    public class BeliefNetwork : OneModeNetwork<IBelief>
     {
-        /// <summary>
-        ///     Repository of all the Beliefs used in the network
-        /// </summary>
-        public List<IBelief> List { get; } = new List<IBelief>();
-        public bool Any()
-        {
-            return List.Any();
-        }
-
-        public void Clear()
-        {
-            List.Clear();
-        }
+       
         public TBelief Get<TBelief>(IId beliefId) where TBelief : IBelief
         {
             return (TBelief)Get(beliefId);
@@ -47,24 +32,6 @@ namespace Symu.DNA.Networks.OneModeNetworks
         public IBelief Get(IId beliefId)
         {
             return List.Find(k => k.Id.Equals(beliefId));
-        }
-
-        /// <summary>
-        ///     Add a Belief to the repository
-        /// </summary>
-        public void Add(IBelief belief)
-        {
-            if (Exists(belief))
-            {
-                return;
-            }
-
-            List.Add(belief);
-        }
-
-        public bool Exists(IBelief belief)
-        {
-            return List.Contains(belief);
         }
 
         public bool Exists(IId beliefId)

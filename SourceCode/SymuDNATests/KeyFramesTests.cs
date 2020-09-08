@@ -5,7 +5,6 @@ using Symu.Common.Interfaces.Agent;
 using Symu.Common.Interfaces.Entity;
 using Symu.DNA;
 using Symu.DNA.MatrixNetworks;
-using Symu.DNA.MatrixNetworks.OneModeNetworks;
 
 namespace SymuDNATests
 {

@@ -22,36 +22,11 @@ using Symu.Common.Interfaces.Entity;
 namespace Symu.DNA.Networks.OneModeNetworks
 {
     /// <summary>
-    ///     EventNetwork helps you schedule one shot events that happen during the simulation
+    ///     List of the Events of the meta network:
+    ///     An Event is occurrences or phenomena that happen
     /// </summary>
-    public class EventNetwork
+    public class EventNetwork : OneModeNetwork<IEvent>
     {
-
-        /// <summary>
-        /// List of Events that will be triggered during the simulation
-        /// occurrences or phenomena that happen
-        /// Specific Events are one time occurrences with a specific date
-        /// </summary>
-        public List<IEvent> List { get; } = new List<IEvent>();
-
-        public void Add(IEvent @event)
-        {
-            if (!Exists(@event))
-            {
-                List.Add(@event);
-            }
-        }
-
-        public bool Exists(IEvent @event)
-        {
-            return List.Contains(@event);
-        }
-
-        public void Clear()
-        {
-            List.Clear();
-        }
-
         /// <summary>
         ///     Returns a list with the ids of all the beliefs
         /// </summary>

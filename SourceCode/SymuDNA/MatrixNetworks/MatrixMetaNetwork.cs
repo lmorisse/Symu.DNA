@@ -10,13 +10,10 @@
 #region using directives
 
 using System;
-using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Interfaces.Entity;
-using Symu.DNA.MatrixNetworks.OneModeNetworks;
 using Symu.DNA.Networks;
-using Symu.DNA.Networks.TwoModesNetworks.Sphere;
 
 #endregion
 
@@ -38,63 +35,67 @@ namespace Symu.DNA.MatrixNetworks
             Resource = new VectorNetwork<IId>(metaNetwork.Resource.ToVector());
             Knowledge = new VectorNetwork<IId>(metaNetwork.Knowledge.ToVector());
             Belief = new VectorNetwork<IId>(metaNetwork.Belief.ToVector());
-            Activity = new VectorNetwork<IId>(metaNetwork.Activity.ToVector());
+            Task = new VectorNetwork<IId>(metaNetwork.Task.ToVector());
             Event = new VectorNetwork<IId>(metaNetwork.Event.ToVector());
-            Group = new VectorNetwork<IAgentId>(metaNetwork.AgentGroup.ToVector());
+            Organization = new VectorNetwork<IAgentId>(metaNetwork.AgentOrganization.ToVector());
 
             #endregion
 
             #region Two modes networks
 
             AgentBelief = metaNetwork.AgentBelief.ToMatrix(Agent, Belief);
-            AgentGroup = metaNetwork.AgentGroup.ToMatrix(Agent, Group);
+            AgentOrganization = metaNetwork.AgentOrganization.ToMatrix(Agent, Organization);
             AgentKnowledge = metaNetwork.AgentKnowledge.ToMatrix(Agent, Knowledge);
             AgentResource = metaNetwork.AgentResource.ToMatrix(Agent, Resource);
             AgentRole = metaNetwork.AgentRole.ToMatrix(Agent, Role);
-            Assignment = metaNetwork.Assignment.ToMatrix(Agent, Activity);
+            AgentTask = metaNetwork.AgentTask.ToMatrix(Agent, Task);
 
             #endregion
         }
 
         #region One mode networks
         /// <summary>
-        ///     List of the agents of this network
+        ///     List of the agents of the meta network, called Actor network
+        ///     An agent is an individual decision makers
         /// </summary>
         public VectorNetwork<IAgentId> Agent { get; set; }
         /// <summary>
-        ///     List of the groups of this network
+        ///     List of the organizations of this network:
+        ///     An organization is collectives of people that try to reach a common goal
         /// </summary>
-        public VectorNetwork<IAgentId> Group { get; set; }
+        public VectorNetwork<IAgentId> Organization { get; set; }
 
         /// <summary>
-        ///     Directory of the roles the agent are playing in the organizationEntity
+        ///     List of the roles of the meta network:
+        ///     A role describe functions of agents
         /// </summary>
-        public VectorNetwork<IId> Role { get; set; } 
+        public VectorNetwork<IId> Role { get; set; }
 
         /// <summary>
-        ///     Directory of objects used by the agentIds
-        ///     using, working, support
+        ///     List of the resources of the meta network:
+        ///     Resources are products, materials, or goods that are necessary to perform Tasks and Events
         /// </summary>
-        public VectorNetwork<IId> Resource { get; set; } 
+        public VectorNetwork<IId> Resource { get; set; }
         /// <summary>
-        ///     Knowledge network
-        ///     Who (agentId) knows what (Information)
+        ///     List of the knowledge of the meta network:
+        ///     A knowledge is cognitive capabilities and skills
         /// </summary>
-        public VectorNetwork<IId> Knowledge { get; set; } 
+        public VectorNetwork<IId> Knowledge { get; set; }
 
         /// <summary>
-        ///     Belief network
-        ///     List of Beliefs
+        ///     List of the beliefs of the meta network:
+        ///     Beliefs are any form of religion or other persuasion.
         /// </summary>
-        public VectorNetwork<IId> Belief { get; set; } 
+        public VectorNetwork<IId> Belief { get; set; }
         /// <summary>
-        ///     Activities network
-        ///     Who (agentId) works on what activities (Kanban)
+        ///     List of the tasks of the meta network:
+        ///     A Task is a well defined procedures or goals of an organization, scheduled or planned activities
         /// </summary>
-        public VectorNetwork<IId> Activity { get; set; } 
+        public VectorNetwork<IId> Task { get; set; }
 
         /// <summary>
-        /// occurrences or phenomena that happen
+        ///     List of the Events of the meta network:
+        ///     An Event is occurrences or phenomena that happen
         /// </summary>
         public VectorNetwork<IId> Event { get; set; } 
 
@@ -103,55 +104,43 @@ namespace Symu.DNA.MatrixNetworks
         #region Two modes networks 
 
         /// <summary>
-        ///     Agent x Agent network
-        ///     Directory of social links between AgentIds, with their interaction type
-        ///     Who report/communicate to who
-        ///     Sphere of interaction of agents
+        ///     Agent x Agent network, called interaction network, social network
+        ///     network of social links between agents, with their interaction type
+        ///     Who interacts to / knows who
         /// </summary>
-        public Matrix<float> Interaction { get; set; } 
+        public Matrix<float> AgentAgent { get; set; }
 
         /// <summary>
-        ///     Agent x Group network
-        ///     Directory of the groups of the organizationEntity :
-        ///     Team, task force, workgroup, circles, community of practices, ...
+        ///     Agent x Organization network, called work network, employment network
+        ///     Who works where
         /// </summary>
-        public Matrix<float> AgentGroup { get; set; }
+        public Matrix<float> AgentOrganization { get; set; }
         /// <summary>
         ///     Agent x Role network
-        ///     Directory of the roles the agent are playing in the organizationEntity
+        ///     Who has what functions
         /// </summary>
         public Matrix<float> AgentRole { get; set; }
         /// <summary>
-        ///     Agent x Resource network
-        ///     Directory of objects used by the agentIds
-        ///     using, working, support
+        ///     Agent x Resource network, called capabilities network
+        ///     Who has what resource
         /// </summary>
-        public Matrix<float> AgentResource { get; set; } 
-
+        public Matrix<float> AgentResource { get; set; }
         /// <summary>
-        ///     Agent * Knowledge network
-        ///     Who (agentId) knows what (Information)
+        ///     Agent * Knowledge network, called knowledge network
+        ///     Who (agent) knows what (Knowledge)
         /// </summary>
         public Matrix<float> AgentKnowledge { get; set; } 
         /// <summary>
         ///     Agent * belief network
-        ///     Who (agentId) believes what (Information)
+        ///     Who (agent) believes what (Belief)
         /// </summary>
         public Matrix<float> AgentBelief { get; set; } 
 
         /// <summary>
-        ///     Agent x Activity network
-        ///     Who (agentId) works on what activities (Kanban)
+        ///     Agent x Task network, called assignment network
+        ///     Who (agent) does what (Tasks)
         /// </summary>
-        public Matrix<float> Assignment { get; set; } 
-
-        /// <summary>
-        ///     Agent x Agent network
-        ///     Derived Parameters from others networks.
-        ///     these parameters are use indirectly to change agent behavior.
-        /// </summary>
-        /// todo 
-        public InteractionSphere InteractionSphere { get; set; }
+        public Matrix<float> AgentTask { get; set; } 
         #endregion
 
         /// <summary>
@@ -164,11 +153,11 @@ namespace Symu.DNA.MatrixNetworks
             switch (networkType)
             {
                 case NetworkType.Interaction:
-                    return Interaction;
+                    return AgentAgent;
                 case NetworkType.AgentxBelief:
                     return AgentBelief;
                 case NetworkType.AgentxGroup:
-                    return AgentGroup;
+                    return AgentOrganization;
                 case NetworkType.AgentxKnowledge:
                     return AgentKnowledge;
                 case NetworkType.AgentxResource:
@@ -176,7 +165,7 @@ namespace Symu.DNA.MatrixNetworks
                 case NetworkType.AgentxRole:
                     return AgentResource;
                 case NetworkType.Assignment:
-                    return Assignment;
+                    return AgentTask;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(networkType), networkType, null);
             }

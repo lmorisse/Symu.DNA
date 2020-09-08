@@ -19,27 +19,12 @@ using Symu.Common.Interfaces.Entity;
 namespace Symu.DNA.Networks.OneModeNetworks
 {
     /// <summary>
-    ///    Knowledge network
-    ///    List of all the information known in the network
+    ///     List of the knowledge of the meta network:
+    ///     A knowledge is cognitive capabilities and skills
     /// </summary>
-    /// <example></example>
-    public class KnowledgeNetwork
+    public class KnowledgeNetwork : OneModeNetwork<IKnowledge>
     {
-
-        /// <summary>
-        ///     Repository of all the knowledges used in the network
-        /// </summary>
-        public List<IKnowledge> List { get; } = new List<IKnowledge>();
-
-        public bool Any()
-        {
-            return List.Any();
-        }
-
-        public void Clear()
-        {
-            List.Clear();
-        }
+        
         public IKnowledge Get(IId knowledgeId)
         {
             return List.Find(k => k.Id.Equals(knowledgeId));
@@ -52,39 +37,11 @@ namespace Symu.DNA.Networks.OneModeNetworks
         {
             return List.Select(x => x.Id);
         }
-        /// <summary>
-        ///     Add a Knowledge to the repository
-        ///     Should be called only by NetWork, not directly to add belief in parallel
-        /// </summary>
-        public void Add(IKnowledge knowledge)
-        {
-            if (List.Contains(knowledge))
-            {
-                return;
-            }
-
-            List.Add(knowledge);
-        }
-
-        /// <summary>
-        ///     Add a set of Knowledge to the repository
-        /// </summary>
-        public void Add(IEnumerable<IKnowledge> knowledges)
-        {
-            if (knowledges is null)
-            {
-                throw new ArgumentNullException(nameof(knowledges));
-            }
-
-            foreach (var knowledge in knowledges)
-            {
-                Add(knowledge);
-            }
-        }
-
+        
         public IReadOnlyList<IId> ToVector()
         {
             return GetIds().OrderBy(x => x).ToList();
         }
+
     }
 }

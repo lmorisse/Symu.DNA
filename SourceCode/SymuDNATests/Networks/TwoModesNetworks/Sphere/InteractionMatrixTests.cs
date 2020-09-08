@@ -13,7 +13,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces.Agent;
-using Symu.DNA.Networks.TwoModesNetworks.AgentKnowledge;
+using Symu.DNA.Networks;
+using Symu.DNA.Networks.TwoModesNetworks;
 using Symu.DNA.Networks.TwoModesNetworks.Sphere;
 using SymuDNATests.Classes;
 
@@ -39,7 +40,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         private readonly TestKnowledge _info3 =
             new TestKnowledge(3);
 
-        private Symu.DNA.Networks.MetaNetwork _network;
+        private MetaNetwork _network;
 
         private AgentKnowledgeNetwork _networkKnowledge;
         private TestAgentKnowledge _agentKnowledge;
@@ -49,10 +50,14 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         [TestInitialize]
         public void Initialize()
         {
-            //_templates.Human.Cognitive.InteractionPatterns.SetInteractionPatterns(InteractionStrategy.Knowledge);
-
-            var interactionSphereModel = new InteractionSphereModel { On = true };
-            _network = new Symu.DNA.Networks.MetaNetwork(interactionSphereModel);
+            var interactionSphereModel = new InteractionSphereModel
+            {
+                On = true,
+                RelativeActivityWeight = 0,
+                RelativeBeliefWeight = 0,
+                SocialDemographicWeight = 0
+            };
+            _network = new MetaNetwork(interactionSphereModel);
             _networkKnowledge = _network.AgentKnowledge;
             _agentKnowledge = new TestAgentKnowledge(_info1.Id, 1);
             _agentKnowledge2 = new TestAgentKnowledge(_info2.Id, 1);

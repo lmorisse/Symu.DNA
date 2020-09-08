@@ -9,7 +9,6 @@ using MathNet.Numerics.LinearAlgebra;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Interfaces.Entity;
 using Symu.DNA.MatrixNetworks;
-using Symu.DNA.MatrixNetworks.OneModeNetworks;
 
 namespace Symu.DNA.Tests
 {

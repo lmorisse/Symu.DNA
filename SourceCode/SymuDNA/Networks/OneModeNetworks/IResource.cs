@@ -15,9 +15,11 @@ using Symu.Common.Interfaces.Entity;
 
 namespace Symu.DNA.Networks.OneModeNetworks
 {
+
     /// <summary>
-    /// The interface that let you define a resource
+    ///     Resources are products, materials, or goods that are necessary to perform Tasks and Events
     /// </summary>
+    /// <example>database, products, routines, processes, ...</example>
     public interface IResource 
     {
         /// <summary>

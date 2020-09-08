@@ -10,8 +10,9 @@
 using Symu.Common.Interfaces.Entity;
 
 namespace Symu.DNA.Networks.OneModeNetworks
-{    /// <summary>
-    ///     Describe an area of knowledge
+{
+    /// <summary>
+    ///     A knowledge is cognitive capabilities and skills
     /// </summary>
     public interface IKnowledge
     {

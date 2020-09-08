@@ -17,38 +17,9 @@ using Symu.Common.Interfaces.Entity;
 
 namespace Symu.DNA.Networks.OneModeNetworks
 {
-    public class RoleNetwork
+    public class RoleNetwork : OneModeNetwork<IRole>
     {
-        /// <summary>
-        ///     Repository of all the resources used in the network
-        /// </summary>
-        public List<IRole> List { get; } = new List<IRole>();
-
-        public void Clear()
-        {
-            List.Clear();
-        }
-
-        public bool Any()
-        {
-            return List.Any();
-        }
-
-        public void Add(IRole role)
-        {
-            if (Exists(role))
-            {
-                return;
-            }
-
-            List.Add(role);
-        }
-
-        public bool Exists(IRole role)
-        {
-            return List.Contains(role);
-        }
-
+       
         /// <summary>
         ///     Returns a list with the ids of all the roles
         /// </summary>
