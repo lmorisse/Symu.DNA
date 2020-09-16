@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces.Agent;
-using Symu.DNA.Networks.TwoModesNetworks;
+using Symu.DNA.Entities;
+using Symu.DNA.GraphNetworks.TwoModesNetworks;
 using SymuDNATests.Classes;
 
 namespace SymuDNATests.Networks.TwoModesNetworks
@@ -11,32 +12,32 @@ namespace SymuDNATests.Networks.TwoModesNetworks
     [TestClass()]
     public class ConcurrentTwoModesNetworkTests
     {
-        private readonly TestTask _task = new TestTask(1);
-        private readonly AgentId _agentId = new AgentId(1, 1);
-        private readonly AgentId _agentId2 = new AgentId(2, 1);
-        private TestAgentTask _agentTask;
-        private TestAgentTask _agentTask2;
-        private readonly AgentTaskNetwork _network = new AgentTaskNetwork();
+        private readonly ITask _task = new TaskEntity(1);
+        private readonly IAgentId _agentId = new AgentId(1, 1);
+        private readonly IAgentId _agentId2 = new AgentId(2, 1);
+        private IActorTask _actorTask;
+        private IActorTask _actorTask2;
+        private readonly ActorTaskNetwork _network = new ActorTaskNetwork();
 
         [TestInitialize]
         public void Initialize()
         {
-            _agentTask = new TestAgentTask(_agentId, _task);
-            _agentTask2 = new TestAgentTask(_agentId2, _task);
+            _actorTask = new TestActorTask(_agentId, _task);
+            _actorTask2 = new TestActorTask(_agentId2, _task);
         }
 
         [TestMethod()]
         public void AnyTest()
         {
             Assert.IsFalse(_network.Any());
-            _network.Add(_agentId, _agentTask);
+            _network.Add(_agentId, _actorTask);
             Assert.IsTrue(_network.Any());
         }
 
         [TestMethod()]
         public void ClearTest()
         {
-            _network.Add(_agentId, _agentTask);
+            _network.Add(_agentId, _actorTask);
             _network.Clear();
             Assert.IsFalse(_network.Any());
         }
@@ -45,7 +46,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks
         public void ExistsTest()
         {
             Assert.IsFalse(_network.Exists(_agentId));
-            _network.Add(_agentId, _agentTask);
+            _network.Add(_agentId, _actorTask);
             Assert.IsTrue(_network.Exists(_agentId));
             Assert.IsFalse(_network.Exists(_agentId2));
         }
@@ -53,18 +54,18 @@ namespace SymuDNATests.Networks.TwoModesNetworks
         [TestMethod()]
         public void AddTest()
         {
-            Assert.IsFalse(_network.Exists(_agentId, _agentTask));
-            _network.Add(_agentId, _agentTask);
-            Assert.IsTrue(_network.Exists(_agentId, _agentTask));
+            Assert.IsFalse(_network.Exists(_agentId, _actorTask));
+            _network.Add(_agentId, _actorTask);
+            Assert.IsTrue(_network.Exists(_agentId, _actorTask));
         }
 
         [TestMethod()]
         public void AddTest1()
         {
-            var values = new List<IAgentTask> {_agentTask};
-            Assert.IsFalse(_network.Exists(_agentId, _agentTask));
+            var values = new List<IActorTask> {_actorTask};
+            Assert.IsFalse(_network.Exists(_agentId, _actorTask));
             _network.Add(_agentId, values);
-            Assert.IsTrue(_network.Exists(_agentId, _agentTask));
+            Assert.IsTrue(_network.Exists(_agentId, _actorTask));
         }
 
         [TestMethod()]
@@ -73,7 +74,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks
             Assert.ThrowsException<ArgumentNullException>(() =>
                 _network.AddValue(_agentId, null));
             Assert.ThrowsException<ArgumentNullException>(() =>
-                _network.AddValue(_agentId, _agentTask));
+                _network.AddValue(_agentId, _actorTask));
         }
 
         [TestMethod()]
@@ -100,12 +101,12 @@ namespace SymuDNATests.Networks.TwoModesNetworks
         public void GetValuesCountTest()
         {
             Assert.AreEqual(0, _network.GetValuesCount(_agentId));
-            _network.Add(_agentId, _agentTask);
+            _network.Add(_agentId, _actorTask);
             Assert.AreEqual(1, _network.GetValuesCount(_agentId));
             // Check duplication
-            _network.Add(_agentId, _agentTask);
+            _network.Add(_agentId, _actorTask);
             Assert.AreEqual(1, _network.GetValuesCount(_agentId));
-            _network.Add(_agentId2, _agentTask2);
+            _network.Add(_agentId2, _actorTask2);
             Assert.AreEqual(1, _network.GetValuesCount(_agentId));
         }
 
@@ -113,11 +114,11 @@ namespace SymuDNATests.Networks.TwoModesNetworks
         public void RemoveAgentTest()
         {
             // Without key
-            _network.RemoveKey(_agentId);
+            _network.RemoveActor(_agentId);
             // With keys
             _network.AddKey(_agentId);
             _network.AddKey(_agentId2);
-            _network.RemoveKey(_agentId);
+            _network.RemoveActor(_agentId);
             Assert.IsFalse(_network.Exists(_agentId));
             Assert.IsTrue(_network.Exists(_agentId2));
         }
@@ -125,9 +126,9 @@ namespace SymuDNATests.Networks.TwoModesNetworks
         [TestMethod()]
         public void CopyToTest()
         {
-            _network.Add(_agentId, _agentTask);
+            _network.Add(_agentId, _actorTask);
 
-            var copy = new AgentTaskNetwork();
+            var copy = new ActorTaskNetwork();
             _network.CopyTo(copy);
             CollectionAssert.AreNotEqual(_network.List, copy.List);
             Assert.AreEqual(_network.List.Count, copy.List.Count);

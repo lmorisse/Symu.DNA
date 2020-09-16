@@ -10,7 +10,8 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.DNA.Networks.OneModeNetworks;
+using Symu.DNA.Entities;
+using Symu.DNA.GraphNetworks.OneModeNetworks;
 using SymuDNATests.Classes;
 
 #endregion
@@ -20,7 +21,7 @@ namespace SymuDNATests.Networks.OneModeNetworks
     [TestClass]
     public class BeliefNetworkTests
     {
-        private readonly TestBelief _belief = new TestBelief(1);
+        private readonly BeliefEntity _belief = new BeliefEntity(1);
 
         private readonly BeliefNetwork _network = new BeliefNetwork();
 
@@ -28,9 +29,9 @@ namespace SymuDNATests.Networks.OneModeNetworks
         [TestMethod]
         public void GetBeliefTest()
         {
-            Assert.IsNull(_network.Get(_belief.Id));
+            Assert.IsNull(_network.GetEntity(_belief.AgentId));
             _network.Add(_belief);
-            Assert.IsNotNull(_network.Get(_belief.Id));
+            Assert.IsNotNull(_network.GetEntity(_belief.AgentId));
         }
 
     }

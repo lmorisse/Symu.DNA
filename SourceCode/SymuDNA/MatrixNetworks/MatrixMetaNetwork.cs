@@ -13,7 +13,7 @@ using System;
 using MathNet.Numerics.LinearAlgebra;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Interfaces.Entity;
-using Symu.DNA.Networks;
+using Symu.DNA.GraphNetworks;
 
 #endregion
 
@@ -30,25 +30,25 @@ namespace Symu.DNA.MatrixNetworks
         {
             #region One mode networks
 
-            Agent = new VectorNetwork<IAgentId>(metaNetwork.Agent.ToVector());
+            Actor = new VectorNetwork<IAgentId>(metaNetwork.Actor.ToVector());
             Role = new VectorNetwork<IId>(metaNetwork.Role.ToVector());
-            Resource = new VectorNetwork<IId>(metaNetwork.Resource.ToVector());
+            Resource = new VectorNetwork<IAgentId>(metaNetwork.Resource.ToVector());
             Knowledge = new VectorNetwork<IId>(metaNetwork.Knowledge.ToVector());
             Belief = new VectorNetwork<IId>(metaNetwork.Belief.ToVector());
             Task = new VectorNetwork<IId>(metaNetwork.Task.ToVector());
             Event = new VectorNetwork<IId>(metaNetwork.Event.ToVector());
-            Organization = new VectorNetwork<IAgentId>(metaNetwork.AgentOrganization.ToVector());
+            Organization = new VectorNetwork<IId>(metaNetwork.Organization.ToVector());
 
             #endregion
 
             #region Two modes networks
 
-            AgentBelief = metaNetwork.AgentBelief.ToMatrix(Agent, Belief);
-            AgentOrganization = metaNetwork.AgentOrganization.ToMatrix(Agent, Organization);
-            AgentKnowledge = metaNetwork.AgentKnowledge.ToMatrix(Agent, Knowledge);
-            AgentResource = metaNetwork.AgentResource.ToMatrix(Agent, Resource);
-            AgentRole = metaNetwork.AgentRole.ToMatrix(Agent, Role);
-            AgentTask = metaNetwork.AgentTask.ToMatrix(Agent, Task);
+            ActorBelief = metaNetwork.ActorBelief.ToMatrix(Actor, Belief);
+            ActorOrganization = metaNetwork.OrganizationActor.ToMatrix(Actor, Organization);
+            ActorKnowledge = metaNetwork.ActorKnowledge.ToMatrix(Actor, Knowledge);
+            ActorResource = metaNetwork.ActorResource.ToMatrix(Actor, Resource);
+            ActorRole = metaNetwork.ActorRole.ToMatrix(Actor, Role);
+            ActorTask = metaNetwork.ActorTask.ToMatrix(Actor, Task);
 
             #endregion
         }
@@ -58,12 +58,12 @@ namespace Symu.DNA.MatrixNetworks
         ///     List of the agents of the meta network, called Actor network
         ///     An agent is an individual decision makers
         /// </summary>
-        public VectorNetwork<IAgentId> Agent { get; set; }
+        public VectorNetwork<IAgentId> Actor { get; set; }
         /// <summary>
         ///     List of the organizations of this network:
         ///     An organization is collectives of people that try to reach a common goal
         /// </summary>
-        public VectorNetwork<IAgentId> Organization { get; set; }
+        public VectorNetwork<IId> Organization { get; set; }
 
         /// <summary>
         ///     List of the roles of the meta network:
@@ -75,7 +75,7 @@ namespace Symu.DNA.MatrixNetworks
         ///     List of the resources of the meta network:
         ///     Resources are products, materials, or goods that are necessary to perform Tasks and Events
         /// </summary>
-        public VectorNetwork<IId> Resource { get; set; }
+        public VectorNetwork<IAgentId> Resource { get; set; }
         /// <summary>
         ///     List of the knowledge of the meta network:
         ///     A knowledge is cognitive capabilities and skills
@@ -104,43 +104,43 @@ namespace Symu.DNA.MatrixNetworks
         #region Two modes networks 
 
         /// <summary>
-        ///     Agent x Agent network, called interaction network, social network
+        ///     Actor x Actor network, called interaction network, social network
         ///     network of social links between agents, with their interaction type
         ///     Who interacts to / knows who
         /// </summary>
-        public Matrix<float> AgentAgent { get; set; }
+        public Matrix<float> ActorActor { get; set; }
 
         /// <summary>
-        ///     Agent x Organization network, called work network, employment network
+        ///     Actor x Organization network, called work network, employment network
         ///     Who works where
         /// </summary>
-        public Matrix<float> AgentOrganization { get; set; }
+        public Matrix<float> ActorOrganization { get; set; }
         /// <summary>
-        ///     Agent x Role network
+        ///     Actor x Role network
         ///     Who has what functions
         /// </summary>
-        public Matrix<float> AgentRole { get; set; }
+        public Matrix<float> ActorRole { get; set; }
         /// <summary>
-        ///     Agent x Resource network, called capabilities network
+        ///     Actor x Resource network, called capabilities network
         ///     Who has what resource
         /// </summary>
-        public Matrix<float> AgentResource { get; set; }
+        public Matrix<float> ActorResource { get; set; }
         /// <summary>
-        ///     Agent * Knowledge network, called knowledge network
-        ///     Who (agent) knows what (Knowledge)
+        ///     Actor * Knowledge network, called knowledge network
+        ///     Who (Actor) knows what (Knowledge)
         /// </summary>
-        public Matrix<float> AgentKnowledge { get; set; } 
+        public Matrix<float> ActorKnowledge { get; set; }
         /// <summary>
-        ///     Agent * belief network
-        ///     Who (agent) believes what (Belief)
+        ///     Actor * belief network
+        ///     Who (Actor) believes what (Belief)
         /// </summary>
-        public Matrix<float> AgentBelief { get; set; } 
+        public Matrix<float> ActorBelief { get; set; } 
 
         /// <summary>
-        ///     Agent x Task network, called assignment network
+        ///     Actor x Task network, called assignment network
         ///     Who (agent) does what (Tasks)
         /// </summary>
-        public Matrix<float> AgentTask { get; set; } 
+        public Matrix<float> ActorTask { get; set; } 
         #endregion
 
         /// <summary>
@@ -152,20 +152,20 @@ namespace Symu.DNA.MatrixNetworks
         {
             switch (networkType)
             {
-                case NetworkType.Interaction:
-                    return AgentAgent;
-                case NetworkType.AgentxBelief:
-                    return AgentBelief;
-                case NetworkType.AgentxGroup:
-                    return AgentOrganization;
-                case NetworkType.AgentxKnowledge:
-                    return AgentKnowledge;
-                case NetworkType.AgentxResource:
-                    return AgentResource;
-                case NetworkType.AgentxRole:
-                    return AgentResource;
-                case NetworkType.Assignment:
-                    return AgentTask;
+                case NetworkType.ActorActor:
+                    return ActorActor;
+                case NetworkType.ActorBelief:
+                    return ActorBelief;
+                case NetworkType.ActorOrganization:
+                    return ActorOrganization;
+                case NetworkType.ActorKnowledge:
+                    return ActorKnowledge;
+                case NetworkType.ActorResource:
+                    return ActorResource;
+                case NetworkType.ActorRole:
+                    return ActorResource;
+                case NetworkType.ActorTask:
+                    return ActorTask;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(networkType), networkType, null);
             }

@@ -14,18 +14,12 @@ namespace Symu.DNA.MatrixNetworks
     /// </summary>
     public enum NetworkType
     {
-        /// <summary>
-        /// Agent x Agent
-        /// </summary>
-        Interaction,
-        AgentxBelief,
-        AgentxGroup,
-        AgentxKnowledge,
-        AgentxResource,
-        AgentxRole,
-        /// <summary>
-        /// Agent x Activity (Task)
-        /// </summary>
-        Assignment
+        ActorActor,
+        ActorBelief,
+        ActorOrganization,
+        ActorKnowledge,
+        ActorResource,
+        ActorRole,
+        ActorTask
     }
 }

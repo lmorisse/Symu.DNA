@@ -65,13 +65,13 @@ namespace Symu.DNA
             _refMetaNetwork = InitializeKeyFrames.InitializeAnalysis(_list);
         }
 
-        public IAgentId[] AgentIds => _refMetaNetwork.Agent.IndexItem;
+        public IAgentId[] AgentIds => _refMetaNetwork.Actor.IndexItem;
 
-        public IAgentId[] GroupsIds => _refMetaNetwork.Organization.IndexItem;
+        public IId[] GroupsIds => _refMetaNetwork.Organization.IndexItem;
 
         public IId[] RoleIds => _refMetaNetwork.Role.IndexItem;
 
-        public IId[] ResourceIds => _refMetaNetwork.Resource.IndexItem;
+        public IAgentId[] ResourceIds => _refMetaNetwork.Resource.IndexItem;
         
         public IId[] KnowledgeIds => _refMetaNetwork.Knowledge.IndexItem;
         
@@ -82,7 +82,6 @@ namespace Symu.DNA
         public IId[] EventIds => _refMetaNetwork.Event.IndexItem;
 
         #endregion
-
 
         #region Analyis
 
@@ -99,8 +98,8 @@ namespace Symu.DNA
             var filter = NoFilter;
             if (id != null && !id.IsNull)
             {
-                var agentId = _refMetaNetwork.Agent.ItemIndex.Keys.ToList().Find(x => x.Id.Equals(id));
-                filter = _refMetaNetwork.Agent.ItemIndex[agentId];
+                var agentId = _refMetaNetwork.Actor.ItemIndex.Keys.ToList().Find(x => x.Id.Equals(id));
+                filter = _refMetaNetwork.Actor.ItemIndex[agentId];
             }
             return GetNetworks.Select(network => TwoModesMetrics.Analysis(metricType, network.Get(networkType), filter))
                     .ToList();

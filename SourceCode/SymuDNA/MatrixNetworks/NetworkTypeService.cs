@@ -39,20 +39,20 @@ namespace Symu.DNA.MatrixNetworks
         {
             switch (level)
             {
-                case "Assignment":
-                    return NetworkType.Assignment;
-                case "Interaction":
-                    return NetworkType.Interaction;
-                case "AgentxBelief":
-                    return NetworkType.AgentxBelief;
-                case "AgentxGroup":
-                    return NetworkType.AgentxGroup;
-                case "AgentxKnowledge":
-                    return NetworkType.AgentxKnowledge;
-                case "AgentxResource":
-                    return NetworkType.AgentxResource;
-                case "AgentxRole":
-                    return NetworkType.AgentxRole;
+                case "ActorTask":
+                    return NetworkType.ActorTask;
+                case "ActorActor":
+                    return NetworkType.ActorActor;
+                case "ActorBelief":
+                    return NetworkType.ActorBelief;
+                case "ActorOrganization":
+                    return NetworkType.ActorOrganization;
+                case "ActorKnowledge":
+                    return NetworkType.ActorKnowledge;
+                case "ActorResource":
+                    return NetworkType.ActorResource;
+                case "ActorRole":
+                    return NetworkType.ActorRole;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

@@ -10,8 +10,8 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.DNA.Networks.OneModeNetworks;
-using SymuDNATests.Classes;
+using Symu.DNA.Entities;
+using Symu.DNA.GraphNetworks.OneModeNetworks;
 
 #endregion
 
@@ -20,17 +20,17 @@ namespace SymuDNATests.Networks.OneModeNetworks
     [TestClass]
     public class KnowledgeNetworkTests
     {
-        private readonly TestKnowledge _knowledge =
-            new TestKnowledge(1);
+        private readonly IKnowledge _knowledge =
+            new KnowledgeEntity(1);
 
         private readonly KnowledgeNetwork _knowledgeNetwork = new KnowledgeNetwork();
 
         [TestMethod]
         public void GetKnowledgeTest()
         {
-            Assert.IsNull(_knowledgeNetwork.Get(_knowledge.Id));
+            Assert.IsNull(_knowledgeNetwork.GetEntity(_knowledge.EntityId));
             _knowledgeNetwork.Add(_knowledge);
-            Assert.IsNotNull(_knowledgeNetwork.Get(_knowledge.Id));
+            Assert.IsNotNull(_knowledgeNetwork.GetEntity(_knowledge.EntityId));
         }
     }
 }

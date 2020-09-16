@@ -13,9 +13,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces.Agent;
-using Symu.DNA.Networks;
-using Symu.DNA.Networks.TwoModesNetworks;
-using Symu.DNA.Networks.TwoModesNetworks.Sphere;
+using Symu.DNA.Entities;
+using Symu.DNA.GraphNetworks;
+using Symu.DNA.GraphNetworks.TwoModesNetworks;
+using Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere;
 using SymuDNATests.Classes;
 
 #endregion
@@ -31,21 +32,21 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         private readonly AgentId _agentId2 = new AgentId(2, 1);
         private readonly AgentId _agentId3 = new AgentId(3, 1);
 
-        private readonly TestKnowledge _info1 =
-            new TestKnowledge(1);
+        private readonly KnowledgeEntity _info1 =
+            new KnowledgeEntity(1);
 
-        private readonly TestKnowledge _info2 =
-            new TestKnowledge(2);
+        private readonly KnowledgeEntity _info2 =
+            new KnowledgeEntity(2);
 
-        private readonly TestKnowledge _info3 =
-            new TestKnowledge(3);
+        private readonly KnowledgeEntity _info3 =
+            new KnowledgeEntity(3);
 
         private MetaNetwork _network;
 
-        private AgentKnowledgeNetwork _networkKnowledge;
-        private TestAgentKnowledge _agentKnowledge;
-        private TestAgentKnowledge _agentKnowledge2;
-        private TestAgentKnowledge _agentKnowledge3;
+        private ActorKnowledgeNetwork _networkKnowledge;
+        private TestActorKnowledge _actorKnowledge;
+        private TestActorKnowledge _actorKnowledge2;
+        private TestActorKnowledge _actorKnowledge3;
 
         [TestInitialize]
         public void Initialize()
@@ -58,16 +59,16 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
                 SocialDemographicWeight = 0
             };
             _network = new MetaNetwork(interactionSphereModel);
-            _networkKnowledge = _network.AgentKnowledge;
-            _agentKnowledge = new TestAgentKnowledge(_info1.Id, 1);
-            _agentKnowledge2 = new TestAgentKnowledge(_info2.Id, 1);
-            _agentKnowledge3 = new TestAgentKnowledge(_info3.Id, 1);
+            _networkKnowledge = _network.ActorKnowledge;
+            _actorKnowledge = new TestActorKnowledge(_info1.AgentId, 1);
+            _actorKnowledge2 = new TestActorKnowledge(_info2.AgentId, 1);
+            _actorKnowledge3 = new TestActorKnowledge(_info3.AgentId, 1);
         }
 
         private void Interaction1X1()
         {
             _actors.Add(_agentId1);
-            _networkKnowledge.Add(_agentId1, _agentKnowledge);
+            _networkKnowledge.Add(_agentId1, _actorKnowledge);
             _network.InteractionSphere.SetSphere(true, Actors, _network);
         }
 
@@ -75,7 +76,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         {
             Interaction1X1();
             _actors.Add(_agentId2);
-            _networkKnowledge.Add(_agentId2, _agentKnowledge2);
+            _networkKnowledge.Add(_agentId2, _actorKnowledge2);
             _network.InteractionSphere.SetSphere(true, Actors, _network);
         }
 
@@ -83,7 +84,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         {
             NoInteraction2X2();
             _actors.Add(_agentId3);
-            _networkKnowledge.Add(_agentId3, _agentKnowledge3);
+            _networkKnowledge.Add(_agentId3, _actorKnowledge3);
             _network.InteractionSphere.SetSphere(true, Actors, _network);
         }
 
@@ -123,8 +124,8 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
         public void Average1Interaction2X2Test()
         {
             NoInteraction2X2();
-            _networkKnowledge.Add(_agentId1, _agentKnowledge2);
-            _networkKnowledge.Add(_agentId2, _agentKnowledge);
+            _networkKnowledge.Add(_agentId1, _actorKnowledge2);
+            _networkKnowledge.Add(_agentId2, _actorKnowledge);
             _network.InteractionSphere.SetSphere(true, Actors, _network);
 
             Assert.AreEqual(1F,
@@ -159,7 +160,7 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
             {
                 var agentId = new AgentId(i, 1);
                 _actors.Add(agentId);
-                _networkKnowledge.Add(agentId, _agentKnowledge);
+                _networkKnowledge.Add(agentId, _actorKnowledge);
             }
 
             _network.InteractionSphere.SetSphere(true, Actors, _network);
@@ -179,10 +180,10 @@ namespace SymuDNATests.Networks.TwoModesNetworks.Sphere
             for (ushort i = 0; i < count; i++)
             {
                 var info =
-                    new TestKnowledge(i);
+                    new KnowledgeEntity(i);
                 var agentId = new AgentId(i, 1);
                 _actors.Add(agentId);
-                var agentKnowledge = new TestAgentKnowledge(info.Id, 1);
+                var agentKnowledge = new TestActorKnowledge(info.AgentId, 1);
                 _networkKnowledge.Add(agentId, agentKnowledge);
             }
 

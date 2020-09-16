@@ -1,67 +1,71 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.DNA.Networks.OneModeNetworks;
-using SymuDNATests.Classes;
+using Symu.DNA.Entities;
+using Symu.DNA.GraphNetworks;
+using Symu.DNA.GraphNetworks.OneModeNetworks;
+using Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere;
 
 namespace SymuDNATests.Networks.OneModeNetworks
 {
-    [TestClass()]
+    [TestClass]
     public class OneModeNetworkTests
     {
-        private readonly TestKnowledge _knowledge =
-            new TestKnowledge(1);
+        private readonly MetaNetwork _metaNetwork =new MetaNetwork(new InteractionSphereModel());
+        private readonly IKnowledge _knowledge =
+            new KnowledgeEntity(1);
 
-        private readonly KnowledgeNetwork _network = new KnowledgeNetwork();
-        [TestMethod()]
+        private KnowledgeNetwork KnowledgeNetwork => _metaNetwork.Knowledge;
+
+        [TestMethod]
         public void ClearTest()
         {
-            _network.Add(_knowledge);
-            _network.Clear();
-            Assert.IsFalse(_network.Any());
+            KnowledgeNetwork.Add(_knowledge);
+            KnowledgeNetwork.Clear();
+            Assert.IsFalse(KnowledgeNetwork.Any());
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void AnyTest()
         {
-            Assert.IsFalse(_network.Any());
-            _network.Add(_knowledge);
-            Assert.IsTrue(_network.Any());
+            Assert.IsFalse(KnowledgeNetwork.Any());
+            KnowledgeNetwork.Add(_knowledge);
+            Assert.IsTrue(KnowledgeNetwork.Any());
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void AddTest()
         {
-            Assert.IsFalse(_network.Any());
-            _network.Add(_knowledge);
-            Assert.IsTrue(_network.Any());
-            Assert.IsTrue(_network.Exists(_knowledge));
+            Assert.IsFalse(KnowledgeNetwork.Any());
+            KnowledgeNetwork.Add(_knowledge);
+            Assert.IsTrue(KnowledgeNetwork.Any());
+            Assert.IsTrue(KnowledgeNetwork.Exists(_knowledge));
             // Duplicate
-            _network.Add(_knowledge);
-            Assert.AreEqual(1, _network.List.Count);
+            KnowledgeNetwork.Add(_knowledge);
+            Assert.AreEqual(1, KnowledgeNetwork.List.Count);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ExistsTest()
         {
-            Assert.IsFalse(_network.Exists(_knowledge));
-            _network.Add(_knowledge);
-            Assert.IsTrue(_network.Exists(_knowledge));
+            Assert.IsFalse(KnowledgeNetwork.Exists(_knowledge));
+            KnowledgeNetwork.Add(_knowledge);
+            Assert.IsTrue(KnowledgeNetwork.Exists(_knowledge));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void NextIdentityTest()
         {
-            Assert.AreEqual(0, _network.NextIdentity());
-            Assert.AreEqual(1, _network.NextIdentity());
+            Assert.AreEqual(0, KnowledgeNetwork.NextId());
+            Assert.AreEqual(1, KnowledgeNetwork.NextId());
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void CopyToTest()
         {
-            _network.Add(_knowledge);
+            KnowledgeNetwork.Add(_knowledge);
 
             var copy = new KnowledgeNetwork();
-            _network.CopyTo(copy);
-            CollectionAssert.AreEqual(_network.List, copy.List);
+            KnowledgeNetwork.CopyTo(_metaNetwork, copy);
+            CollectionAssert.AreEqual(KnowledgeNetwork.List, copy.List);
         }
     }
 }

@@ -10,8 +10,8 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.DNA.Networks.OneModeNetworks;
-using SymuDNATests.Classes;
+using Symu.DNA.Entities;
+using Symu.DNA.GraphNetworks.OneModeNetworks;
 
 #endregion
 
@@ -20,7 +20,7 @@ namespace SymuDNATests.Networks.OneModeNetworks
     [TestClass]
     public class ResourceNetworkTests
     {
-        private readonly TestResource _resource = new TestResource(2);
+        private readonly IResource _resource = new ResourceEntity(2);
         private readonly ResourceNetwork _resources = new ResourceNetwork();
 
 
@@ -38,10 +38,10 @@ namespace SymuDNATests.Networks.OneModeNetworks
         [TestMethod]
         public void GetTest()
         {
-            Assert.IsNull(_resources.Get(_resource.Id));
+            Assert.IsNull(_resources.GetEntity(_resource.EntityId.Id));
             _resources.Add(_resource);
-            Assert.IsNotNull(_resources.Get(_resource.Id));
-            Assert.AreEqual(_resource, _resources.Get(_resource.Id));
+            Assert.IsNotNull(_resources.GetEntity(_resource.EntityId.Id));
+            Assert.AreEqual(_resource, _resources.GetEntity(_resource.EntityId.Id));
         }
     }
 }

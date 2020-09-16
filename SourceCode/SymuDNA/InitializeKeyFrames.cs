@@ -36,23 +36,23 @@ namespace Symu.DNA
         {
             var refMetaNetwork = new MatrixMetaNetwork
             {
-                Agent = new VectorNetwork<IAgentId>(GetAgentIdsOverTime(list.Values.Select(x => x.Agent))),
+                Actor = new VectorNetwork<IAgentId>(GetAgentIdsOverTime(list.Values.Select(x => x.Actor))),
                 Role = new VectorNetwork<IId>(GetIdsOverTime(list.Values.Select(x => x.Role))),
-                Resource = new VectorNetwork<IId>(GetIdsOverTime(list.Values.Select(x => x.Resource))),
+                Resource = new VectorNetwork<IAgentId>(GetAgentIdsOverTime(list.Values.Select(x => x.Resource))),
                 Knowledge = new VectorNetwork<IId>(GetIdsOverTime(list.Values.Select(x => x.Knowledge))),
                 Belief = new VectorNetwork<IId>(GetIdsOverTime(list.Values.Select(x => x.Belief))),
                 Task = new VectorNetwork<IId>(GetIdsOverTime(list.Values.Select(x => x.Task))),
                 Event = new VectorNetwork<IId>(GetIdsOverTime(list.Values.Select(x => x.Event))),
-                Organization = new VectorNetwork<IAgentId>(GetAgentIdsOverTime(list.Values.Select(x => x.Organization)))
+                Organization = new VectorNetwork<IId>(GetIdsOverTime(list.Values.Select(x => x.Organization)))
             };
 
             foreach (var frame in list.Values)
             {
-                frame.AgentBelief = InitializeMatrix(refMetaNetwork.Agent, refMetaNetwork.Belief, frame.Agent, frame.Belief, frame.AgentBelief);
-                frame.AgentOrganization = InitializeMatrix(refMetaNetwork.Agent, refMetaNetwork.Organization, frame.Agent, frame.Organization, frame.AgentOrganization);
-                frame.AgentKnowledge = InitializeMatrix(refMetaNetwork.Agent, refMetaNetwork.Knowledge, frame.Agent, frame.Knowledge, frame.AgentKnowledge);
-                frame.AgentResource = InitializeMatrix(refMetaNetwork.Agent, refMetaNetwork.Resource, frame.Agent, frame.Resource, frame.AgentResource);
-                frame.AgentRole = InitializeMatrix(refMetaNetwork.Agent, refMetaNetwork.Role, frame.Agent, frame.Role, frame.AgentRole);
+                frame.ActorBelief = InitializeMatrix(refMetaNetwork.Actor, refMetaNetwork.Belief, frame.Actor, frame.Belief, frame.ActorBelief);
+                frame.ActorOrganization = InitializeMatrix(refMetaNetwork.Actor, refMetaNetwork.Organization, frame.Actor, frame.Organization, frame.ActorOrganization);
+                frame.ActorKnowledge = InitializeMatrix(refMetaNetwork.Actor, refMetaNetwork.Knowledge, frame.Actor, frame.Knowledge, frame.ActorKnowledge);
+                frame.ActorResource = InitializeMatrix(refMetaNetwork.Actor, refMetaNetwork.Resource, frame.Actor, frame.Resource, frame.ActorResource);
+                frame.ActorRole = InitializeMatrix(refMetaNetwork.Actor, refMetaNetwork.Role, frame.Actor, frame.Role, frame.ActorRole);
                 //frame.Interaction = InitializeMatrix(refMetaNetwork.Agent, refMetaNetwork.Belief, frame.Agent, frame.Belief, frame.AgentBelief);
             }
 

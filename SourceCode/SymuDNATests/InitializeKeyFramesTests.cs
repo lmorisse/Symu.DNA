@@ -1,18 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using Symu.DNA;
-
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces.Agent;
 using Symu.Common.Interfaces.Entity;
 using Symu.DNA.MatrixNetworks;
 
 namespace Symu.DNA.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class InitializeKeyFramesTests
     {
         [TestMethod]
@@ -52,12 +47,12 @@ namespace Symu.DNA.Tests
             }
             var frame = new MatrixMetaNetwork
             {
-                Agent = new VectorNetwork<IAgentId>(agentIds),
+                Actor = new VectorNetwork<IAgentId>(agentIds),
                 Belief = new VectorNetwork<IId>(beliefIds),
-                AgentBelief = Matrix<float>.Build.Dense(8, 8, 1F)
+                ActorBelief = Matrix<float>.Build.Dense(8, 8, 1F)
             };
 
-            var result = InitializeKeyFrames.InitializeMatrix(agentsRef, beliefsRef, frame.Agent, frame.Belief, frame.AgentBelief);
+            var result = InitializeKeyFrames.InitializeMatrix(agentsRef, beliefsRef, frame.Actor, frame.Belief, frame.ActorBelief);
             // Add 2 rows/cols
             Assert.AreEqual(10, result.RowCount);
             Assert.AreEqual(10, result.ColumnCount);

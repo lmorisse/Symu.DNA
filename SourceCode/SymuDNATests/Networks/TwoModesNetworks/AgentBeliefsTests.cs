@@ -10,7 +10,8 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.DNA.Networks.TwoModesNetworks;
+using Symu.DNA.Entities;
+using Symu.DNA.GraphNetworks.TwoModesNetworks;
 using SymuDNATests.Classes;
 
 #endregion
@@ -21,24 +22,24 @@ namespace SymuDNATests.Networks.TwoModesNetworks
     [TestClass]
     public class AgentBeliefsTests
     {
-        private TestAgentBelief _agentBelief ;
-        private readonly TestBelief _belief = new TestBelief(1);
-        private readonly AgentBeliefs _beliefs = new AgentBeliefs();
+        private TestActorBelief _actorBelief ;
+        private readonly BeliefEntity _belief = new BeliefEntity(1);
+        private readonly ActorBeliefs _beliefs = new ActorBeliefs();
 
         [TestInitialize]
         public void Initialize()
         {
-            _agentBelief = new TestAgentBelief(_belief.Id);
+            _actorBelief = new TestActorBelief(_belief.AgentId);
         }
 
         [TestMethod]
         public void AddTest()
         {
             Assert.AreEqual(0, _beliefs.Count);
-            _beliefs.Add(_agentBelief);
+            _beliefs.Add(_actorBelief);
             Assert.AreEqual(1, _beliefs.Count);
             // Duplicate
-            _beliefs.Add(_agentBelief);
+            _beliefs.Add(_actorBelief);
             Assert.AreEqual(1, _beliefs.Count);
         }
 
@@ -46,35 +47,35 @@ namespace SymuDNATests.Networks.TwoModesNetworks
         public void AddTest1()
         {
             Assert.AreEqual(0, _beliefs.Count);
-            _beliefs.Add(_agentBelief);
+            _beliefs.Add(_actorBelief);
             Assert.AreEqual(1, _beliefs.Count);
             // Duplicate
-            _beliefs.Add(_agentBelief);
+            _beliefs.Add(_actorBelief);
             Assert.AreEqual(1, _beliefs.Count);
         }
 
         [TestMethod]
         public void ContainsTest()
         {
-            Assert.IsFalse(_beliefs.Contains(_belief.Id));
-            _beliefs.Add(_agentBelief);
-            Assert.IsTrue(_beliefs.Contains(_belief.Id));
+            Assert.IsFalse(_beliefs.Contains(_belief.AgentId));
+            _beliefs.Add(_actorBelief);
+            Assert.IsTrue(_beliefs.Contains(_belief.AgentId));
         }
 
         [TestMethod]
         public void ContainsTest1()
         {
-            Assert.IsFalse(_beliefs.Contains(_agentBelief));
-            _beliefs.Add(_agentBelief);
-            Assert.IsTrue(_beliefs.Contains(_agentBelief));
+            Assert.IsFalse(_beliefs.Contains(_actorBelief));
+            _beliefs.Add(_actorBelief);
+            Assert.IsTrue(_beliefs.Contains(_actorBelief));
         }
 
         [TestMethod]
         public void GetBeliefTest()
         {
-            Assert.IsNull(_beliefs.GetAgentBelief(_belief.Id));
-            _beliefs.Add(_agentBelief);
-            Assert.IsNotNull(_beliefs.GetAgentBelief(_belief.Id));
+            Assert.IsNull(_beliefs.GetActorBelief(_belief.AgentId));
+            _beliefs.Add(_actorBelief);
+            Assert.IsNotNull(_beliefs.GetActorBelief(_belief.AgentId));
         }
 
     }
