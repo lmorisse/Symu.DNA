@@ -7,31 +7,42 @@
 
 #endregion
 
+#region using directives
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Symu.Common.Interfaces.Agent;
+using Symu.Common.Interfaces;
 using Symu.DNA.Entities;
+
+#endregion
 
 namespace Symu.DNA.GraphNetworks
 {
     /// <summary>
-    ///     Abstract class fro One mode vector 
+    ///     Base class fro One mode vector
     /// </summary>
-    public abstract class OneModeNetwork<TKey> where TKey : class, IEntity
+    public class OneModeNetwork
     {
-        /// <summary>
-        ///     Repository of all the Tasks used in the network
-        /// </summary>
-        public List<TKey> List { get; } = new List<TKey>();
-        public int Count => List.Count;
         /// <summary>
         ///     Latest unique index of task
         /// </summary>
         private ushort _entityIndex;
-        public ushort NextId()
+
+        /// <summary>
+        ///     Repository of all the Tasks used in the network
+        /// </summary>
+        public List<IEntity> List { get; } = new List<IEntity>();
+
+        public int Count => List.Count;
+
+        public IAgentId NextEntityId(byte classId)
         {
-            return _entityIndex++;
+            return new AgentId(_entityIndex++, classId);
+        }
+        public IAgentId NextEntityId(IClassId classId)
+        {
+            return new AgentId(_entityIndex++, classId);
         }
 
         public bool Any()
@@ -39,20 +50,44 @@ namespace Symu.DNA.GraphNetworks
             return List.Any();
         }
 
-        public bool Exists(TKey key)
+        public bool Contains(IEntity key)
         {
             return List.Contains(key);
+        }
+        public bool Exists(IAgentId id)
+        {
+            return List.Exists(x => x.EntityId.Equals(id));
+        }
+
+        public void CopyTo(MetaNetwork metaNetwork, OneModeNetwork network)
+        {
+            network._entityIndex = _entityIndex;
+            foreach (var clone in List.Select(key => key.Clone() as IEntity))
+            {
+                if (clone == null)
+                {
+                    throw new NullReferenceException(nameof(clone));
+                }
+
+                clone.Set(metaNetwork, network);
+                network.List.Add(clone);
+            }
+        }
+
+        public IReadOnlyList<IAgentId> ToVector()
+        {
+            return GetEntityIds().OrderBy(x => x.Id).ToList();
         }
 
         #region Add entity
 
         /// <summary>
-        /// Add a key to the repository
+        ///     Add a key to the repository
         /// </summary>
         /// <param name="key"></param>
-        public void Add(TKey key)
+        public void Add(IEntity key)
         {
-            if (Exists(key))
+            if (Contains(key))
             {
                 return;
             }
@@ -63,7 +98,7 @@ namespace Symu.DNA.GraphNetworks
         /// <summary>
         ///     Add a set of keys to the repository
         /// </summary>
-        public void Add(IEnumerable<TKey> keys)
+        public void Add(IEnumerable<IEntity> keys)
         {
             if (keys is null)
             {
@@ -75,20 +110,10 @@ namespace Symu.DNA.GraphNetworks
                 Add(key);
             }
         }
+
         #endregion
 
         #region Get entities
-        /// <summary>
-        ///     Get a typed entity by its entityId
-        /// </summary>
-        /// <typeparam name="TTKey"></typeparam>
-        /// <param name="entityId"></param>
-        /// <returns>The typed entity</returns>
-        public TTKey GetEntity<TTKey>(IAgentId entityId) where TTKey : IEntity
-        {
-            return (TTKey)GetEntity(entityId);
-        }
-
 
         /// <summary>
         ///     Get an entity by its entityId
@@ -101,68 +126,80 @@ namespace Symu.DNA.GraphNetworks
         }
 
         /// <summary>
-        /// Get all typed entities Id filtered by type
+        ///     Get an entity by its entityId
+        /// </summary>
+        /// <param name="entityId"></param>
+        /// <returns>The entity</returns>
+        public TTKey GetEntity<TTKey>(IAgentId entityId) where TTKey : IEntity
+        {
+            return List.OfType<TTKey>().ToList().Find(x => x.EntityId.Equals(entityId));
+        }
+
+        /// <summary>
+        ///     Get all typed entities Id filtered by type
         /// </summary>
         /// <typeparam name="TTKey"></typeparam>
         /// <returns></returns>
-        public IEnumerable<IAgentId> GetEntityIds<TTKey>() where TTKey : TKey
+        public IEnumerable<IAgentId> GetEntityIds<TTKey>() where TTKey : IEntity
         {
             return List.OfType<TTKey>().Select(x => x.EntityId);
         }
 
         /// <summary>
-        /// Get all entities Id 
+        ///     Get all entities Id
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IAgentId> GetEntityIds() 
+        public IEnumerable<IAgentId> GetEntityIds()
         {
             return List.Select(x => x.EntityId);
         }
 
         /// <summary>
-        /// Get all typed entities filtered by type
-        /// </summary>
-        /// <typeparam name="TTKey"></typeparam>
-        /// <returns></returns>
-        public IEnumerable<TTKey> GetEntities<TTKey>() where TTKey : TKey
-        {
-            return List.OfType<TTKey>();
-        }
-
-        /// <summary>
-        /// Get all entities 
+        ///     Get all entities
         /// </summary>
         /// <returns></returns>
         public IEnumerable<IEntity> GetEntities()
         {
             return List;
         }
+        /// <summary>
+        ///     Get all entities
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<TTKey> GetEntities<TTKey>() where TTKey : IEntity
+        {
+            return List.OfType<TTKey>();
+        }
         #endregion
 
         #region Remove
+
         public void Clear()
         {
             List.Clear();
+            _entityIndex = 0;
         }
-        public void Remove(TKey key)
+
+        public void Remove(IEntity key)
         {
             List.Remove(key);
         }
+
         public void Remove(IAgentId entityId)
         {
             List.RemoveAll(x => x.EntityId.Equals(entityId));
         }
+
         #endregion
 
         #region Filtered by classId
 
-
         /// <summary>
-        ///     The number of entities 
+        ///     The number of entities
         /// </summary>
         public ushort CountByClassId(IClassId classId)
         {
-            return (ushort)List.Count(x => x.EntityId.ClassId.Equals(classId));
+            return (ushort) List.Count(x => x.EntityId.ClassId.Equals(classId));
         }
 
         /// <summary>
@@ -180,27 +217,8 @@ namespace Symu.DNA.GraphNetworks
         {
             return List.Where(x => x.EntityId.ClassId.Equals(classId));
         }
+
+
         #endregion
-
-
-        public void CopyTo(MetaNetwork metaNetwork, OneModeNetwork<TKey> entity)
-        {
-            entity._entityIndex = _entityIndex;
-            foreach (var clone in List.Select(key => key.Clone() as TKey))
-            {
-                if (clone == null)
-                {
-                    throw new NullReferenceException(nameof(clone));
-                }
-
-                clone.Set(metaNetwork);
-                entity.List.Add(clone);
-            }
-        }
-
-        public IReadOnlyList<IAgentId> ToVector()
-        {
-            return GetEntityIds().OrderBy(x => x.Id).ToList();
-        }
     }
 }

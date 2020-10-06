@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - Symu
+// Description: SymuBiz - SymuDNA
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -12,11 +12,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MathNet.Numerics.LinearAlgebra;
-using Symu.Common.Interfaces.Agent;
-using Symu.Common.Interfaces.Entity;
-using Symu.DNA.Entities;
-using Symu.DNA.MatrixNetworks;
+using Symu.Common.Interfaces;
+using Symu.DNA.Edges;
 
 #endregion
 
@@ -25,48 +22,18 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks
     /// <summary>
     ///     Actor x Role network
     ///     Who has what functions
+    ///     Source : Actor
+    ///     Target : Role
     /// </summary>
-    public class ActorRoleNetwork
+    public class ActorRoleNetwork : TwoModesNetwork<IActorRole>
     {
-        public List<IActorRole> List { get; private set; } = new List<IActorRole>();
-
-        /// <summary>
-        ///     Gets or sets the element at the specified index
-        /// </summary>
-        /// <param name="index">0 based</param>
-        /// <returns></returns>
-        public IActorRole this[int index]
+        public void RemoveSource(IAgentId actorId, IAgentId organizationId)
         {
-            get => List[index];
-            set => List[index] = value;
-        }
-
-        public void Clear()
-        {
-            List.Clear();
-        }
-
-        public void RemoveActor(IAgentId actorId)
-        {
-            // Remove actorId as an Agent
-            List.RemoveAll(l => l.ActorId.Equals(actorId));
-            // Remove actorId as a Group
-            List.RemoveAll(l => l.OrganizationId.Equals(actorId));
-        }
-
-        public void RemoveActor(IAgentId actorId, IAgentId organizationId)
-        {
-            List.RemoveAll(l => l == null || l.HasRoleInOrganization(actorId, organizationId));
-        }
-        public void RemoveRole(IAgentId roleId)
-        {
-            List.RemoveAll(x => x.HasRole(roleId));
-        }
-
-
-        public bool Any()
-        {
-            return List.Any();
+            var roles = GetRolesIn(actorId, organizationId);
+            foreach (var role in roles)
+            {
+                Remove(role);
+            }
         }
 
         /// <summary>
@@ -75,9 +42,10 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks
         /// <param name="actorId"></param>
         /// <param name="organizationClassId"></param>
         /// <returns></returns>
-        public IEnumerable<IAgentId> IsActorOfOrganizations(IAgentId actorId, IClassId organizationClassId)
+        public IEnumerable<IAgentId> IsActorOfOrganizationIds(IAgentId actorId, IClassId organizationClassId)
         {
-            return List.FindAll(l => l != null && l.IsActorOfOrganizations(actorId, organizationClassId)).Select(x => x.OrganizationId);
+            return EdgesFilteredBySource(actorId).Where(l => l.IsOrganization(organizationClassId))
+                .Select(x => x.OrganizationId);
         }
 
         /// <summary>
@@ -88,57 +56,28 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks
         /// <returns></returns>
         public bool IsActorOf(IAgentId actorId, IClassId organizationClassId)
         {
-            return List.Exists(l => l != null && l.IsActorOfOrganizations(actorId, organizationClassId));
+            return EdgesFilteredBySource(actorId).ToList().Exists(l => l.IsOrganization(organizationClassId));
         }
 
-        public bool ExistActorForRoleType(IRole role, IAgentId organizationId)
+        public bool ExistActorForRoleType(IAgentId roleId, IAgentId organizationId)
         {
-            return List.Exists(l => l != null && l.HasRoleInOrganization(role, organizationId));
+            return EdgesFilteredByTarget(roleId).ToList().Exists(l => l.IsOrganization(organizationId));
         }
 
-        public IAgentId GetActorIdForRoleType(IRole role, IAgentId organizationId)
+        public IAgentId GetActorIdForRoleType(IAgentId roleId, IAgentId organizationId)
         {
-            var group = List.Find(l => l != null && l.HasRoleInOrganization(role, organizationId));
-            return group?.ActorId;
+            return ExistActorForRoleType(roleId, organizationId)
+                ? EdgesFilteredByTarget(roleId).First(l => l.IsOrganization(organizationId)).Source
+                : null;
         }
-
-        public IEnumerable<IAgentId> GetOrganizations(IAgentId actorId, IRole role)
+        public bool HasARoleIn(IAgentId actorId, IAgentId roleId, IAgentId organizationId)
         {
-            return List.FindAll(l => l != null && l.HasRole(actorId, role)).Select(x => x.OrganizationId);
-        }
-
-        /// <summary>
-        ///     Check if actorId has a role 
-        /// </summary>
-        public bool HasRoles(IAgentId actorId)
-        {
-            return List.Exists(l => l != null && l.ActorId.Equals(actorId));
-        }
-
-        public bool HasRole(IAgentId actorId, IRole role)
-        {
-            return List.Exists(l => l != null && l.HasRole(actorId, role));
-        }
-
-        public bool HasARoleIn(IAgentId actorId, IRole role, IAgentId organizationId)
-        {
-            return List.Exists(l => l != null && l.HasRoleInOrganization(actorId, role, organizationId));
+            return Edges(actorId, roleId).ToList().Exists(l => l.IsOrganization(organizationId));
         }
 
         public bool HasARoleIn(IAgentId actorId, IAgentId organizationId)
         {
-            return List.Exists(l => l != null && l.HasRoleInOrganization(actorId, organizationId));
-        }
-
-
-        /// <summary>
-        ///     Get the roles of the actorId
-        /// </summary>
-        /// <param name="actorId"></param>
-        /// <returns></returns>
-        public IEnumerable<IActorRole> GetActorRoles(IAgentId actorId)
-        {
-            return List.Where(r => r.IsActor(actorId));
+            return EdgesFilteredBySource(actorId).ToList().Exists(l => l.IsOrganization(organizationId));
         }
 
         /// <summary>
@@ -149,10 +88,7 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks
         /// <returns></returns>
         public IEnumerable<IActorRole> GetRolesIn(IAgentId actorId, IAgentId organizationId)
         {
-            lock (List)
-            {
-                return List.Where(r => r.HasRoleInOrganization(actorId, organizationId));
-            }
+            return EdgesFilteredBySource(actorId).Where(x => x.IsOrganization(organizationId));
         }
 
         /// <summary>
@@ -162,17 +98,7 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks
         /// <returns></returns>
         public IEnumerable<IActorRole> GetRoles(IAgentId organizationId)
         {
-            return List.Where(r => r.IsOrganization(organizationId));
-        }
-
-        /// <summary>
-        ///     Get the roles of the actorId for the organizationId
-        /// </summary>
-        /// <param name="role"></param>
-        /// <returns></returns>
-        public IEnumerable<IAgentId> GetActors(IRole role)
-        {
-            return List.Where(r => r.HasRole(role)).Select(x => x.ActorId);
+            return Edges().Where(r => r.IsOrganization(organizationId));
         }
 
         /// <summary>
@@ -193,85 +119,20 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks
                 return;
             }
 
-            lock (List)
+            var roles = GetRolesIn(actorId, organizationSourceId).ToList();
+            foreach (var actorRole in roles.Select(role => (IActorRole)role.Clone()))
             {
-                var roles = GetRolesIn(actorId, organizationSourceId).ToList();
-                foreach (var role in roles)
-                {
-                    var actorRole = role.Clone();
-                    actorRole.OrganizationId = organizationTargetId;
-                    List.Add(actorRole);
-                }
-
-                RemoveActor(actorId, organizationSourceId);
-            }
-        }
-
-        public void Add(IActorRole actorRole)
-        {
-            if (Exists(actorRole))
-            {
-                return;
+                actorRole.OrganizationId = organizationTargetId;
+                Add(actorRole);
             }
 
-            List.Add(actorRole);
+            RemoveSource(actorId, organizationSourceId);
         }
 
-        public bool Exists(IActorRole actorRole)
+        public void RemoveActorsByRoleFromOrganization(IAgentId roleId, IAgentId organizationId)
         {
-            return List.Contains(actorRole);
+            var actorId = GetActorIdForRoleType(roleId, organizationId);
+            RemoveSource(actorId);
         }
-
-        public void RemoveActorsByRoleFromOrganization(IRole role, IAgentId organizationId)
-        {
-            List.RemoveAll(l => l.HasRoleInOrganization(role, organizationId));
-        }
-        /// <summary>
-        /// Convert the network into a matrix
-        /// </summary>
-        /// <param name="actorIds"></param>
-        /// <param name="roleIds"></param>
-        /// <returns></returns>
-        public Matrix<float> ToMatrix(VectorNetwork<IAgentId> actorIds, VectorNetwork<IId> roleIds)
-        {
-            if (!actorIds.Any || !roleIds.Any)
-            {
-                return null;
-            }
-            var matrix = Matrix<float>.Build.Dense(actorIds.Count, roleIds.Count);
-            foreach (var actorRoles in List.GroupBy(x => x.ActorId))
-            {
-                if (!actorIds.ItemIndex.ContainsKey(actorRoles.Key))
-                {
-                    throw new NullReferenceException(nameof(actorIds.ItemIndex));
-                }
-                var row = actorIds.ItemIndex[actorRoles.Key];
-                foreach (var actorRole in actorRoles)
-                {
-                    if (!roleIds.ItemIndex.ContainsKey(actorRole.Role.EntityId))
-                    {
-                        throw new NullReferenceException(nameof(roleIds.ItemIndex));
-                    }
-                    var column = roleIds.ItemIndex[actorRole.Role.EntityId];
-                    matrix[row, column] = actorRole.Value;
-                }
-            }
-            return matrix;
-        }
-        /// <summary>
-        ///     Make a clone of Portfolios from modeling to Symu
-        /// </summary>
-        /// <param name="network"></param>
-        public void CopyTo(ActorRoleNetwork network)
-        {
-            if (network is null)
-            {
-                throw new ArgumentNullException(nameof(network));
-            }
-
-            network.List = List.ToList();
-        }
-
-
     }
 }

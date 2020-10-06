@@ -1,66 +1,52 @@
 ﻿#region Licence
 
-// Description: SymuBiz - Symu
+// Description: SymuBiz - SymuDNA
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
 
-using Symu.Common.Interfaces.Agent;
-using Symu.Common.Interfaces.Entity;
+#region using directives
+
+using Symu.Common.Interfaces;
 using Symu.DNA.GraphNetworks;
 
+#endregion
+
 namespace Symu.DNA.Entities
-{    /// <summary>
+{
+    /// <summary>
+    ///     A knowledge is cognitive capabilities and skills
     ///     Default implementation of IKnowledge
     /// </summary>
-    public class KnowledgeEntity : IKnowledge
+    public class KnowledgeEntity : Entity<KnowledgeEntity>, IKnowledge
     {
-        public static KnowledgeEntity CreateInstance()
+        public const byte Class = ClassIdCollection.Knowledge;
+        public static IClassId ClassId => new ClassId(Class);
+        public KnowledgeEntity(){}
+        public KnowledgeEntity(MetaNetwork metaNetwork) : base(metaNetwork, metaNetwork?.Knowledge, Class)
         {
-            return new KnowledgeEntity();
         }
-
-        private MetaNetwork _metaNetwork;
+        public KnowledgeEntity(MetaNetwork metaNetwork, string name) : base(metaNetwork, metaNetwork?.Knowledge, Class, name)
+        {
+        }
         /// <summary>
-        /// Use for clone method
+        /// Copy the metaNetwork, the two modes networks where the entity exists
         /// </summary>
-        private KnowledgeEntity()
+        /// <param name="entityId"></param>
+        public override void CopyMetaNetworkTo(IAgentId entityId)
         {
+            MetaNetwork.ActorKnowledge.CopyToFromTarget(EntityId, entityId);
+            MetaNetwork.TaskKnowledge.CopyToFromTarget(EntityId, entityId);
+            MetaNetwork.ResourceKnowledge.CopyToFromTarget(EntityId, entityId);
         }
-        public KnowledgeEntity(MetaNetwork metaNetwork, byte classId)
+        public override void Remove()
         {
-            Set(metaNetwork);
-            EntityId = new AgentId(_metaNetwork.Knowledge.NextId(), classId);
-            _metaNetwork.Knowledge.Add(this);
-        }
-
-        public void Remove()
-        {
-            _metaNetwork.ActorKnowledge.RemoveKnowledge(EntityId);
-            _metaNetwork.TaskKnowledge.RemoveKnowledge(EntityId);
-            _metaNetwork.Knowledge.Remove(this);
-        }
-
-        public IAgentId EntityId { get; set; }
-
-        /// <summary>Creates a new object that is a copy of the current instance.</summary>
-        /// <returns>A new object that is a copy of this instance.</returns>
-        public virtual object Clone()
-        {
-            var clone = CreateInstance();
-            clone.EntityId = EntityId;
-            return clone;
-        }
-        public void Set(MetaNetwork metaNetwork)
-        {
-            _metaNetwork = metaNetwork;
-        }
-        public override bool Equals(object obj)
-        {
-            return obj is KnowledgeEntity knowledge &&
-                   EntityId.Equals(knowledge.EntityId);
+            base.Remove();
+            MetaNetwork.ActorKnowledge.RemoveTarget(EntityId);
+            MetaNetwork.TaskKnowledge.RemoveTarget(EntityId);
+            MetaNetwork.ResourceKnowledge.RemoveTarget(EntityId);
         }
     }
 }

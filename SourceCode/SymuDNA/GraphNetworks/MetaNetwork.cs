@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - Symu
+// Description: SymuBiz - SymuDNA
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -9,9 +9,8 @@
 
 #region using directives
 
-using System;
-using Symu.Common.Interfaces.Agent;
-using Symu.DNA.GraphNetworks.OneModeNetworks;
+using System.Collections.Generic;
+using Symu.DNA.Entities;
 using Symu.DNA.GraphNetworks.TwoModesNetworks;
 using Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere;
 using Symu.DNA.MatrixNetworks;
@@ -27,57 +26,148 @@ namespace Symu.DNA.GraphNetworks
     public class MetaNetwork
     {
         //todo manage a list of one mode and two modes network, especially used in Clear and CopyTo methods
+
+        public List<OneModeNetwork> OneModeNetworks { get; } = new List<OneModeNetwork>();
+        public string Version { get; set; } = "reference";
+
         public MetaNetwork(InteractionSphereModel interactionSphere)
         {
             InteractionSphere = new InteractionSphere(interactionSphere);
+            OneModeNetworks.Add(Actor);
+            OneModeNetworks.Add(Role);
+            OneModeNetworks.Add(Resource);
+            OneModeNetworks.Add(Knowledge);
+            OneModeNetworks.Add(Belief);
+            OneModeNetworks.Add(Organization);
+            OneModeNetworks.Add(Task);
+            OneModeNetworks.Add(Event);
+        }
+
+        public MetaNetwork() : this(new InteractionSphereModel())
+        {
+        }
+
+        #region Initialize & remove Actors
+
+        public void Clear()
+        {
+            foreach (var network in OneModeNetworks)
+            {
+                network.Clear();
+            }
+
+            #region two modes networks
+
+            ActorActor.Clear();
+            ActorOrganization.Clear();
+            ActorRole.Clear();
+            ActorResource.Clear();
+            ActorKnowledge.Clear();
+            ActorBelief.Clear();
+            ActorTask.Clear();
+            ResourceTask.Clear();
+            TaskKnowledge.Clear();
+            OrganizationResource.Clear();
+            ResourceResource.Clear();
+            ResourceKnowledge.Clear();
+
+            #endregion
+        }
+
+        #endregion
+
+        /// <summary>
+        ///     Transform the MetaNetwork into a MatrixMetaNetwork
+        /// </summary>
+        /// <returns></returns>
+        public MatrixMetaNetwork ToMatrix()
+        {
+            return new MatrixMetaNetwork(this);
+        }
+
+        public MetaNetwork Clone()
+        {
+            var clone = new MetaNetwork {Version = "clone"};
+            for (var index = 0; index < OneModeNetworks.Count; index++)
+            {
+                var oneModeNetwork = OneModeNetworks[index];
+                var copyTo = clone.OneModeNetworks[index];
+                oneModeNetwork.CopyTo(clone, copyTo);
+            }
+
+            #region two modes networks
+
+            ActorActor.CopyTo(clone.ActorActor);
+            ActorOrganization.CopyTo(clone.ActorOrganization);
+            ActorRole.CopyTo(clone.ActorRole);
+            ActorResource.CopyTo(clone.ActorResource);
+            ActorKnowledge.CopyTo(clone.ActorKnowledge);
+            ActorBelief.CopyTo(clone.ActorBelief);
+            ActorTask.CopyTo(clone.ActorTask);
+            ResourceTask.CopyTo(clone.ResourceTask);
+            TaskKnowledge.CopyTo(clone.TaskKnowledge);
+            OrganizationResource.CopyTo(clone.OrganizationResource);
+            ResourceResource.CopyTo(clone.ResourceResource);
+            ResourceKnowledge.CopyTo(clone.ResourceKnowledge);
+
+            #endregion
+
+            //todo temporary
+            InteractionSphere.Model.CopyTo(clone.InteractionSphere.Model);
+
+            return clone;
         }
 
         #region One mode networks
+
         /// <summary>
         ///     Local actors of this environment
         /// </summary>
-        public ActorNetwork Actor { get; } = new ActorNetwork();
+        public OneModeNetwork Actor { get; } = new OneModeNetwork();
 
         /// <summary>
         ///     Directory of the roles the actor are playing in the organizationEntity
         /// </summary>
-        public RoleNetwork Role { get; } = new RoleNetwork();
+        public OneModeNetwork Role { get; } = new OneModeNetwork();
 
         /// <summary>
         ///     Directory of objects used by the actorIds
         ///     using, working, support
         /// </summary>
-        public ResourceNetwork Resource { get; } = new ResourceNetwork();
+        public OneModeNetwork Resource { get; } = new OneModeNetwork();
+
         /// <summary>
         ///     Knowledge network
         ///     Who (actorId) knows what (Information)
         /// </summary>
-        public KnowledgeNetwork Knowledge { get; set; } = new KnowledgeNetwork();
+        public OneModeNetwork Knowledge { get; set; } = new OneModeNetwork();
 
         /// <summary>
         ///     Belief network
         ///     List of Beliefs
         /// </summary>
-        public BeliefNetwork Belief { get; } = new BeliefNetwork();
+        public OneModeNetwork Belief { get; } = new OneModeNetwork();
+
         /// <summary>
         ///     Organization network
         ///     List of organizations
         /// </summary>
-        public OrganizationNetwork Organization { get; } = new OrganizationNetwork();
+        public OneModeNetwork Organization { get; } = new OneModeNetwork();
+
         /// <summary>
         ///     Activities network
         ///     Who (actorId) works on what activities (Kanban)
         /// </summary>
-        public TaskNetwork Task { get; set; } = new TaskNetwork();
+        public OneModeNetwork Task { get; set; } = new OneModeNetwork();
 
         /// <summary>
-        /// occurrences or phenomena that happen
+        ///     occurrences or phenomena that happen
         /// </summary>
-        public EventNetwork Event { get; } = new EventNetwork();
+        public OneModeNetwork Event { get; } = new OneModeNetwork();
 
         #endregion
 
-        #region Two modes networks 
+        #region Two modes networks
 
         /// <summary>
         ///     Actor x Actor network
@@ -92,12 +182,14 @@ namespace Symu.DNA.GraphNetworks
         ///     Directory of the groups of the organizationEntity :
         ///     Team, task force, workgroup, circles, community of practices, ...
         /// </summary>
-        public OrganizationActorNetwork OrganizationActor { get; } = new OrganizationActorNetwork();
+        public ActorOrganizationNetwork ActorOrganization { get; } = new ActorOrganizationNetwork();
+
         /// <summary>
         ///     Actor x Role network
         ///     Directory of the roles the actor are playing in the organizationEntity
         /// </summary>
         public ActorRoleNetwork ActorRole { get; } = new ActorRoleNetwork();
+
         /// <summary>
         ///     Actor x Resource network
         ///     Directory of objects used by the actorIds
@@ -110,6 +202,7 @@ namespace Symu.DNA.GraphNetworks
         ///     Who (actorId) knows what (Information)
         /// </summary>
         public ActorKnowledgeNetwork ActorKnowledge { get; } = new ActorKnowledgeNetwork();
+
         /// <summary>
         ///     Actor * belief network
         ///     Who (actorId) believes what (Information)
@@ -124,19 +217,22 @@ namespace Symu.DNA.GraphNetworks
 
         /// <summary>
         ///     Resource x Task network
-        ///     Who (actorId) works on what tasks 
+        ///     Who (actorId) works on what tasks
         /// </summary>
         public ResourceTaskNetwork ResourceTask { get; } = new ResourceTaskNetwork();
+
         /// <summary>
         ///     Task * Knowledge network
         ///     What knowledge is necessary for what Task
         /// </summary>
         public TaskKnowledgeNetwork TaskKnowledge { get; } = new TaskKnowledgeNetwork();
+
         /// <summary>
         ///     Organization * Resource network
         ///     Which organization uses what resource
         /// </summary>
         public OrganizationResourceNetwork OrganizationResource { get; } = new OrganizationResourceNetwork();
+
         /// <summary>
         ///     Resource * Resource network
         ///     Which Resource uses what resource
@@ -144,140 +240,34 @@ namespace Symu.DNA.GraphNetworks
         public ResourceResourceNetwork ResourceResource { get; } = new ResourceResourceNetwork();
 
         /// <summary>
+        ///     Resource * Knowledge network
+        ///     Which Resource stores what knowledge
+        /// </summary>
+        public ResourceKnowledgeNetwork ResourceKnowledge { get; } = new ResourceKnowledgeNetwork();
+
+        /// <summary>
         ///     Actor x Actor network
         ///     Derived Parameters from others networks.
         ///     these parameters are use indirectly to change actor behavior.
         /// </summary>
         public InteractionSphere InteractionSphere { get; }
-        #endregion
-
-        #region Initialize & remove Actors
-
-        public void Clear()
-        {
-            #region One mode networks
-            Role.Clear();
-            Resource.Clear();
-            Knowledge.Clear();
-            Belief.Clear();
-            Task.Clear();
-            Actor.Clear();
-            Event.Clear();
-            Organization.Clear();
-            #endregion
-
-            #region two modes networks
-            ActorActor.Clear();
-            OrganizationActor.Clear();
-            ActorRole.Clear();
-            ActorResource.Clear();
-            ActorKnowledge.Clear();
-            ActorBelief.Clear();
-            ActorTask.Clear();
-            ResourceTask.Clear();
-            TaskKnowledge.Clear();
-            OrganizationResource.Clear();
-            ResourceResource.Clear();
-
-            #endregion
-        }
-
-
 
         #endregion
 
-        #region Methods having crossed impacts on networks
-
-        /// <summary>
-        ///     Add an actor to an organization, with its all the resources of the organization
-        ///     It doesn't handle roles' impact
-        /// </summary>
-        /// <param name="actorOrganization"></param>
-        /// <param name="organizationId"></param>
-        //public void AddActorToOrganization(IActorOrganization actorOrganization, IAgentId organizationId)
-        //{
-        //    if (actorOrganization == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(actorOrganization));
-        //    }
-
-        //    ActorOrganization.Add(organizationId, actorOrganization);
-        //    // Actor * Resource
-        //    var organizationResources = OrganizationResource.GetValues(organizationId.Id);
-        //    foreach (var organizationResource in organizationResources)
-        //    {
-        //        ActorResource.Add(actorOrganization.ActorId, organizationResource.Clone());
-        //    }
-        //}
-
-        /// <summary>
-        ///     Remove an actor to an organization, and all the resources of the organization
-        ///     It doesn't handle roles
-        /// </summary>
-        /// <param name="actorId"></param>
-        /// <param name="organizationId"></param>
-        public void RemoveActorFromOrganization(IAgentId actorId, IAgentId organizationId)
+        public void NormalizeWeights()
         {
-            if (actorId == null)
-            {
-                throw new ArgumentNullException(nameof(actorId));
-            }
-
-            if (!OrganizationActor.Exists(organizationId))
-            {
-                return;
-            }
-
-            foreach (var actorIdToRemove in OrganizationActor.GetActorIds(organizationId, actorId.ClassId))
-            {
-                ActorActor.DecreaseInteraction(actorId, actorIdToRemove);
-            }
-
-            OrganizationActor.RemoveActor(actorId, organizationId);
-            ActorRole.RemoveActor(actorId, organizationId);
-            var resourceIds = OrganizationResource.GetResourceIds(organizationId.Id);
-            ActorResource.Remove(actorId, resourceIds);
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Transform the MetaNetwork into a MatrixMetaNetwork
-        /// </summary>
-        /// <returns></returns>
-        public MatrixMetaNetwork ToMatrix()
-        {
-            return new MatrixMetaNetwork(this);
-        }
-
-        public void  CopyTo(MetaNetwork network)
-        {
-
-            #region One mode networks
-            Role.CopyTo(this, network.Role);
-            Resource.CopyTo(this, network.Resource);
-            Knowledge.CopyTo(this, network.Knowledge);
-            Belief.CopyTo(this, network.Belief);
-            Task.CopyTo(this, network.Task);
-            Actor.CopyTo(this, network.Actor);
-            Event.CopyTo(this, network.Event);
-            Organization.CopyTo(this, network.Organization);
-            #endregion
-
-            #region two modes networks
-            ActorActor.CopyTo(network.ActorActor);
-            OrganizationActor.CopyTo(network.OrganizationActor);
-            ActorRole.CopyTo(network.ActorRole);
-            ActorResource.CopyTo(network.ActorResource);
-            ActorKnowledge.CopyTo(network.ActorKnowledge);
-            ActorBelief.CopyTo(network.ActorBelief);
-            ActorTask.CopyTo(network.ActorTask);
-            ResourceTask.CopyTo(network.ResourceTask);
-            TaskKnowledge.CopyTo(network.TaskKnowledge);
-            OrganizationResource.CopyTo(network.OrganizationResource);
-            ResourceResource.CopyTo(network.ResourceResource);
-            #endregion
-
+            ActorActor.NormalizeWeights();
+            ActorOrganization.NormalizeWeights();
+            ActorRole.NormalizeWeights();
+            ActorResource.NormalizeWeights();
+            ActorKnowledge.NormalizeWeights();
+            ActorBelief.NormalizeWeights();
+            ActorTask.NormalizeWeights();
+            ResourceTask.NormalizeWeights();
+            TaskKnowledge.NormalizeWeights();
+            OrganizationResource.NormalizeWeights();
+            ResourceResource.NormalizeWeights();
+            ResourceKnowledge.NormalizeWeights();
         }
     }
 }

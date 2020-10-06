@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - Symu
+// Description: SymuBiz - SymuDNA
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -9,17 +9,14 @@
 
 #region using directives
 
-using Symu.Common.Interfaces.Entity;
-
 #endregion
 
 namespace Symu.DNA.Entities
 {
-
     /// <summary>
-    ///     Resources are products, materials, or goods that are necessary to perform Tasks and Events
+    ///     Organization is a group of people with a same goal or mission
     /// </summary>
-    /// <example>database, products, routines, processes, ...</example>
+    /// <example>team, community of practices, ...</example>
     public interface IOrganization : IEntity
     {
     }

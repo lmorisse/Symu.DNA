@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - Symu
+// Description: SymuBiz - SymuDNA
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -83,7 +83,7 @@ namespace Symu.DNA.Metrics
         }
 
         /// <summary>
-        /// List of available agent level metrics Types
+        ///     List of available agent level metrics Types
         /// </summary>
         public static List<string> NetworkLevel()
         {
@@ -108,13 +108,13 @@ namespace Symu.DNA.Metrics
         }
 
         /// <summary>
-        /// List of available agent level metrics Types
+        ///     List of available agent level metrics Types
         /// </summary>
         public static List<string> AgentLevel()
         {
             var result = new List<string>
             {
-                NetworkMetricType.RowDegreeCentrality.ToString(), 
+                NetworkMetricType.RowDegreeCentrality.ToString(),
                 NetworkMetricType.RowDegreeCentralization.ToString()
             };
             return result;
@@ -130,7 +130,7 @@ namespace Symu.DNA.Metrics
         }
 
         /// <summary>
-        /// List of available agent level metrics Types
+        ///     List of available agent level metrics Types
         /// </summary>
         public static List<string> ColumnLevel()
         {

@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - Symu
+// Description: SymuBiz - SymuDNA
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -11,8 +11,6 @@
 
 using System;
 using MathNet.Numerics.LinearAlgebra;
-using Symu.Common.Interfaces.Entity;
-using Symu.DNA.MatrixNetworks;
 
 #endregion
 
@@ -31,9 +29,11 @@ namespace Symu.DNA.Metrics.TwoModes
             {
                 return 0;
             }
+
             switch (type)
             {
                 #region Quantity
+
                 case NetworkMetricType.Density:
                     return QuantityMetrics.Density(matrix);
                 case NetworkMetricType.Load:
@@ -46,20 +46,23 @@ namespace Symu.DNA.Metrics.TwoModes
                     return QuantityMetrics.RowDegreeCentrality(matrix, indexAgent);
                 case NetworkMetricType.ColumnDegreeCentrality:
                     return QuantityMetrics.ColumnDegreeCentrality(matrix);
+
                 #endregion
 
                 #region Variance
+
                 case NetworkMetricType.DegreeCentralization:
                     return VarianceMetrics.DegreeCentralization(matrix);
                 case NetworkMetricType.RowDegreeCentralization:
                     return VarianceMetrics.RowDegreeCentralization(matrix);
                 case NetworkMetricType.ColumnDegreeCentralization:
                     return VarianceMetrics.ColumnDegreeCentralization(matrix);
+
                 #endregion
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }
-
     }
 }

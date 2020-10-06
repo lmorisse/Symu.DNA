@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - Symu
+// Description: SymuBiz - SymuDNA
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -10,8 +10,6 @@
 #region using directives
 
 using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Single;
-using Symu.Common.Interfaces.Entity;
 using Symu.Common.Math.LinearAlgebra;
 
 #endregion
@@ -30,8 +28,9 @@ namespace Symu.DNA.Metrics.TwoModes
     public static class QuantityMetrics
     {
         #region Degree
+
         /// <summary>
-        /// Row count
+        ///     Row count
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
@@ -39,8 +38,9 @@ namespace Symu.DNA.Metrics.TwoModes
         {
             return matrix.RowCount;
         }
+
         /// <summary>
-        /// Column count
+        ///     Column count
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
@@ -50,7 +50,7 @@ namespace Symu.DNA.Metrics.TwoModes
         }
 
         /// <summary>
-        /// Normalized row entries count
+        ///     Normalized row entries count
         /// </summary>
         /// <param name="matrix"></param>
         /// <param name="indexAgent">Filtering on agentId</param>
@@ -58,15 +58,16 @@ namespace Symu.DNA.Metrics.TwoModes
         public static object RowDegreeCentrality(Matrix<float> matrix, int indexAgent)
         {
             var result = RowDegreeCentrality(matrix);
-            ;
             if (indexAgent == KeyFrames.NoFilter)
             {
                 return RowDegreeCentrality(matrix);
             }
+
             return result[indexAgent];
         }
+
         /// <summary>
-        /// Normalized row entries count
+        ///     Normalized row entries count
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
@@ -82,7 +83,7 @@ namespace Symu.DNA.Metrics.TwoModes
         }
 
         /// <summary>
-        /// Normalized column entries count
+        ///     Normalized column entries count
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
@@ -100,9 +101,10 @@ namespace Symu.DNA.Metrics.TwoModes
         #endregion
 
         #region Load & density
+
         /// <summary>
-        /// It's a network level concept that identifies the average amount of, e.g. knowledge, per agent
-        /// It tell us how loaded a network is
+        ///     It's a network level concept that identifies the average amount of, e.g. knowledge, per agent
+        ///     It tell us how loaded a network is
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
@@ -112,17 +114,25 @@ namespace Symu.DNA.Metrics.TwoModes
             {
                 return matrix.GrandSum() / matrix.ColumnCount;
             }
+
             return 0;
         }
+
         /// <summary>
-        /// The ratio of the number of links versus the maximum possible links for a network
-        /// Number of possible relation that reflects the level of social  organizational cohesion.
-        /// Density is a normalized value of the load
+        ///     The ratio of the number of links versus the maximum possible links for a network
+        ///     Number of possible relation that reflects the level of social  organizational cohesion.
+        ///     Density is a normalized value of the load
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns>the density from 0 to 1</returns>
-        /// <remarks>typical social network density levels range from 5% to 30%  in the case of frequent or very frequent information exchanges</remarks>
-        /// <remarks>a minimum social network density of 15%—20% may  reflect efficient information and knowledge sharing in a network comprising approximately 100 nodes</remarks>
+        /// <remarks>
+        ///     typical social network density levels range from 5% to 30%  in the case of frequent or very frequent
+        ///     information exchanges
+        /// </remarks>
+        /// <remarks>
+        ///     a minimum social network density of 15%—20% may  reflect efficient information and knowledge sharing in a
+        ///     network comprising approximately 100 nodes
+        /// </remarks>
         public static float Density(Matrix<float> matrix)
         {
             if (matrix.RowCount * matrix.ColumnCount > 0)
@@ -132,6 +142,7 @@ namespace Symu.DNA.Metrics.TwoModes
 
             return 0;
         }
+
         #endregion
     }
 }

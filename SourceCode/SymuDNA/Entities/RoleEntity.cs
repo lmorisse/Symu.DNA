@@ -1,66 +1,48 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuTests
+// Description: SymuBiz - SymuDNA
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
 
-using Symu.Common.Interfaces.Agent;
-using Symu.Common.Interfaces.Entity;
+#region using directives
+
+using Symu.Common.Interfaces;
 using Symu.DNA.GraphNetworks;
+
+#endregion
 
 namespace Symu.DNA.Entities
 {
     /// <summary>
-    /// Default implementation of IRole
+    ///     A role describe functions of actors
+    ///     Default implementation of IRole
     /// </summary>
-    public class RoleEntity : IRole
+    public class RoleEntity : Entity<RoleEntity>, IRole
     {
-        public static RoleEntity CreateInstance()
+        public const byte Class = ClassIdCollection.Role;
+        public static IClassId ClassId => new ClassId(Class);
+        public RoleEntity(){ }
+        public RoleEntity(MetaNetwork metaNetwork) : base(metaNetwork, metaNetwork?.Role, Class)
         {
-            return new RoleEntity();
         }
-
-        private MetaNetwork _metaNetwork;
+        public RoleEntity(MetaNetwork metaNetwork, string name) : base(metaNetwork, metaNetwork?.Role, Class, name)
+        {
+        }
         /// <summary>
-        /// Use for clone method
+        /// Copy the metaNetwork, the two modes networks where the entity exists
         /// </summary>
-        private RoleEntity()
+        /// <param name="entityId"></param>
+        public override void CopyMetaNetworkTo(IAgentId entityId)
         {
+            MetaNetwork.ActorRole.CopyToFromTarget(EntityId, entityId);
         }
-        public RoleEntity(MetaNetwork metaNetwork, byte classId)
+        public override void Remove()
         {
-            Set(metaNetwork);
-            EntityId = new AgentId(_metaNetwork.Role.NextId(), classId);
-            _metaNetwork.Role.Add(this);
-        }
-
-        public void Remove()
-        {
-            _metaNetwork.ActorRole.RemoveRole(EntityId);
-            _metaNetwork.Role.Remove(this);
-        }
-
-        public IAgentId EntityId { get; set; }
-
-        /// <summary>Creates a new object that is a copy of the current instance.</summary>
-        /// <returns>A new object that is a copy of this instance.</returns>
-        public virtual object Clone()
-        {
-            var clone = CreateInstance();
-            clone.EntityId = EntityId;
-            return clone;
-        }
-        public void Set(MetaNetwork metaNetwork)
-        {
-            _metaNetwork = metaNetwork;
-        }
-        public override bool Equals(object obj)
-        {
-            return obj is RoleEntity role &&
-                   EntityId.Equals(role.EntityId);
+            base.Remove();
+            MetaNetwork.ActorRole.RemoveTarget(EntityId);
         }
     }
 }

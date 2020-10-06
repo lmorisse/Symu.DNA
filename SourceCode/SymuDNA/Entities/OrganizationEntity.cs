@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuTests
+// Description: SymuBiz - SymuDNA
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -9,8 +9,9 @@
 
 #region using directives
 
-using Symu.Common.Interfaces.Agent;
-using Symu.Common.Interfaces.Entity;
+using System.Collections.Generic;
+using System.Linq;
+using Symu.Common.Interfaces;
 using Symu.DNA.GraphNetworks;
 
 #endregion
@@ -18,54 +19,64 @@ using Symu.DNA.GraphNetworks;
 namespace Symu.DNA.Entities
 {
     /// <summary>
+    ///     Organization is a group of people with a same goal or mission
     ///     Default implementation of IOrganization
     /// </summary>
-    public class OrganizationEntity : IOrganization
+    /// <example>team, community of practices, ...</example>
+    public class OrganizationEntity : Entity<OrganizationEntity>, IOrganization
     {
-        public static OrganizationEntity CreateInstance()
+        public const byte Class = ClassIdCollection.Organization;
+        public static IClassId ClassId => new ClassId(Class);
+        public OrganizationEntity(){}
+        public OrganizationEntity(MetaNetwork metaNetwork) : base(metaNetwork, metaNetwork?.Organization, Class)
         {
-            return new OrganizationEntity();
         }
-
-        private MetaNetwork _metaNetwork;
+        public OrganizationEntity(MetaNetwork metaNetwork, byte classId) : base(metaNetwork, metaNetwork?.Organization, classId)
+        {
+        }
+        public OrganizationEntity(MetaNetwork metaNetwork, byte classId, string name) : base(metaNetwork, metaNetwork?.Organization, classId, name)
+        {
+        }        
+        
         /// <summary>
-        /// Use for clone method
+        /// Copy the metaNetwork, the two modes networks where the entity exists
         /// </summary>
-        private OrganizationEntity()
+        /// <param name="entityId"></param>
+        public override void CopyMetaNetworkTo(IAgentId entityId)
         {
-        }
-        public OrganizationEntity(MetaNetwork metaNetwork, byte classId)
-        {
-            Set(metaNetwork);
-            EntityId = new AgentId(_metaNetwork.Organization.NextId(), classId);
-            _metaNetwork.Organization.Add(this);
+            MetaNetwork.ActorOrganization.CopyToFromTarget(EntityId, entityId);
+            MetaNetwork.OrganizationResource.CopyToFromSource(EntityId, entityId);
         }
 
-        public void Remove()
+        public override void Remove()
         {
-            _metaNetwork.OrganizationActor.RemoveOrganization(EntityId);
-            _metaNetwork.OrganizationResource.RemoveOrganization(EntityId);
-            _metaNetwork.Organization.Remove(this);
+            base.Remove();
+            MetaNetwork.ActorOrganization.RemoveTarget(EntityId);
+            MetaNetwork.OrganizationResource.RemoveSource(EntityId);
         }
 
-        public IAgentId EntityId { get; set; }
+        #region Actor Management
+        /// <summary>
+        ///     Count of the actorsIds of the organization
+        /// </summary>
+        public byte ActorsCount =>
+            (byte)MetaNetwork.ActorOrganization.SourcesFilteredByTargetAndSourceClassIdCount(EntityId, ActorEntity.ClassId);
+        /// <summary>
+        ///     List of the actorsIds of the organization
+        /// </summary>
+        public IEnumerable<IAgentId> ActorIds =>
+            MetaNetwork.ActorOrganization.SourcesFilteredByTargetAndSourceClassId(EntityId, ActorEntity.ClassId);
+        /// <summary>
+        ///     List of the actors of the organization
+        /// </summary>
+        public IEnumerable<IActor> Actors =>
+            ActorIds.Select(actorId => MetaNetwork.Actor.GetEntity<ActorEntity>(actorId));
 
-        /// <summary>Creates a new object that is a copy of the current instance.</summary>
-        /// <returns>A new object that is a copy of this instance.</returns>
-        public virtual object Clone()
-        {
-            var clone = CreateInstance();
-            clone.EntityId = EntityId;
-            return clone;
-        }
-        public void Set(MetaNetwork metaNetwork)
-        {
-            _metaNetwork = metaNetwork;
-        }
-        public override bool Equals(object obj)
-        {
-            return obj is OrganizationEntity organization &&
-                   EntityId.Equals(organization.EntityId);
-        }
+        /// <summary>
+        ///     Get the first actor fo the group
+        /// </summary>
+        /// <returns></returns>
+        public IAgentId GetFirstActorId => ActorsCount == 0 ? new AgentId() : ActorIds.First();
+        #endregion
     }
 }

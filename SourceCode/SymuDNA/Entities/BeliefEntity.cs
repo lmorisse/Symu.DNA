@@ -1,66 +1,48 @@
 ﻿#region Licence
 
-// Description: SymuBiz - Symu
+// Description: SymuBiz - SymuDNA
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
 
-using Symu.Common.Interfaces.Agent;
-using Symu.Common.Interfaces.Entity;
+#region using directives
+
+using Symu.Common.Interfaces;
 using Symu.DNA.GraphNetworks;
+
+#endregion
 
 namespace Symu.DNA.Entities
 {
     /// <summary>
+    ///     Beliefs are any form of religion or other persuasion.
     ///     Default implementation of IBelief
     /// </summary>
-    public class BeliefEntity: IBelief
+    public class BeliefEntity : Entity<BeliefEntity>, IBelief
     {
-        public static BeliefEntity CreateInstance()
+        public const byte Class = ClassIdCollection.Belief;
+        public static IClassId ClassId => new ClassId(Class);
+        public BeliefEntity(){}
+        public BeliefEntity(MetaNetwork metaNetwork) : base(metaNetwork, metaNetwork?.Belief, Class)
         {
-            return new BeliefEntity();
         }
-
-        private MetaNetwork _metaNetwork;
+        public BeliefEntity(MetaNetwork metaNetwork, string name) : base(metaNetwork, metaNetwork?.Belief, Class, name)
+        {
+        }
         /// <summary>
-        /// Use for clone method
+        /// Copy the metaNetwork, the two modes networks where the entity exists
         /// </summary>
-        private BeliefEntity()
+        /// <param name="entityId"></param>
+        public override void CopyMetaNetworkTo(IAgentId entityId)
         {
+            MetaNetwork.ActorBelief.CopyToFromTarget(EntityId, entityId);
         }
-        public BeliefEntity(MetaNetwork metaNetwork, byte classId)
+        public override void Remove()
         {
-            Set(metaNetwork);
-            EntityId = new AgentId(_metaNetwork.Belief.NextId(), classId);
-            _metaNetwork.Belief.Add(this);
-        }
-
-        public void Remove()
-        {
-            _metaNetwork.ActorBelief.RemoveBelief(EntityId);
-            _metaNetwork.Belief.Remove(this);
-        }
-
-        public IAgentId EntityId { get; set; }
-
-        /// <summary>Creates a new object that is a copy of the current instance.</summary>
-        /// <returns>A new object that is a copy of this instance.</returns>
-        public virtual object Clone()
-        {
-            var clone = CreateInstance();
-            clone.EntityId = EntityId;
-            return clone;
-        }
-        public void Set(MetaNetwork metaNetwork)
-        {
-            _metaNetwork = metaNetwork;
-        }
-        public override bool Equals(object obj)
-        {
-            return obj is BeliefEntity belief &&
-                   EntityId.Equals(belief.EntityId);
+            base.Remove();
+            MetaNetwork.ActorBelief.RemoveTarget(EntityId);
         }
     }
 }

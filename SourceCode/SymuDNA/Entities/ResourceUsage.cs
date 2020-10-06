@@ -1,18 +1,22 @@
 ﻿#region Licence
 
-// Description: SymuBiz - Symu
+// Description: SymuBiz - SymuDNA
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
 
+#region using directives
+
 using System;
+
+#endregion
 
 namespace Symu.DNA.Entities
 {
     /// <summary>
-    /// Default implementation of IResourceUsage
+    ///     Default implementation of IResourceUsage
     /// </summary>
     public class ResourceUsage : IResourceUsage
     {
@@ -20,7 +24,11 @@ namespace Symu.DNA.Entities
         {
             Usage = usage;
         }
+
         public byte Usage { get; }
+
+        #region IResourceUsage Members
+
         public bool Equals(IResourceUsage resourceUsage)
         {
             if (resourceUsage == null)
@@ -31,5 +39,7 @@ namespace Symu.DNA.Entities
             return resourceUsage is ResourceUsage usage &&
                    Usage == usage.Usage;
         }
+
+        #endregion
     }
 }

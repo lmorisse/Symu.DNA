@@ -10,7 +10,7 @@
 namespace Symu.DNA.MatrixNetworks
 {
     /// <summary>
-    /// List of all the networks that are available for measurements
+    ///     List of all the networks that are available for measurements
     /// </summary>
     public enum NetworkType
     {

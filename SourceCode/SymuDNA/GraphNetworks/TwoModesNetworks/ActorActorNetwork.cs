@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - Symu
+// Description: SymuBiz - SymuDNA
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -12,8 +12,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Symu.Common.Interfaces.Agent;
-using static Symu.Common.Constants;
+using Symu.Common.Interfaces;
+using Symu.DNA.Edges;
+using Symu.DNA.Entities;
+
 #endregion
 
 namespace Symu.DNA.GraphNetworks.TwoModesNetworks
@@ -22,70 +24,32 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks
     ///     Actor x Actor network, called interaction network, social network
     ///     network of social links between agents, with their interaction type
     ///     Who interacts to / knows who
+    ///     Source : Actor
+    ///     Target : Actor
     /// </summary>
-    public class ActorActorNetwork
+    public class ActorActorNetwork : TwoModesNetwork<IActorActor>
     {
-        private float _maxWeight;
-        public List<IActorActor> List { get; private set; } = new List<IActorActor>();
-        public int Count => List.Count;
-
-        /// <summary>
-        ///     Gets or sets the element at the specified index
-        /// </summary>
-        /// <param name="index">0 based</param>
-        /// <returns></returns>
-        public IActorActor this[int index]
-        {
-            get => List[index];
-            set => List[index] = value;
-        }
-
+        
         public void RemoveActor(IAgentId actorId)
         {
-            List.RemoveAll(l => l.Id1.Equals(actorId) || l.Id2.Equals(actorId));
-        }
-
-        public bool Any()
-        {
-            return List.Any();
-        }
-
-        /// <summary>
-        ///     Reinitialize links between members of a group :
-        ///     Add a bi directional link between every member of a group
-        /// </summary>
-        public void AddInteractions(List<IActorActor> interactions)
-        {
-            if (interactions == null)
-            {
-                throw new ArgumentNullException(nameof(interactions));
-            }
-
-            foreach (var interaction in interactions)
-            {
-                AddInteraction(interaction);
-            }
-        }
-
-
-        public void Clear()
-        {
-            List.Clear();
+            //List.RemoveAll(l => l.Source.Equals(actorId) || l.Target.Equals(actorId));
+            RemoveSource(actorId);
+            RemoveTarget(actorId);
         }
 
         /// <summary>
         ///     Add interaction.
-        /// If interaction already exist, it calls IncreaseInteraction
+        ///     If interaction already exist, it calls IncreaseInteraction
         /// </summary>
         /// <param name="actorActor"></param>
-        public void AddInteraction(IActorActor actorActor)
+        public override void Add(IActorActor actorActor)
         {
             if (actorActor == null)
             {
                 throw new ArgumentNullException(nameof(actorActor));
             }
 
-            if (actorActor.Id2.Equals(actorActor.Id1))
+            if (actorActor.Target.Equals(actorActor.Source))
             {
                 return;
             }
@@ -94,101 +58,82 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks
             {
                 IncreaseInteraction(actorActor);
             }
-            else  
+            else
             {
                 List.Add(actorActor);
             }
         }
 
-        public bool Exists(IActorActor actorActor)
-        {
-            return List.Contains(actorActor);
-        }
-
         /// <summary>
-        ///     Link exists between actorId1 and actorId2 
+        ///     Link exists between actorId1 and actorId2
         /// </summary>
         /// <param name="actorId1"></param>
         /// <param name="actorId2"></param>
-        public bool Exists(IAgentId actorId1, IAgentId actorId2)
+        /// <remarks>Specific because the link is bi directional, should be resolved with QuickGraph</remarks>
+        public override bool Exists(IAgentId actorId1, IAgentId actorId2)
         {
+            //todo should be removed with QuickGraph and directed graph
             return List.Exists(x => x.HasLink(actorId1, actorId2));
         }
 
-        private IActorActor Get(IAgentId actorId1, IAgentId actorId2)
+        public override IActorActor Edge(IAgentId actorId1, IAgentId actorId2)
         {
-            return List.Find(x => x.HasLink(actorId1, actorId2));
+            //todo should be removed with QuickGraph and directed graph
+            return List.FirstOrDefault(x => x.HasLink(actorId1, actorId2));
+        }
+
+        public override IEnumerable<IActorActor> Edges(IAgentId sourceId, IAgentId targetId)
+        {
+            //todo should be removed with QuickGraph and directed graph
+            return sourceId.CompareTo(targetId)
+                ? base.Edges(sourceId, targetId)
+                : base.Edges(targetId, sourceId);
         }
 
         /// <summary>
-        /// Increase the weight of the interaction if the interaction is weighted
+        ///     Increase the weight of the interaction if the interaction is weighted
         /// </summary>
-        private void IncreaseInteraction(IActorActor actorActor)
+        private void IncreaseInteraction(IEdge actorActor)
         {
             // As interaction can be a new instance of IInteraction, it may be not the one that is stored in the network
-            var interactionFromNetwork = Get(actorActor.Id1, actorActor.Id2);
+            var interactionFromNetwork = Edge(actorActor.Source, actorActor.Target);
             interactionFromNetwork.IncreaseWeight();
         }
 
         /// <summary>
-        /// Decrease the weight of the interaction if the interaction is weighted
+        ///     Decrease the weight of the interaction if the interaction is weighted
         /// </summary>
         public void DecreaseInteraction(IAgentId actorId1, IAgentId actorId2)
         {
-            if (Exists(actorId1, actorId2))
+            if (!Exists(actorId1, actorId2))
             {
-                Get(actorId1, actorId2).DecreaseWeight();
+                return;
             }
+
+            Edge(actorId1, actorId2).DecreaseWeight();
         }
 
         public bool HasActiveInteraction(IAgentId actorId1, IAgentId actorId2)
         {
-            return List.Exists(l => l.HasActiveInteraction(actorId1, actorId2));
-        }
-
-        public float GetInteractionWeight(IAgentId actorId1, IAgentId actorId2)
-        {
-            return Exists(actorId1, actorId2) ? Get(actorId1, actorId2).Weight : 0;
-        }
-
-        public float NormalizedCountLinks(IAgentId actorId1, IAgentId actorId2)
-        {
-            return _maxWeight < Tolerance ? 0 : GetInteractionWeight(actorId1, actorId2) / _maxWeight;
-        }
-
-        public void SetMaxLinksCount()
-        {
-            _maxWeight = List.Any() ? List.Max(x => x.Weight) : 0;
+            return Edges(actorId1, actorId2).ToList().Exists(l => l.HasActiveInteraction(actorId1, actorId2));
         }
 
         #region unit tests
 
         public bool HasPassiveInteraction(IAgentId actorId1, IAgentId actorId2)
         {
-            return List.Exists(l => l.HasPassiveInteraction(actorId1, actorId2));
+            return Edges(actorId1, actorId2).ToList().Exists(l => l.HasPassiveInteraction(actorId1, actorId2));
         }
 
         /// <summary>
-        ///     Get all the active links of an agent
+        ///     Get the number of the active links of an actor
         /// </summary>
-        public IEnumerable<IAgentId> GetActiveInteractions(IAgentId agentId)
+        public int ActiveInteractionCount(IAgentId actorId)
         {
-            return List.FindAll(l => l.HasActiveInteractions(agentId)).Select(l => l.Id2).Distinct();
+            return List.Count(x => x.Equals(actorId) && x.IsActive);
         }
 
         #endregion
-        /// <summary>
-        ///     Make a clone of Portfolios from modeling to Symu
-        /// </summary>
-        /// <param name="network"></param>
-        public void CopyTo(ActorActorNetwork network)
-        {
-            if (network is null)
-            {
-                throw new ArgumentNullException(nameof(network));
-            }
 
-            network.List = List.ToList();
-        }
     }
 }

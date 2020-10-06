@@ -7,10 +7,14 @@
 
 #endregion
 
+#region using directives
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+
+#endregion
 
 namespace Symu.DNA.GraphNetworks.TwoModesNetworks
 {
@@ -25,6 +29,7 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks
         /// </summary>
         public ConcurrentDictionary<TKey, List<TValue>> List { get; } =
             new ConcurrentDictionary<TKey, List<TValue>>();
+
         public int Count => List.Count;
 
         public bool Any()
@@ -75,6 +80,7 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks
             {
                 throw new ArgumentNullException(nameof(value));
             }
+
             if (!Exists(key))
             {
                 throw new ArgumentNullException(nameof(key));
@@ -98,9 +104,10 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks
         {
             return List.Any() ? List.Keys : new List<TKey>();
         }
+
         public IEnumerable<TValue> GetValues(TKey key)
         {
-            return Exists(key) ? (IEnumerable<TValue>)List[key] : new TValue[0];
+            return Exists(key) ? (IEnumerable<TValue>) List[key] : new TValue[0];
         }
 
         /// <summary>
@@ -110,7 +117,7 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks
         /// <returns></returns>
         public byte GetValuesCount(TKey key)
         {
-            return Exists(key) ? Convert.ToByte(List[key].Count) : (byte)0;
+            return Exists(key) ? Convert.ToByte(List[key].Count) : (byte) 0;
         }
 
 
@@ -121,6 +128,7 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks
                 List.TryRemove(key, out _);
             }
         }
+
         /// <summary>
         ///     Make a copy of of the network
         /// </summary>

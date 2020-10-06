@@ -1,11 +1,24 @@
-﻿using System.Collections.Generic;
+﻿#region Licence
+
+// Description: SymuBiz - SymuDNATests
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
+using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.Common.Interfaces.Agent;
-using Symu.Common.Interfaces.Entity;
+using Symu.Common.Interfaces;
+using Symu.DNA;
 using Symu.DNA.MatrixNetworks;
 
-namespace Symu.DNA.Tests
+#endregion
+
+namespace SymuDNATests
 {
     [TestClass]
     public class InitializeKeyFramesTests
@@ -18,41 +31,49 @@ namespace Symu.DNA.Tests
             {
                 agentIdsRef.Add(new AgentId(i, 1));
             }
-            var agentsRef = new VectorNetwork<IAgentId>(agentIdsRef);
 
-            var beliefIdsRef = new List<IId>();
+            var agentsRef = new VectorNetwork(agentIdsRef);
+
+            var beliefIdsRef = new List<IAgentId>();
             for (ushort i = 0; i < 10; i++)
             {
-                beliefIdsRef.Add(new UId(i));
+                beliefIdsRef.Add(new AgentId(i, 1));
             }
-            var beliefsRef = new VectorNetwork<IId>(beliefIdsRef);
+
+            var beliefsRef = new VectorNetwork(beliefIdsRef);
 
             var agentIds = new List<IAgentId>();
             for (ushort i = 0; i < 4; i++)
             {
                 agentIds.Add(new AgentId(i, 1));
             }
+
             for (ushort i = 5; i < 9; i++)
             {
                 agentIds.Add(new AgentId(i, 1));
             }
-            var beliefIds = new List<IId>();
+
+            var beliefIds = new List<IAgentId>();
             for (ushort i = 0; i < 4; i++)
             {
-                beliefIds.Add(new UId(i));
+                beliefIds.Add(new AgentId(i, 1));
             }
+
             for (ushort i = 5; i < 9; i++)
             {
-                beliefIds.Add(new UId(i));
+                beliefIds.Add(new AgentId(i, 1));
             }
+
             var frame = new MatrixMetaNetwork
             {
-                Actor = new VectorNetwork<IAgentId>(agentIds),
-                Belief = new VectorNetwork<IId>(beliefIds),
+                Actor = new VectorNetwork(agentIds),
+                Belief = new VectorNetwork(beliefIds),
                 ActorBelief = Matrix<float>.Build.Dense(8, 8, 1F)
             };
 
-            var result = InitializeKeyFrames.InitializeMatrix(agentsRef, beliefsRef, frame.Actor, frame.Belief, frame.ActorBelief);
+            var result =
+                InitializeKeyFrames.InitializeMatrix(agentsRef, beliefsRef, frame.Actor, frame.Belief,
+                    frame.ActorBelief);
             // Add 2 rows/cols
             Assert.AreEqual(10, result.RowCount);
             Assert.AreEqual(10, result.ColumnCount);

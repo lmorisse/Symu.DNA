@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - Symu
+// Description: SymuBiz - SymuDNA
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -164,7 +164,7 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere
             }
         }
 
-        public void CopyTo(InteractionSphereModel entity)
+        public override void CopyTo(ModelEntity entity)
         {
             if (entity is null)
             {
@@ -172,14 +172,26 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere
             }
 
             base.CopyTo(entity);
-            entity.SphereUpdateOverTime = SphereUpdateOverTime;
-            entity.MaxSphereDensity = MaxSphereDensity;
-            entity.MinSphereDensity = MinSphereDensity;
-            entity.RandomlyGeneratedSphere = RandomlyGeneratedSphere;
-            entity.RelativeActivityWeight = RelativeActivityWeight;
-            entity.RelativeBeliefWeight = RelativeBeliefWeight;
-            entity.RelativeKnowledgeWeight = RelativeKnowledgeWeight;
-            entity.SocialDemographicWeight = SocialDemographicWeight;
+            if (!(entity is InteractionSphereModel copy))
+            {
+                return;
+            }
+
+            copy.SphereUpdateOverTime = SphereUpdateOverTime;
+            copy.MaxSphereDensity = MaxSphereDensity;
+            copy.MinSphereDensity = MinSphereDensity;
+            copy.RandomlyGeneratedSphere = RandomlyGeneratedSphere;
+            copy.RelativeActivityWeight = RelativeActivityWeight;
+            copy.RelativeBeliefWeight = RelativeBeliefWeight;
+            copy.RelativeKnowledgeWeight = RelativeKnowledgeWeight;
+            copy.SocialDemographicWeight = SocialDemographicWeight;
+        }
+
+        public override ModelEntity Clone()
+        {
+            var clone = new InteractionSphereModel();
+            CopyTo(clone);
+            return clone;
         }
 
         /// <summary>

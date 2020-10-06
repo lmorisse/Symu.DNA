@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - Symu
+// Description: SymuBiz - SymuDNA
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Symu.Common;
-using Symu.Common.Interfaces.Agent;
+using Symu.Common.Interfaces;
 using Symu.Common.Math.ProbabilityDistributions;
 using Symu.DNA.MatrixNetworks;
 
@@ -28,17 +28,15 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere
     /// </summary>
     public class InteractionSphere
     {
-        public InteractionSphereModel Model
-        {
-            get;
-        }
-        private VectorNetwork<IAgentId> _vector;
         private DerivedParameter _lastAverage;
+        private VectorNetwork _vector;
 
         public InteractionSphere(InteractionSphereModel model)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
         }
+
+        public InteractionSphereModel Model { get; }
 
         /// <summary>
         ///     List of all agentId and their enculturation information
@@ -64,7 +62,8 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere
                 return;
             }
 
-            network.ActorActor.SetMaxLinksCount();
+            //todo use => _vector = new VectorNetwork(network.Actor.ToVector());
+            network.NormalizeWeights();
             if (Model.RandomlyGeneratedSphere)
             {
                 if (initialization)
@@ -96,16 +95,14 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere
             }
 
             var count = agentIds.Count;
-            //_vector.ItemIndex = new Dictionary<IAgentId, int>();
-            //_vector.IndexItem = new Dictionary<int, IAgentId>();
-            _vector = new VectorNetwork<IAgentId>(agentIds);
+            _vector = new VectorNetwork(agentIds);
             Sphere = new DerivedParameter[count, count];
             // for the moment the matrix is symmetrical
             for (var i = 0; i < count; i++)
             {
                 var agentI = agentIds[i];
-                //_vector.ItemIndex[agentI] = i;
-                //_vector.IndexItem[i] = agentI;
+                _vector.ItemIndex[agentI] = i;
+                _vector.IndexItem[i] = agentI;
 
                 var density = ContinuousUniform.Sample(Model.MinSphereDensity, Model.MaxSphereDensity);
                 for (var j = i + 1; j < count; j++)
@@ -136,15 +133,11 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere
             }
 
             var count = agentIds.Count;
-            //var tempAgentIndex = new Dictionary<IAgentId, int>();
-            //var tempIndexAgent = new Dictionary<int, IAgentId>();
-            var tempVector = new VectorNetwork<IAgentId>(agentIds);
+            var tempVector = new VectorNetwork(agentIds);
             var tempSphere = new DerivedParameter[count, count];
             for (var i = 0; i < count; i++)
             {
                 var agentI = agentIds[i];
-                //tempAgentIndex[agentI] = i;
-                //tempIndexAgent[i] = agentI;
                 if (_vector.ItemIndex.ContainsKey(agentI))
                 {
                     var oldIndexI = _vector.ItemIndex[agentI];
@@ -195,8 +188,6 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere
                 }
             }
 
-            //_vector.ItemIndex = tempAgentIndex;
-            //_vector.IndexItem = tempIndexAgent;
             _vector = tempVector;
             Sphere = tempSphere;
         }
@@ -204,19 +195,18 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere
         private void SetSphereWithSimilarityMatching(IReadOnlyList<IAgentId> agentIds, MetaNetwork network)
         {
             var count = agentIds.Count;
-            //_agentIndex = new Dictionary<IAgentId, int>();
-            //_vector.IndexItem = new Dictionary<int, IAgentId>();
-            _vector= new VectorNetwork<IAgentId>(agentIds);
+            _vector = new VectorNetwork(agentIds);
             Sphere = new DerivedParameter[count, count];
+            var orderedAgents = agentIds.OrderBy(x => x.Id).ToList();
             // for the moment it is a symmetrical matrix
             for (var i = 0; i < count; i++)
             {
-                var agentI = agentIds[i];
+                var agentI = orderedAgents[i];
                 _vector.ItemIndex[agentI] = i;
                 _vector.IndexItem[i] = agentI;
                 for (var j = i + 1; j < count; j++)
                 {
-                    var agentJ = agentIds[j];
+                    var agentJ = orderedAgents[j];
                     Sphere[i, j] = SetDerivedParameter(network, agentI, agentJ);
                     Sphere[j, i] = Sphere[i, j];
                 }
@@ -254,21 +244,22 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere
                 throw new ArgumentNullException(nameof(beliefNetwork));
             }
 
-            if (!beliefNetwork.Exists(agentId1) || !beliefNetwork.Exists(agentId2))
+            if (!beliefNetwork.ExistsSource(agentId1) || !beliefNetwork.ExistsSource(agentId2))
             {
                 return 0;
             }
 
             var relativeBelief = 0F;
-            var beliefIds = beliefNetwork.GetBeliefIds(agentId1).ToList();
+            var beliefIds = beliefNetwork.TargetsFilteredBySource(agentId1).ToList();
             foreach (var beliefId in beliefIds)
             {
                 if (!beliefNetwork.Exists(agentId1, beliefId) || !beliefNetwork.Exists(agentId2, beliefId))
                 {
                     continue;
                 }
-                var agentBelief1 = beliefNetwork.GetAgentBelief(agentId1, beliefId);
-                var agentBelief2 = beliefNetwork.GetAgentBelief(agentId2, beliefId);
+
+                var agentBelief1 = beliefNetwork.Edge(agentId1, beliefId);
+                var agentBelief2 = beliefNetwork.Edge(agentId2, beliefId);
                 relativeBelief += agentBelief1.CompareTo(agentBelief2);
             }
 
@@ -286,21 +277,22 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere
                 throw new ArgumentNullException(nameof(knowledgeNetwork));
             }
 
-            if (!knowledgeNetwork.Exists(agentId1) || !knowledgeNetwork.Exists(agentId2))
+            if (!knowledgeNetwork.ExistsSource(agentId1) || !knowledgeNetwork.ExistsSource(agentId2))
             {
                 return 0;
             }
 
             var relativeExpertise = 0F;
-            var knowledgeIds = knowledgeNetwork.GetKnowledgeIds(agentId1).ToList();
+            var knowledgeIds = knowledgeNetwork.TargetsFilteredBySource(agentId1).ToList();
             foreach (var knowledgeId in knowledgeIds)
             {
                 if (!knowledgeNetwork.Exists(agentId1, knowledgeId) || !knowledgeNetwork.Exists(agentId2, knowledgeId))
                 {
                     continue;
                 }
-                var agentKnowledge1 = knowledgeNetwork.GetActorKnowledge(agentId1, knowledgeId);
-                var agentKnowledge2 = knowledgeNetwork.GetActorKnowledge(agentId2, knowledgeId);
+
+                var agentKnowledge1 = knowledgeNetwork.Edge(agentId1, knowledgeId);
+                var agentKnowledge2 = knowledgeNetwork.Edge(agentId2, knowledgeId);
                 relativeExpertise += agentKnowledge1.CompareTo(agentKnowledge2);
             }
 
@@ -314,7 +306,8 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere
         /// <param name="agentId2"></param>
         /// <param name="actorActorNetwork"></param>
         /// <returns></returns>
-        public static float SetSocialProximity(IAgentId agentId1, IAgentId agentId2, ActorActorNetwork actorActorNetwork)
+        public static float SetSocialProximity(IAgentId agentId1, IAgentId agentId2,
+            ActorActorNetwork actorActorNetwork)
         {
             //todo graph : number of nodes between agentId1 and agentId2
             if (actorActorNetwork == null)
@@ -322,7 +315,7 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere
                 throw new ArgumentNullException(nameof(actorActorNetwork));
             }
 
-            return actorActorNetwork.NormalizedCountLinks(agentId1, agentId2);
+            return actorActorNetwork.NormalizedWeight(agentId1, agentId2);//actorActorNetwork.NormalizedCountLinks(agentId1, agentId2);
         }
 
         /// <summary>
@@ -340,12 +333,13 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere
                 throw new ArgumentNullException(nameof(actorTaskNetwork));
             }
 
-            var task1 = actorTaskNetwork.GetTasks(agentId1);
+            var task1 = actorTaskNetwork.TargetsFilteredBySource(agentId1);
             if (task1 == null)
             {
                 return 0;
             }
-            var task2 = actorTaskNetwork.GetTasks(agentId2); 
+
+            var task2 = actorTaskNetwork.TargetsFilteredBySource(agentId2);
             if (task2 == null)
             {
                 return 0;
@@ -368,7 +362,6 @@ namespace Symu.DNA.GraphNetworks.TwoModesNetworks.Sphere
         public IEnumerable<IAgentId> GetAgentIdsForInteractions(IAgentId agentId,
             InteractionStrategy interactionStrategy)
         {
-
             if (!Model.On || _vector.ItemIndex is null || !_vector.ItemIndex.ContainsKey(agentId))
             {
                 return new List<IAgentId>();

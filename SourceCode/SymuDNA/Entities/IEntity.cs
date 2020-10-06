@@ -1,16 +1,19 @@
 ﻿#region Licence
 
-// Description: SymuBiz - Symu
+// Description: SymuBiz - SymuDNA
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
 
+#region using directives
+
 using System;
-using System.Data.SqlTypes;
-using Symu.Common.Interfaces.Agent;
+using Symu.Common.Interfaces;
 using Symu.DNA.GraphNetworks;
+
+#endregion
 
 namespace Symu.DNA.Entities
 {
@@ -18,21 +21,21 @@ namespace Symu.DNA.Entities
     ///     Base interface for entities
     ///     Entities are used in One Mode Networks
     /// </summary>
-    public interface IEntity: ICloneable
+    public interface IEntity : ICloneable
     {
-        IAgentId EntityId
-        {
-            get;
-            set;
-        }
+        IAgentId EntityId { get; set; }
+        string Name { get; set; }
+
         /// <summary>
-        /// Use to set the metaNetwork embedded in the Entity
+        ///     Set the metaNetwork embedded in the Entity and the OneModeNetwork
         /// </summary>
         /// <param name="metaNetwork"></param>
-        void Set(MetaNetwork metaNetwork);
+        /// <param name="network"></param>
+        void Set(MetaNetwork metaNetwork, OneModeNetwork network);
+
         /// <summary>
-        /// Triggered when the entity is removed
-        /// At least must clean the MetaNetwork
+        ///     Triggered when the entity is removed
+        ///     At least must clean the MetaNetwork
         /// </summary>
         void Remove();
     }
