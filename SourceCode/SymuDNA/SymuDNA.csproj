@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Symu.OrgMod\Github\SourceCode\SymuOrgMod\SymuOrgMod.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Symu.Common">
       <HintPath>..\..\..\..\Symu.Common\Github\SourceCode\SymuCommon\bin\Debug\netstandard2.0\Symu.Common.dll</HintPath>
     </Reference>

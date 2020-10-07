@@ -13,10 +13,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Symu.Common.Classes;
 using Symu.Common.Interfaces;
-
-using Symu.DNA.MatrixNetworks;
 using Symu.DNA.Metrics;
 using Symu.DNA.Metrics.TwoModes;
+using Symu.OrgMod.GraphNetworks;
 
 #endregion
 
@@ -34,6 +33,10 @@ namespace Symu.DNA
         public IEnumerable<MatrixMetaNetwork> GetNetworks => _list.Values;
         public List<ushort> GetFrames => _list.Keys.ToList();
 
+        public void Add(ushort frame, GraphMetaNetwork network)
+        {
+            Add(frame, new MatrixMetaNetwork(network));
+        }
         public void Add(ushort frame, MatrixMetaNetwork network)
         {
             _list.Add(frame, network);

@@ -14,7 +14,7 @@ using MathNet.Numerics.LinearAlgebra;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.Common.Interfaces;
 using Symu.DNA;
-using Symu.DNA.MatrixNetworks;
+using Symu.OrgMod.GraphNetworks;
 
 #endregion
 

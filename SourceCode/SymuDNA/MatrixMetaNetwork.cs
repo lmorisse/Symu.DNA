@@ -11,11 +11,13 @@
 
 using System;
 using MathNet.Numerics.LinearAlgebra;
-using Symu.DNA.GraphNetworks;
+using Symu.OrgMod.Edges;
+using Symu.OrgMod.GraphNetworks;
+using Symu.OrgMod.GraphNetworks.TwoModesNetworks;
 
 #endregion
 
-namespace Symu.DNA.MatrixNetworks
+namespace Symu.DNA
 {
     /// <summary>
     ///     Referential of networks for social and organizational network analysis
@@ -27,7 +29,7 @@ namespace Symu.DNA.MatrixNetworks
         {
         }
 
-        public MatrixMetaNetwork(MetaNetwork metaNetwork)
+        public MatrixMetaNetwork(GraphMetaNetwork metaNetwork)
         {
             #region One mode networks
 
@@ -44,18 +46,18 @@ namespace Symu.DNA.MatrixNetworks
 
             #region Two modes networks
 
-            ActorActor = metaNetwork.ActorActor.ToMatrix(Actor, Actor);
-            ActorBelief = metaNetwork.ActorBelief.ToMatrix(Actor, Belief);
-            ActorOrganization = metaNetwork.ActorOrganization.ToMatrix(Actor, Organization);
-            ActorKnowledge = metaNetwork.ActorKnowledge.ToMatrix(Actor, Knowledge);
-            ActorResource = metaNetwork.ActorResource.ToMatrix(Actor, Resource);
-            ActorRole = metaNetwork.ActorRole.ToMatrix(Actor, Role);
-            ActorTask = metaNetwork.ActorTask.ToMatrix(Actor, Task);
-            ResourceTask = metaNetwork.ResourceTask.ToMatrix(Resource, Task);
-            TaskKnowledge = metaNetwork.TaskKnowledge.ToMatrix(Task, Knowledge);
-            OrganizationResource = metaNetwork.OrganizationResource.ToMatrix(Organization, Resource);
-            ResourceResource = metaNetwork.ResourceResource.ToMatrix(Resource, Resource);
-            ResourceKnowledge = metaNetwork.ResourceKnowledge.ToMatrix(Resource, Knowledge);
+            ActorActor = ImportToMatrix(metaNetwork.ActorActor.Clone() , Actor, Actor);
+            ActorBelief = ImportToMatrix(metaNetwork.ActorBelief.Clone(), Actor, Belief);
+            ActorOrganization = ImportToMatrix(metaNetwork.ActorOrganization.Clone(), Actor, Organization);
+            ActorKnowledge = ImportToMatrix(metaNetwork.ActorKnowledge.Clone(), Actor, Knowledge);
+            ActorResource = ImportToMatrix(metaNetwork.ActorResource.Clone(), Actor, Resource);
+            ActorRole = ImportToMatrix(metaNetwork.ActorRole.Clone(), Actor, Role);
+            ActorTask = ImportToMatrix(metaNetwork.ActorTask.Clone(), Actor, Task);
+            ResourceTask = ImportToMatrix(metaNetwork.ResourceTask.Clone(), Resource, Task);
+            TaskKnowledge = ImportToMatrix(metaNetwork.TaskKnowledge.Clone(), Task, Knowledge);
+            OrganizationResource = ImportToMatrix(metaNetwork.OrganizationResource.Clone(), Organization, Resource);
+            ResourceResource = ImportToMatrix(metaNetwork.ResourceResource.Clone(), Resource, Resource);
+            ResourceKnowledge = ImportToMatrix(metaNetwork.ResourceKnowledge.Clone(), Resource, Knowledge);
 
             #endregion
         }
@@ -216,5 +218,44 @@ namespace Symu.DNA.MatrixNetworks
         public Matrix<float> ActorTask { get; set; }
 
         #endregion
+
+        /// <summary>
+        ///     Convert the network into a matrix
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="sourceIds"></param>
+        /// <param name="targetIds"></param>
+        /// <returns></returns>
+        public Matrix<float> ImportToMatrix(TwoModesNetwork<IEdge> network, VectorNetwork sourceIds, VectorNetwork targetIds)
+        {
+            if (!sourceIds.Any || !targetIds.Any)
+            {
+                return null;
+            }
+
+            var matrix = Matrix<float>.Build.Dense(sourceIds.Count, targetIds.Count);
+            for (var i = 0; i < sourceIds.Count; i++)
+            {
+                var sourceId = sourceIds.IndexItem[i];
+                if (!sourceIds.ItemIndex.ContainsKey(sourceId))
+                {
+                    throw new NullReferenceException(nameof(sourceIds.ItemIndex));
+                }
+
+                var row = sourceIds.ItemIndex[sourceId];
+                foreach (var edge in network.EdgesFilteredBySource(sourceId))
+                {
+                    if (!targetIds.ItemIndex.ContainsKey(edge.Target))
+                    {
+                        throw new NullReferenceException(nameof(targetIds.ItemIndex));
+                    }
+
+                    var column = targetIds.ItemIndex[edge.Target];
+                    matrix[row, column] = edge.Weight;
+                }
+            }
+
+            return matrix;
+        }
     }
 }

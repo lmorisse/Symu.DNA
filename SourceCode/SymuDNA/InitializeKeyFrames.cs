@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using Symu.Common.Interfaces;
-using Symu.DNA.MatrixNetworks;
+using Symu.OrgMod.GraphNetworks;
 
 #endregion
 
