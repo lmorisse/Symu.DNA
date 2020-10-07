@@ -37,6 +37,7 @@ namespace Symu.DNA
         {
             Add(frame, new MatrixMetaNetwork(network));
         }
+
         public void Add(ushort frame, MatrixMetaNetwork network)
         {
             _list.Add(frame, network);

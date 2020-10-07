@@ -9,6 +9,7 @@
 
 #region using directives
 
+using System;
 using MathNet.Numerics.LinearAlgebra;
 using Symu.Common.Math.LinearAlgebra;
 
@@ -36,6 +37,11 @@ namespace Symu.DNA.Metrics.TwoModes
         /// <returns></returns>
         public static int RowCount(Matrix<float> matrix)
         {
+            if (matrix == null)
+            {
+                throw new ArgumentNullException(nameof(matrix));
+            }
+
             return matrix.RowCount;
         }
 
@@ -46,6 +52,11 @@ namespace Symu.DNA.Metrics.TwoModes
         /// <returns></returns>
         public static int ColumnCount(Matrix<float> matrix)
         {
+            if (matrix == null)
+            {
+                throw new ArgumentNullException(nameof(matrix));
+            }
+
             return matrix.ColumnCount;
         }
 
@@ -73,6 +84,11 @@ namespace Symu.DNA.Metrics.TwoModes
         /// <returns></returns>
         public static Vector<float> RowDegreeCentrality(Matrix<float> matrix)
         {
+            if (matrix == null)
+            {
+                throw new ArgumentNullException(nameof(matrix));
+            }
+
             var result = Vector<float>.Build.Dense(matrix.RowCount);
             if (matrix.RowCount * matrix.ColumnCount > 0)
             {
@@ -89,6 +105,11 @@ namespace Symu.DNA.Metrics.TwoModes
         /// <returns></returns>
         public static Vector<float> ColumnDegreeCentrality(Matrix<float> matrix)
         {
+            if (matrix == null)
+            {
+                throw new ArgumentNullException(nameof(matrix));
+            }
+
             var result = Vector<float>.Build.Dense(matrix.ColumnCount);
             if (matrix.RowCount * matrix.ColumnCount > 0)
             {
@@ -110,6 +131,11 @@ namespace Symu.DNA.Metrics.TwoModes
         /// <returns></returns>
         public static float Load(Matrix<float> matrix)
         {
+            if (matrix == null)
+            {
+                throw new ArgumentNullException(nameof(matrix));
+            }
+
             if (matrix.ColumnCount > 0)
             {
                 return matrix.GrandSum() / matrix.ColumnCount;
@@ -135,6 +161,11 @@ namespace Symu.DNA.Metrics.TwoModes
         /// </remarks>
         public static float Density(Matrix<float> matrix)
         {
+            if (matrix == null)
+            {
+                throw new ArgumentNullException(nameof(matrix));
+            }
+
             if (matrix.RowCount * matrix.ColumnCount > 0)
             {
                 return matrix.GrandSum() / (matrix.RowCount * matrix.ColumnCount);

@@ -9,6 +9,7 @@
 
 #region using directives
 
+using System;
 using MathNet.Numerics.LinearAlgebra;
 using Symu.Common.Math.LinearAlgebra;
 using static Symu.Common.Constants;
@@ -41,6 +42,11 @@ namespace Symu.DNA.Metrics.TwoModes
         /// <remarks>https://fr.wikipedia.org/wiki/Centralit%C3%A9</remarks>
         public static float DegreeCentralization(Matrix<float> matrix)
         {
+            if (matrix == null)
+            {
+                throw new ArgumentNullException(nameof(matrix));
+            }
+
             var degreeCentrality = matrix.DegreeCentrality();
             var maxDegree = degreeCentrality.Maximum();
             //maxDegree- degreeCentrality
@@ -63,6 +69,11 @@ namespace Symu.DNA.Metrics.TwoModes
         /// <remarks>https://fr.wikipedia.org/wiki/Centralit%C3%A9</remarks>
         public static Vector<float> RowDegreeCentralization(Matrix<float> matrix)
         {
+            if (matrix == null)
+            {
+                throw new ArgumentNullException(nameof(matrix));
+            }
+
             var degreeCentrality = matrix.DegreeCentrality();
             var maxDegree = degreeCentrality.Maximum();
             var tempMatrix = Matrix<float>.Build.Dense(matrix.RowCount, matrix.ColumnCount, maxDegree) -
@@ -84,6 +95,11 @@ namespace Symu.DNA.Metrics.TwoModes
         /// <remarks>https://fr.wikipedia.org/wiki/Centralit%C3%A9</remarks>
         public static Vector<float> ColumnDegreeCentralization(Matrix<float> matrix)
         {
+            if (matrix == null)
+            {
+                throw new ArgumentNullException(nameof(matrix));
+            }
+
             var degreeCentrality = matrix.DegreeCentrality();
             var maxDegree = degreeCentrality.Maximum();
             var tempMatrix = Matrix<float>.Build.Dense(matrix.RowCount, matrix.ColumnCount, maxDegree) -

@@ -9,6 +9,7 @@
 
 #region using directives
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
@@ -41,6 +42,11 @@ namespace Symu.DNA
         /// </example>
         public static MatrixMetaNetwork InitializeAnalysis(Dictionary<ushort, MatrixMetaNetwork> list)
         {
+            if (list == null)
+            {
+                throw new ArgumentNullException(nameof(list));
+            }
+
             var refMetaNetwork = new MatrixMetaNetwork
             {
                 Actor = new VectorNetwork(GetAgentIdsOverTime(list.Values.Select(x => x.Actor))),
@@ -74,6 +80,11 @@ namespace Symu.DNA
         public static Matrix<float> InitializeMatrix(VectorNetwork rowVectorRef, VectorNetwork colVectorRef,
             VectorNetwork rowVector, VectorNetwork colVector, Matrix<float> matrix)
         {
+            if (matrix == null)
+            {
+                throw new ArgumentNullException(nameof(matrix));
+            }
+
             // row comparison
             if (rowVector.Count != rowVectorRef.Count)
             {
@@ -106,6 +117,11 @@ namespace Symu.DNA
         public static IReadOnlyList<IAgentId> GetAgentIdsOverTime(IEnumerable<VectorNetwork> vectors)
         {
             var agentIds = new List<IAgentId>();
+            if (vectors == null)
+            {
+                return agentIds.ToList();
+            }
+
             foreach (var vector in vectors)
             {
                 agentIds.AddRange(vector.IndexItem);

@@ -25,12 +25,16 @@ namespace Symu.DNA
     /// </summary>
     public class MatrixMetaNetwork
     {
+        private readonly GraphMetaNetwork _metaNetwork;
+
         public MatrixMetaNetwork()
         {
         }
 
         public MatrixMetaNetwork(GraphMetaNetwork metaNetwork)
         {
+            _metaNetwork = metaNetwork ?? throw new ArgumentNullException(nameof(metaNetwork));
+
             #region One mode networks
 
             Actor = new VectorNetwork(metaNetwork.Actor.ToVector());
@@ -46,7 +50,7 @@ namespace Symu.DNA
 
             #region Two modes networks
 
-            ActorActor = ImportToMatrix(metaNetwork.ActorActor.Clone() , Actor, Actor);
+            ActorActor = ImportToMatrix(metaNetwork.ActorActor.Clone(), Actor, Actor);
             ActorBelief = ImportToMatrix(metaNetwork.ActorBelief.Clone(), Actor, Belief);
             ActorOrganization = ImportToMatrix(metaNetwork.ActorOrganization.Clone(), Actor, Organization);
             ActorKnowledge = ImportToMatrix(metaNetwork.ActorKnowledge.Clone(), Actor, Knowledge);
@@ -88,6 +92,51 @@ namespace Symu.DNA
                 default:
                     throw new ArgumentOutOfRangeException(nameof(networkType), networkType, null);
             }
+        }
+
+        /// <summary>
+        ///     Convert the network into a matrix
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="sourceIds"></param>
+        /// <param name="targetIds"></param>
+        /// <returns></returns>
+        public static Matrix<float> ImportToMatrix(TwoModesNetwork<IEdge> network, VectorNetwork sourceIds,
+            VectorNetwork targetIds)
+        {
+            if (network == null)
+            {
+                throw new ArgumentNullException(nameof(network));
+            }
+
+            if (!sourceIds.Any || !targetIds.Any)
+            {
+                return null;
+            }
+
+            var matrix = Matrix<float>.Build.Dense(sourceIds.Count, targetIds.Count);
+            for (var i = 0; i < sourceIds.Count; i++)
+            {
+                var sourceId = sourceIds.IndexItem[i];
+                if (!sourceIds.ItemIndex.ContainsKey(sourceId))
+                {
+                    throw new NullReferenceException(nameof(sourceIds.ItemIndex));
+                }
+
+                var row = sourceIds.ItemIndex[sourceId];
+                foreach (var edge in network.EdgesFilteredBySource(sourceId))
+                {
+                    if (!targetIds.ItemIndex.ContainsKey(edge.Target))
+                    {
+                        throw new NullReferenceException(nameof(targetIds.ItemIndex));
+                    }
+
+                    var column = targetIds.ItemIndex[edge.Target];
+                    matrix[row, column] = edge.Weight;
+                }
+            }
+
+            return matrix;
         }
 
         #region One mode networks
@@ -218,44 +267,5 @@ namespace Symu.DNA
         public Matrix<float> ActorTask { get; set; }
 
         #endregion
-
-        /// <summary>
-        ///     Convert the network into a matrix
-        /// </summary>
-        /// <param name="network"></param>
-        /// <param name="sourceIds"></param>
-        /// <param name="targetIds"></param>
-        /// <returns></returns>
-        public Matrix<float> ImportToMatrix(TwoModesNetwork<IEdge> network, VectorNetwork sourceIds, VectorNetwork targetIds)
-        {
-            if (!sourceIds.Any || !targetIds.Any)
-            {
-                return null;
-            }
-
-            var matrix = Matrix<float>.Build.Dense(sourceIds.Count, targetIds.Count);
-            for (var i = 0; i < sourceIds.Count; i++)
-            {
-                var sourceId = sourceIds.IndexItem[i];
-                if (!sourceIds.ItemIndex.ContainsKey(sourceId))
-                {
-                    throw new NullReferenceException(nameof(sourceIds.ItemIndex));
-                }
-
-                var row = sourceIds.ItemIndex[sourceId];
-                foreach (var edge in network.EdgesFilteredBySource(sourceId))
-                {
-                    if (!targetIds.ItemIndex.ContainsKey(edge.Target))
-                    {
-                        throw new NullReferenceException(nameof(targetIds.ItemIndex));
-                    }
-
-                    var column = targetIds.ItemIndex[edge.Target];
-                    matrix[row, column] = edge.Weight;
-                }
-            }
-
-            return matrix;
-        }
     }
 }
