@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-First off, thank you for considering contributing to ONA. There are different ways to contribute to this project.
+First off, thank you for considering contributing to DNA. There are different ways to contribute to this project.
 Contributing start by using the framework and give feedbacks.
 
 ## As a user
@@ -28,13 +28,13 @@ General questions will feed the FAQs.
 
 ## Getting started
 
-The main project is [ONA](https://github.com/lmorisse/ONA/tree/master/SourceCode/ONA). .
+The main project is [ONA](https://github.com/lmorisse/Symu.DNA/tree/master/SourceCode/DNA). .
 This project come with its test project, mainly unit tests. It is helpful for developers to understand how to use the framework.
 
 
 ## Fork & create a branch
 
-If this is something you think you can fix, then [fork ONA] and create
+If this is something you think you can fix, then [fork DNA] and create
 a branch with a descriptive name.
 
 A good branch name would be ISSUENUMBER-FEATURE-YOU-IMPLEMENT

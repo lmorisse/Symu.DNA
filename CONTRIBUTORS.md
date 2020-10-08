@@ -6,6 +6,6 @@ ONA was designed and developed by Laurent Morisseau.
 
 ### Thanks
 
-ONA would not have been possible without strong company backing.
+DNA would not have been possible without strong company backing.
 Support have been provided mainly by
 [MorisseauConsulting](http://morisseauconsulting.com)

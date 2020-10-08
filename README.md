@@ -51,7 +51,9 @@ There isn't GUI mode yet.
 ``Symu.DNA`` is built upon different repositories. We don't use git submodules. So that, to build Symu.DNA and its examples solutions, you'll need to check the dependencies manually.
 
 #### Symu.DNA dependencies
-To build Symu you have to add the Symu.Common.dll as a dependency. You find this library in the [Symu.Common](https://github.com/lmorisse/Symu.Common/releases/latest) and [Symu.DNA](https://github.com/lmorisse/Symu.DNA/releases/latest) repositories.
+To build Symu you have to add the following dependencies :
+* Symu.Common.dll : [Symu.Common](https://github.com/lmorisse/Symu.Common/releases/latest) 
+* Symu.OrgMod.dll : [Symu.OrgMod](https://github.com/lmorisse/Symu.OrgMod/releases/latest) 
 
 #### External dependencies
 * [Math.net](https://www.math.net/)
