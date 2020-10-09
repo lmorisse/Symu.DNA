@@ -41,7 +41,7 @@ Because we believe that such a framework is valuable for organizations and acade
 With our **academic program**, we will first implement algorithms that you want to use for you.
 
 ## Getting Started
-The main project is [Symu.DNA](https://github.com/lmorisse/Symu.DNA/tree/master/sourceCode/SymuDNA). This is the framework you'll use to build your own application.
+The main project is [Symu.DNA](https://github.com/lmorisse/Symu.DNA/tree/master/SourceCode/SymuDNA). This is the framework you'll use to build your own application.
 There isn't GUI mode yet.
 
 ### Installing
