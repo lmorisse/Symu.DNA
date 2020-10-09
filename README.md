@@ -1,6 +1,7 @@
 # Symu.DNA as Dynamic Network Analysis
 
-Develop your own application to analyse social [SNA](https://en.wikipedia.org/wiki/Social_network_analysis) and organizational [DNA](https://en.wikipedia.org/wiki/Organizational_network_analysis) networks, statically or dynamically [DNA](https://en.wikipedia.org/wiki/Dynamic_network_analysis)``<br>
+Develop your own application to analyse social [SNA](https://en.wikipedia.org/wiki/Social_network_analysis) and organizational [ONA](https://en.wikipedia.org/wiki/Organizational_network_analysis) networks, statically or dynamically [DNA](https://en.wikipedia.org/wiki/Dynamic_network_analysis).
+
 ``Symu.DNA`` is part of ``Symu Suite``, for organizational modeling, analysis and simulating.
 ``Symu.DNA`` is a core of social and organizational network analysis library for static and dynamic analysis, written in C#.
 It implements agnostic organizations as social groups to target the most general use cases.
